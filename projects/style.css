@@ -1,0 +1,146 @@
+@charset "utf-8";
+
+body, html {
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+	background: #FFF;
+	font-family:'Gill Sans','Gill Sans MT','Goudy Bookletter 1911','Linux Libertine O','Liberation Serif',Candara,serif;
+	background: #FFF;
+	color: #222;
+	font-size: 18px;
+	line-height: 1.4em;
+	background:transparent none repeat scroll 0 0;
+	margin:0;
+	padding:0;
+	padding-bottom: 2em;
+}
+
+div#main {width: 85%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+div.toc {
+	font-size: 18px;
+	margin:1em;
+	margin-left: 4em;
+	border: 1px solid black;
+	width: 30em;
+	padding: .5em;
+}
+
+div.toc ul {
+	margin:0;
+	padding:0;
+}
+
+div.toc ul li {
+	font-size: 16px;
+	margin:0;
+	padding:0;
+	line-height: 2em;
+	list-style-type: none;
+}
+
+div.toc ul li a {
+	font-weight: 600;
+	color: black;
+}
+
+div.toc ul li ul li {
+	list-style-type: none;
+	margin-left: 2em;
+}
+
+div.toc ul li ul li a {
+	font-weight: normal;
+}
+
+h1 {
+	text-transform:capitalize;
+	/*font-family: Georgia, "Times New Roman", Times, serif;*/
+	border-bottom:1px solid #333333;
+	display:block;
+	font-size:1.2em;
+	width:100%;
+	background-color:#2D2A62;
+	color:white;
+	margin:0;
+	padding: .25em;
+	padding-left: 2em;
+	margin-bottom: 1em;
+	font-weight: normal;
+}
+
+h1 a {color: #222;}
+h1 a:hover {text-decoration: underline; color: blue;}
+
+h2 {
+	margin: 0;
+	padding: 0;
+	font-size: 1em;
+	display: inline;
+	padding-bottom: 2em;
+}
+
+h4 {
+	margin:0;
+	padding:0;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+h5 {font-weight: normal;}
+
+p {
+	margin:0;
+	padding:0;
+	margin-top: 1em;
+	margin-left: 1em;	
+	margin-bottom: 1em;
+}
+
+em {font-style: italic;}
+
+ul, li {
+	line-height: 1.1em;
+	/*margin: 25px;
+	margin-bottom: 40px; */
+	list-style-type: none;
+	margin: 10px;
+	}
+
+ul li ul li {
+	margin-top: 10px;
+	list-style-type: none;
+	margin-bottom: 12px;
+}
+
+/*(ul li ul li:before {
+	content: "-  " attr(li);
+}
+
+ul li ul li ul li:before {
+	content: "--  " attr(li);
+}
+*/
+	
+a {
+	color: blue;
+	text-decoration: none;
+}
+
+a:hover {text-decoration: underline;}
+
+code {font-size: 16px;}
+
+#home {	width: 50%;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 20%; 
+		}
+	
+
+
+
