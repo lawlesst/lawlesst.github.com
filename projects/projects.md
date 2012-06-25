@@ -3,18 +3,18 @@
 # Brown University
 ## easyArticle
 
-Developed a [new link-resolver front end](http://library.brown.edu/easyarticle/get/eaT) to provide quick and easy access to library collections.  Uses various web APIS, including 360Link from Serial Solutions, Mendeley, JSTOR, and Microsoft Academic Search, to pull citation and access information as well as article abstracts and citing articles.  Wrote code to place requests in ILLiad, the library inter-library loan systems, on behalf of the user so that articles not in the library’s collection can be requested with one-click.  Developed export routine and indexing process to allow library print holdings to be avaiable via OpenURL.  
+Developed a [new link-resolver front end](http://library.brown.edu/easyarticle/get/eaT) to provide quick and easy access to library collections.  Uses various web APIs, including 360Link from Serials Solutions, Mendeley, JSTOR, and Microsoft Academic Search, to pull citation and access information as well as article abstracts and citing articles.  Wrote code to place requests in ILLiad, the library interlibrary loan system, on behalf of the user so that articles not in the library’s collection can be requested with one-click.  Developed export routine and indexing process to allow library print holdings to be avaiable via OpenURL.  
 
 ## Vufind and Summon
 
-Customized and implemented the open-source [library search](http://library.brown.edu/) front-end Vufind.  Developed programs to index multiple sets of local content - digital collections, research guides, student dissertations - to integrate with standard library catalog data.  Developed custom record drivers to allow for custom display of various content types.  Developed export scripts for ILS and local repository system to keep index up-to-date.  Customized the Apache Solr schema to meet the library’s needs.  The project won a university-wide staff innovation award.  
+Customized and implemented the open-source [library search](http://library.brown.edu/) front-end Vufind.  Developed code to index multiple sets of local content - digital collections, research guides, student dissertations - and integrated that content with standard library catalog data.  Developed record drivers to allow for custom display of various content types.  Developed export scripts for ILS and local repository systems to keep index up-to-date.  Customized the Apache Solr schema to meet the library’s needs.  The project won a university-wide staff innovation award.  
 
 ## The Minassian Collection of Qur’anic Manuscripts
 
-Ingested metadata and raw images for ancient Qur’anic manuscripts into the Brown Digital Repository.  Wrote scripts to create derivative images for access copies.  Worked with curator and metadata specialists to index MODS metadata in Apache Solr for [public search and browsing](http://library.brown.edu/cds/projects/quran).  Developed web application in Django for public use.  Implemented a sitemap to maximize the collection’s presence in commercial search engines. 
+Ingested metadata and raw images for ancient Qur’anic manuscripts into the Brown Digital Repository.  Wrote scripts to create derivative images for access copies.  Worked with curator and metadata specialists to index MODS metadata in Apache Solr for [public search and browsing](http://library.brown.edu/cds/projects/quran) via a Django web application.  Implemented a sitemap to maximize the collection’s presence in commercial search engines. 
 
 ##Library accessions and cataloging statistical reporting database
-Worked with the head of cataloging and head of acquisitions to develop a staff database to track accessions and cataloging activity in the library collections.  Coded custom logic for parsing MARC records and tabulating various statistical counts.  Developed ILS export routines to update the statistical database daily.  Implemented charts and CSV downloads of data to assist staff with analysis.  
+Worked with library departmental managers to develop a staff database to track accessions and cataloging activity in the library collections.  Coded custom logic for parsing MARC records and tabulating various statistical counts.  Developed ILS export routines to update the statistical database daily.  Implemented charts and CSV downloads of data to assist staff with analysis.  
 
 ##Book locator
 
