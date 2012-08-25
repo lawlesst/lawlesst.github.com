@@ -12,6 +12,7 @@ import time
 
 import markdown
 import PyRSS2Gen
+from PyRSS2Gen import RSSItem
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 BASE_URL = 'http://lawlesst.github.com'
@@ -36,6 +37,15 @@ TWITTER = """<div><a href="https://twitter.com/tedlawless" class="twitter-follow
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </div>"""
 
+from PyRSS2Gen import _element
+class MyRSSItem(RSSItem):
+  def __init__(self, content, *args, **kwargs):
+    self.content = content
+    super(MyRSSItem, self).__init__(*args, **kwargs)
+
+  def publish_extensions(self, handler):
+    content = self.content
+    _element(handler, "content:encoded", '<![CDATA[%s]]' % content)
 
 #build the html
 for directory in src_dirs:
@@ -94,12 +104,13 @@ for directory in src_dirs:
     #store notebook files for rss
     if d == NOTEBOOK_DIR:
       link = "%s/%s" % (BASE_URL, out_file)
-      f = PyRSS2Gen.RSSItem(
+      f = MyRSSItem(
         title = title,
         link = link,
         guid = link,
-        description = "<![CDATA[" + content + "]]",
+        #description = content,
         pubDate = post_date,
+        content = content,
 
       )
       feed.append(f)
