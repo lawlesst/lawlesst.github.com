@@ -45,7 +45,9 @@ class MyRSSItem(RSSItem):
 
   def publish_extensions(self, handler):
     content = self.content
-    _element(handler, "content:encoded", '<![CDATA[%s]]' % content)
+    #_element(handler, "content:encoded", '<![CDATA[%s]]' % content)
+    _element(handler, "content:encoded", content)
+
 
 #build the html
 for directory in src_dirs:
