@@ -44,6 +44,11 @@ class MyRSSItem(RSSItem):
     super(MyRSSItem, self).__init__(*args, **kwargs)
 
   def publish_extensions(self, handler):
+    """
+    Could just put this in PyRSS2Gen since I've forked it anyway.  
+    See content:encoded.
+    https://developer.mozilla.org/en-US/docs/RSS/Article/Why_RSS_Content_Module_is_Popular_-_Including_HTML_Contents
+    """
     content = self.content
     #_element(handler, "content:encoded", '<![CDATA[%s]]' % content)
     handler.startElement("content:encoded", self.element_attrs)
