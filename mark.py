@@ -110,7 +110,7 @@ for directory in src_dirs:
         title = title,
         link = link,
         guid = link,
-        #description = content,
+        description = '',
         pubDate = post_date,
         content = content,
 
