@@ -98,7 +98,7 @@ for directory in src_dirs:
         title = title,
         link = link,
         guid = link,
-        description = content,
+        description = "<![CDATA[" + content + "]]",
         pubDate = post_date,
 
       )
