@@ -23,7 +23,7 @@ meta_re = re.compile('^(title\:)(.*)\n(date\:)(.*)\n(-*)', re.M)
 #set date to blank text by default
 str_post_date = ""
 feed = []
-NOTEBOOK_DIR = 'notebok'
+NOTEBOOK_DIR = 'notebook'
 #directories to scan
 src_dirs = [
   '.',
@@ -67,7 +67,7 @@ for directory in src_dirs:
     else:
       html = template.replace('{{date}}', '')
       html = html.replace('<pre></pre>', '')
-    
+
     #set the title if we have one
     if title == "":
       html = html.replace('{{title}}', '')
