@@ -1,3 +1,6 @@
+title:Projects
+date:01-01-12
+----
 [TOC]
 
 # Brown University
@@ -24,8 +27,8 @@ Rewrote an existing application that provides users with a [specific floor and a
 
 Developed a Django-based, [Apache Solr](http://lucene.apache.org/solr/) powered facet [search application](http://library.brown.edu/titles) that highlights recent acquisitions in the library collections.  Modified and extended an open-source code base, Kochief.  Developed, in conjunction with technical services librarians, a customized MARC record parsing routine.  Implemented a Library of Congress call number normalization process that allows subject librarians to assign titles to university disciplines based off of the assigned call number.  
 
-## Repository ingestion processes
-Modified and maintained a complex set of Perl scripts that modify metadata and manipulate images for ingestion in to the library’s digital repository. 
+## Repository ingestion and indexing processeses
+Adapted a Modified and maintained a complex set of Perl scripts that modify metadata and manipulate images for ingestion in to the library’s digital repository.   
 
 ##Time-off Recording System
 Developed a Django application to allow staff and supervisors to manage vacation and sick time.  Built Javascript based timesheet that keeps a running total of staff.  Integrated external databases with organizational chart into local system to track and manage staff and supervisory relationships.  In coordination with Human Resources, developed business logic to handle university policies.  
