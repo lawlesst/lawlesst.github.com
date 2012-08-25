@@ -13,15 +13,6 @@ import time
 import markdown
 import PyRSS2Gen
 
-
-#directories to scan
-src_dirs = [
-  '.',
-  'projects',
-  'notebook'
-]
-
-
 BASE = os.path.dirname(os.path.abspath(__file__))
 BASE_URL = 'http://lawlesst.github.com'
 template = open('template.html').read()
@@ -32,6 +23,13 @@ meta_re = re.compile('^(title\:)(.*)\n(date\:)(.*)\n(-*)', re.M)
 #set date to blank text by default
 str_post_date = ""
 feed = []
+NOTEBOOK_DIR = 'notebok'
+#directories to scan
+src_dirs = [
+  '.',
+  'projects',
+  NOTEBOOK_DIR
+]
 
 #Twitter link for index page.
 TWITTER = """<div><a href="https://twitter.com/tedlawless" class="twitter-follow-button" data-show-count="false">Follow @tedlawless</a>
@@ -63,16 +61,20 @@ for directory in src_dirs:
         title = ''
     #build the markdown
     content = markdown.markdown(unicode(txt, errors='ignore'), extensions=['toc'])
-    #add the date
-    html = template.replace('{{date}}', str_post_date)
-    #if no date, remove pre element too
-    if str_post_date == '':
+    #add the date for notebook pages
+    if d == NOTEBOOK_DIR:
+      html = template.replace('{{date}}', str_post_date)
+    else:
+      html = template.replace('{{date}}', '')
       html = html.replace('<pre></pre>', '')
+    
     #set the title if we have one
     if title == "":
       html = html.replace('{{title}}', '')
     else:
       html = html.replace('{{title}}', ' -- ' + title)
+      #for non notebook pages don't add the title to the h1
+      #if d == NOTEBOOK_DIR:
 
     #if we are in the root directory, adjust the media path
     if d == '.':
@@ -90,7 +92,7 @@ for directory in src_dirs:
     f.close()
 
     #store notebook files for rss
-    if d == 'notebook':
+    if d == NOTEBOOK_DIR:
       link = "%s/%s" % (BASE_URL, out_file)
       f = PyRSS2Gen.RSSItem(
         title = title,
