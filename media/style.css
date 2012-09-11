@@ -16,6 +16,15 @@ body, html {
 	padding-bottom: 2em;
 }
 
+pre {
+		font-family:'Gill Sans','Gill Sans MT','Goudy Bookletter 1911','Linux Libertine O','Liberation Serif',Candara,serif;
+}
+
+blockquote {
+	border: 1px solid gray;
+	padding: .25em;
+}
+
 div#main {width: 85%;
 		margin-left: auto;
 		margin-right: auto;
