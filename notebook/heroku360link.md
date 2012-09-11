@@ -9,9 +9,9 @@ A recent [thread](http://serials.infomotions.com/code4lib/archive/2012/201209/25
 
 Over the last year, my colleagues and I at Brown University Library have developed a new front-end to 360Link using the [360Link API](http://www.serialssolutions.com/en/services/360-search/xml-api) .  It's been serving OpenURL requests since February and, as of August, has completely replaced our use of the default 360Link interface.  The main objective of this project was to streamline the delivery of content found in various databases.  
 
-Since 360Link is rather popular in academic libraries and the importance of successful link resolution has been reinforced by the appearance of Summon and other ‘discovery' services, I decided to put together a demo Djnago application that uses the API to create a basic link resolver.    
+Since 360Link is rather popular in academic libraries and other libaries might be interested in implementing their own front-end, I decided to put together a demo [Django](https://www.djangoproject.com/) application that uses the API to create a basic link resolver.    
 
-You can see the application and test it out here.  
+You can use the application and test it out here.  
 
  * [Main page with form for OpenURL lookups](http://damp-tor-3124.herokuapp.com/)  
  * [Sample article lookup](http://damp-tor-3124.herokuapp.com/?url_ver=Z39.88-2004&url_ctx_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Actx&ctx_ver=Z39.88-2004&rfr_id=info%3Asid%2Fmendeley.com%2Fmendeley&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&rft.genre=article&rft.date=2007&rft.volume=5&rft.issue=2&rft.pages=na&rft.atitle=Fuel+Ethanol+Subsidies+and+Farm+Price+Support&rft.jtitle=Journal+of+Agricultural+Food+Industrial+Organization&rft.title=Journal+of+Agricultural+Food+Industrial+Organization&rft.aulast=Gardner&rft.aufirst=Bruce&rft_id=info%3Adoi%2F10.2202%2F1542-0485.1188&rft.issn=15420485)

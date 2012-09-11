@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless Notebook</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Tue, 11 Sep 2012 20:59:18 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Django, Heroku, and the 360Link API</title><link>http://lawlesst.github.com/notebook/heroku360link.html</link><content:encoded><![CDATA[<blockquote>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless Notebook</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Tue, 11 Sep 2012 21:02:13 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Django, Heroku, and the 360Link API</title><link>http://lawlesst.github.com/notebook/heroku360link.html</link><content:encoded><![CDATA[<blockquote>
 <p>This post describes and links to a <a href="http://damp-tor-3124.herokuapp.com/">demo application</a> that serves as a front-end to the <a href="http://www.serialssolutions.com/en/services/360-link">360Link OpenURL resolver</a>
 from Serials Solutions.  The code is available on <a href="https://github.com/lawlesst/heroku-360link">Github</a> and the application is running on Heroku.  <br />
 </p>
@@ -7,9 +7,9 @@ from Serials Solutions.  The code is available on <a href="https://github.com/la
 <p>A recent <a href="http://serials.infomotions.com/code4lib/archive/2012/201209/2516.html">thread</a> on the Code4Lib mailing list discussed technical details of the <a href="http://www.serialssolutions.com/en/services/360-link">360Link </a> OpenURL resolver.  The technical details are interesting because the OpenURL resolver is often the last handoff from the library systems to the location on the web where users can actually get what they are looking for.  If something goes wrong, it's a frustating experience for everyone involved. </p>
 <p>Over the last year, my colleagues and I at Brown University Library have developed a new front-end to 360Link using the <a href="http://www.serialssolutions.com/en/services/360-search/xml-api">360Link API</a> .  It's been serving OpenURL requests since February and, as of August, has completely replaced our use of the default 360Link interface.  The main objective of this project was to streamline the delivery of content found in various databases.<br />
 </p>
-<p>Since 360Link is rather popular in academic libraries and the importance of successful link resolution has been reinforced by the appearance of Summon and other discovery' services, I decided to put together a demo Djnago application that uses the API to create a basic link resolver.  <br />
+<p>Since 360Link is rather popular in academic libraries and other libaries might be interested in implementing their own front-end, I decided to put together a demo <a href="https://www.djangoproject.com/">Django</a> application that uses the API to create a basic link resolver.  <br />
 </p>
-<p>You can see the application and test it out here.<br />
+<p>You can use the application and test it out here.<br />
 </p>
 <ul>
 <li><a href="http://damp-tor-3124.herokuapp.com/">Main page with form for OpenURL lookups</a><br />
