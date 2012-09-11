@@ -2,7 +2,7 @@ title:Django, Heroku, and the 360Link API
 date:09-11-12
 ----
 
-> This post describes and links to a [demo application](http://damp-tor-3124.herokuapp.com/) that serves as a front-end to the [360Link OpenURL resolver](http://www.serialssolutions.com/en/services/360-link)
+> This post describes a [demo application](http://damp-tor-3124.herokuapp.com/) that serves as a front-end to the [360Link OpenURL resolver](http://www.serialssolutions.com/en/services/360-link)
 from Serials Solutions.  The code is available on [Github](https://github.com/lawlesst/heroku-360link) and the application is running on Heroku.    
 
 A recent [thread](http://serials.infomotions.com/code4lib/archive/2012/201209/2516.html) on the Code4Lib mailing list discussed technical details of the [360Link ](http://www.serialssolutions.com/en/services/360-link) OpenURL resolver.  The technical details are interesting because the OpenURL resolver is often the last handoff from the library systems to the location on the web where users can actually get what they are looking for.  If something goes wrong, it's a frustating experience for everyone involved. 
@@ -14,8 +14,9 @@ Since 360Link is rather popular in academic libraries and other libaries might b
 You can use the application and test it out here.  
 
  * [Main page with form for OpenURL lookups](http://damp-tor-3124.herokuapp.com/)  
- * [Sample article lookup](http://damp-tor-3124.herokuapp.com/?url_ver=Z39.88-2004&url_ctx_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Actx&ctx_ver=Z39.88-2004&rfr_id=info%3Asid%2Fmendeley.com%2Fmendeley&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&rft.genre=article&rft.date=2007&rft.volume=5&rft.issue=2&rft.pages=na&rft.atitle=Fuel+Ethanol+Subsidies+and+Farm+Price+Support&rft.jtitle=Journal+of+Agricultural+Food+Industrial+Organization&rft.title=Journal+of+Agricultural+Food+Industrial+Organization&rft.aulast=Gardner&rft.aufirst=Bruce&rft_id=info%3Adoi%2F10.2202%2F1542-0485.1188&rft.issn=15420485)
-* [Pubmed lookup](http://damp-tor-3124.herokuapp.com/?pmid=22953657)
+ * [Sample article lookup](http://damp-tor-3124.herokuapp.com/?url_ver=Z39.88-2004&url_ctx_fmt=info:ofi/fmt:kev:mtx:ctx&ctx_ver=Z39.88-2004&rfr_id=info:sid/mendeley.com/mendeley&rft_val_fmt=info:ofi/fmt:kev:mtx:journal&rft.genre=article&rft.date=2007&rft.volume=5&rft.issue=2&rft.pages=na&rft.atitle=Fuel Ethanol Subsidies and Farm Price Support&rft.jtitle=Journal of Agricultural Food Industrial Organization&rft.title=Journal of Agricultural Food Industrial Organization&rft.aulast=Gardner&rft.aufirst=Bruce&rft_id=info:doi/10.2202/1542-0485.1188&rft.issn=15420485)
+ * [Pubmed lookup](http://damp-tor-3124.herokuapp.com/?pmid=22953657)
+ * [JSONP responses](http://damp-tor-3124.herokuapp.com/?pmid=22953657&output=json) via content negotiation or adding output=json to the OpenURL.  
   
 The app is running on Heroku and the code is on [Github](https://github.com/lawlesst/heroku-360link).  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  It doesn't take much to get started with the API.  
 
