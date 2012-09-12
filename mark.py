@@ -149,11 +149,11 @@ for directory in src_dirs:
 
 #Generate the feed.
 rss = PyRSS2Gen.RSS2(
-    title = "Ted Lawless Notebook",
+    title = "Ted Lawless",
     link = BASE_URL,
     description = "Notes on projects.",
     lastBuildDate = datetime.datetime.utcnow(),
     items = feed
     )
-rss.write_xml(open("feed.xml", "w"))
+rss.write_xml(open("feed.rss", "w"))
 
