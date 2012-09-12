@@ -17,14 +17,12 @@ Here are a few sample links.  You can also paste an OpenURL into the form on the
  * [Pubmed lookup](http://damp-tor-3124.herokuapp.com/?pmid=22953657)
  * [JSON(P) responses](http://damp-tor-3124.herokuapp.com/?pmid=22953657&output=json) via content negotiation or adding output=json to the OpenURL. 
  * [Another sample response](http://damp-tor-3124.herokuapp.com/dl2af5jf3e/?pmid=22953657) but a customer code has been added to the url to switch to another library's API.  
-  
-The app is running on Heroku and the code is on [Github](https://github.com/lawlesst/heroku-360link).  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  It doesn't take a lot of work to get started with the API.  
-
-The demo app uses a Python library we put together at Brown- [py360link](https://github.com/lawlesst/py360link) - for working with the 360Link API.  This is mostly repurposed from Godmar Back's [link360.py](http://code.google.com/p/link360/) which parses the API XML into a Python dictionary that can then be used in Django view and template code.  
 
 You can easily switch libraries by adding another library's Serials Solutions customer code to the URL - e.g Brown's default 360Link interface is at http://rl3tp7zf5x.search.serialssolutions.com/ so the customer code is "rl3tp7z5x".  While testing this, I noticed that some library's seem to have their API behind a firewall but most seem to be open and testable.  
 
 To run some real requests through this app, you could login to [Mendeley](http://www.mendeley.com/) and set it as your resolver in the “Find this paper at” dropdown menu.   
+  
+The app is running on Heroku and the code is on [Github](https://github.com/lawlesst/heroku-360link).  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  So it takes less work to get started with the API than you might suspect.  
 
 For more details about working with the API, Daniel Talsky did a nice job of [explaining the API](http://journal.code4lib.org/articles/108) in Issue 4, 2008  of the Code4Lib Journal.    
 

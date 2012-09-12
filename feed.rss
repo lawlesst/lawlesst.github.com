@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Wed, 12 Sep 2012 01:13:13 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Django, Heroku, and the 360Link API</title><link>http://lawlesst.github.com/notebook/heroku360link.html</link><content:encoded><![CDATA[<blockquote>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Wed, 12 Sep 2012 12:54:23 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Django, Heroku, and the 360Link API</title><link>http://lawlesst.github.com/notebook/heroku360link.html</link><content:encoded><![CDATA[<blockquote>
 <p>This post describes a <a href="http://damp-tor-3124.herokuapp.com/">demo application</a> that serves as a front-end to the <a href="http://www.serialssolutions.com/en/services/360-link">360Link OpenURL resolver</a>
 from Serials Solutions.  The code is available on <a href="https://github.com/lawlesst/heroku-360link">Github</a> and the application is running on Heroku.  <br />
 </p>
@@ -17,13 +17,11 @@ from Serials Solutions.  The code is available on <a href="https://github.com/la
 <li><a href="http://damp-tor-3124.herokuapp.com/dl2af5jf3e/?pmid=22953657">Another sample response</a> but a customer code has been added to the url to switch to another library's API.<br />
 </li>
 </ul>
-<p>The app is running on Heroku and the code is on <a href="https://github.com/lawlesst/heroku-360link">Github</a>.  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  It doesn't take a lot of work to get started with the API.<br />
-</p>
-<p>The demo app uses a Python library we put together at Brown- <a href="https://github.com/lawlesst/py360link">py360link</a> - for working with the 360Link API.  This is mostly repurposed from Godmar Back's <a href="http://code.google.com/p/link360/">link360.py</a> which parses the API XML into a Python dictionary that can then be used in Django view and template code.<br />
-</p>
 <p>You can easily switch libraries by adding another library's Serials Solutions customer code to the URL - e.g Brown's default 360Link interface is at http://rl3tp7zf5x.search.serialssolutions.com/ so the customer code is "rl3tp7z5x".  While testing this, I noticed that some library's seem to have their API behind a firewall but most seem to be open and testable.<br />
 </p>
 <p>To run some real requests through this app, you could login to <a href="http://www.mendeley.com/">Mendeley</a> and set it as your resolver in the Find this paper at dropdown menu. <br />
+</p>
+<p>The app is running on Heroku and the code is on <a href="https://github.com/lawlesst/heroku-360link">Github</a>.  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  So it takes less work to get started with the API than you might suspect.<br />
 </p>
 <p>For more details about working with the API, Daniel Talsky did a nice job of <a href="http://journal.code4lib.org/articles/108">explaining the API</a> in Issue 4, 2008  of the Code4Lib Journal.  <br />
 </p>
