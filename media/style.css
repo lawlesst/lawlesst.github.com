@@ -67,7 +67,6 @@ div.toc ul li ul li a {
 }
 
 h1 {
-	text-transform:capitalize;
 	/*font-family: Georgia, "Times New Roman", Times, serif;*/
 	border-bottom:1px solid #333333;
 	display:block;
