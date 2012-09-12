@@ -13,7 +13,7 @@ Since 360Link is rather popular in academic libraries and other libaries might b
 
 Here are a few sample links.  You can also paste an OpenURL into the form on the [index page](http://damp-tor-3124.herokuapp.com/)
  
- * [Sample article lookup](http://damp-tor-3124.herokuapp.com/?info:doi/10.2202/1542-0485.1188)
+ * [Sample article lookup](http://damp-tor-3124.herokuapp.com/?doi=doi/10.2202/1542-0485.1188)
  * [Pubmed lookup](http://damp-tor-3124.herokuapp.com/?pmid=22953657)
  * [JSON(P) responses](http://damp-tor-3124.herokuapp.com/?pmid=22953657&output=json) via content negotiation or adding output=json to the OpenURL. 
  * [Another sample response](http://damp-tor-3124.herokuapp.com/dl2af5jf3e/?pmid=22953657) but a customer code has been added to the url to switch to another library's API.  
