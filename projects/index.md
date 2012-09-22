@@ -6,7 +6,7 @@ date:01-01-12
 # Brown University
 ## easyArticle
 
-Developed a [new link-resolver front end](http://library.brown.edu/easyarticle/get/eaT) to provide quick and easy access to library collections.  Uses various web APIs, including 360Link from Serials Solutions, Mendeley, JSTOR, and Microsoft Academic Search, to pull citation and access information as well as article abstracts and citing articles.  Wrote code to place requests in ILLiad, the library interlibrary loan system, on behalf of the user so that articles not in the library’s collection can be requested with one-click.  Developed export routine and indexing process to allow library print holdings to be available via OpenURL.  
+Developed a [new link-resolver front end](http://library.brown.edu/easyarticle/get/eaT/) to provide quick and easy access to library collections.  Uses various web APIs, including 360Link from Serials Solutions, Mendeley, JSTOR, and Microsoft Academic Search, to pull citation and access information as well as article abstracts and citing articles.  Wrote code to place requests in ILLiad, the library interlibrary loan system, on behalf of the user so that articles not in the library’s collection can be requested with one-click.  Developed export routine and indexing process to allow library print holdings to be available via OpenURL.  
 
 ## Vufind and Summon
 
@@ -17,15 +17,16 @@ Customized and implemented the open-source [library search](http://library.brown
 Ingested metadata and raw images for ancient Qur’anic manuscripts into the Brown Digital Repository.  Wrote scripts to create derivative images for access copies.  Worked with curator and metadata specialists to index MODS metadata in Apache Solr for [public search and browsing](http://library.brown.edu/cds/projects/quran) via a Django web application.  Implemented a sitemap to maximize the collection’s presence in search engines. 
 
 ##Library accessions and cataloging statistical reporting database
+
 Worked with library departmental managers to develop a staff database to track accessions and cataloging activity in the library collections.  Coded custom logic for parsing MARC records and tabulating various statistical counts.  Developed ILS export routines to update the statistical database daily.  Implemented charts and CSV downloads of data to assist staff with analysis.  
 
 ##Book locator
 
-Rewrote an existing application that provides users with a [specific floor and aisle location](http://library.brown.edu/find/Record/b5863423) for a given item in the library collections.  Included a web service that supports client-side integration so that the service can be easily integrated into other sites.  This system includes an administrative interface that allows library collections staff to maintain the database of call number locations.  Presented the project at the Innovative Interfaces Users Group meeting and shared the [code](https://bitbucket.org/bul/book-locator/overview) publicly.  
+Rewrote an existing application that provides users with a [specific floor and aisle location](http://library.brown.edu/find/Record/b5863423) for a given item in the library.  Included a web service that supports client-side integration so that the service can be easily integrated into [other sites](http://library.brown.edu/easyarticle/borrow/get/BRj/).  This system includes an administrative interface that allows library staff to maintain the database of call number locations.  This project was presented at the Innovative Interfaces Users Group meeting and shared the [code](https://bitbucket.org/bul/book-locator/overview) publicly.  
 
 ##New Titles at the library
 
-Developed a Django-based, [Apache Solr](http://lucene.apache.org/solr/) powered facet [search application](http://library.brown.edu/titles) that highlights recent acquisitions in the library collections.  Modified and extended an open-source code base, Kochief.  Developed, in conjunction with technical services librarians, a customized MARC record parsing routine.  Implemented a Library of Congress call number normalization process that allows subject librarians to assign titles to university disciplines based off of the assigned call number.  
+Developed a Django-based, [Apache Solr](http://lucene.apache.org/solr/) powered facet [search application](http://library.brown.edu/titles) that highlights recent acquisitions in the library collections.  Modified and extended an open-source code base, [Kochief](http://code.google.com/p/kochief/).  Developed, in conjunction with technical services librarians, a customized MARC record parsing routine.  Implemented and adapted a [Library of Congress call number normalization](https://github.com/mjgiarlo/library-callnumber-lc) process that allows subject librarians to assign titles to university disciplines based off of the assigned call number.  
 
 ## Repository ingestion and indexing processeses
 Adapted a Modified and maintained a complex set of Perl scripts that modify metadata and manipulate images for ingestion in to the library’s digital repository.   
