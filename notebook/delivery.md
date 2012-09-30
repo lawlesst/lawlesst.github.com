@@ -12,7 +12,7 @@ At the Brown University Library, we have recently taken steps to improve the del
 
 In its most basic form, easyArticle is a front-end to the 360Link link resolver from Serials Solutions.  However it adds a fair amount of functionality beyond the typical link resolver.  The biggest addition to date is the automated submission of Interlibrary Loan and document delivery requests.  This along with the [easyBorrow](http://library.brown.edu/its/software/easyborrow/) project at Brown, which focuses on obtaining copies of books, consist of our "delivery" services.  
 
-[^code]: Many of the components of this application are available on [Github](https://github.com/lawlesst) as separate Python modules.  I also [wrote previously](http://lawlesst.github.com/notebook/heroku360link.html) about building a demo application on Heroku that provides the basic functionality of this application. 
+[^code]: Many of the components of this application are [available on Github](https://github.com/lawlesst) as separate Python modules.  I also [wrote previously](http://lawlesst.github.com/notebook/heroku360link.html) about building a demo application on Heroku that provides the basic functionality of this application. 
 
 This screencast demonstrates a search in Google Scholar that leads to the user requesting an article via Interlibrary Loan through this application[^code].  Below the screencast is a list of user scenarios and how the easyArticle system is delivery the content to the user.    
 <div style="width: 700px; margin: 1em; margin-left:auto; margin-right:auto; padding:1em;">
