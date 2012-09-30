@@ -6,7 +6,7 @@ date:09-30-12
 <script src="http://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 A [Twitter exchange](https://twitter.com/hochstenbach/status/251929102024597504) between [Patrick Hochstenbach](https://twitter.com/intent/user?screen_name=hochstenbach) and [Rosemie Callewaert
-](https://twitter.com/rcallewaert) says library "discovery systems should focus more on delivery".  I agree - completely - and would like to describe some of the work I've been a part of recently that focuses on delivery of library content. 
+](https://twitter.com/rcallewaert) voiced the opinion that library "discovery systems should focus more on delivery".  I agree - completely - and would like to describe some of the work I've been a part of recently that focuses on delivery of library content. 
 
 At the Brown University Library, we have recently taken steps to improve the delivery of journal articles to library users.  We call the project easyArticle[^code].  When a user clicks on the 'Findit @Brown' link in various databases (including Google Scholar) or clicks the access link in our [Summon](http://www.serialssolutions.com/en/services/summon/) [front-end](http://library.brown.edu/find/Summon/Search?lookfor=learning+to+use+word+processors&type=AllFields&filter[]=holdingsOnly%3A%22false%22&view=list), she is routed through this system.  
 

@@ -66,7 +66,7 @@ div.toc ul li ul li a {
 	font-weight: normal;
 }
 
-h1 {
+#header {
 	/*font-family: Georgia, "Times New Roman", Times, serif;*/
 	border-bottom:1px solid #333333;
 	display:block;
@@ -81,25 +81,8 @@ h1 {
 	font-weight: normal;
 }
 
-h1 a {color: #222;}
-h1 a:hover {text-decoration: underline; color: blue;}
-
-h2 {
-	margin: 0;
-	padding: 0;
-	font-size: 1em;
-	display: inline;
-	padding-bottom: 2em;
-}
-
-h4 {
-	margin:0;
-	padding:0;
-	margin-top: 1em;
-	margin-bottom: 1em;
-}
-
-h5 {font-weight: normal;}
+#header a {color: #222;}
+#header a:hover {text-decoration: underline; color: blue;}
 
 p {
 	margin:0;
@@ -154,5 +137,9 @@ code {font-size: 16px;}
 	margin-left: 3em;
 }
 
+
+.inset {
+	margin-left: 1em;
+}
 
 

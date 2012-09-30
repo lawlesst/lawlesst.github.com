@@ -97,7 +97,7 @@ for directory in src_dirs:
         field_label = ''
         title = ''
     #build the markdown
-    content = markdown.markdown(unicode(txt, errors='ignore'), extensions=['toc'])
+    content = markdown.markdown(unicode(txt, errors='ignore'), extensions=['toc', 'footnotes'])
     #add the date for notebook pages
     if d == NOTEBOOK_DIR:
       html = template.replace('{{date}}', str_post_date)
