@@ -63,7 +63,7 @@ http://www.w3.org/2000/01/rdf-schema#
 ~~~~
 
 #### Performing SPARQL queries
-This example is closer to the operation of thing you might want to perform.  It executes a SPARQL select query on the Vivo model.  
+This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the Vivo model.  
 ~~~~{.python}
 from jnius import autoclass
 
