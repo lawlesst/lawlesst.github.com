@@ -13,9 +13,9 @@ Here's a quick list of operations on the Vivo model that we would like to be abl
 
 A [recent post](http://news.ycombinator.com/item?id=4407624) on Hacker News pointed me to a project called [Pyjnius](http://pyjnius.readthedocs.org/en/latest/index.html), which is "a Python library for accessing Java classes."  
 
-For the last couple of weeks, we have been using Pyjnius, with pretty good results.  We are able to write our ingestion scripts in Python, using [RDFLib](http://rdflib.readthedocs.org/en/latest/index.html), but still use the Jena and Vivo harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  
+For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using [RDFLib](http://rdflib.readthedocs.org/en/latest/index.html), but still use the Jena and Vivo harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  
 
-I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case Vivo).  This [Gist](https://gist.github.com/3829194) contains some code that we are using in Vivo data loading scripts.  We are just beginning to explore the [Vivo harvester](https://github.com/vivo-project/VIVO-Harvester) in detail and hope to take fuller advantage of it moving forward.
+I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case Vivo).  This [Gist](https://gist.github.com/3829194) contains code that we are using in Vivo data loading scripts.  We are just beginning to explore the [Vivo harvester](https://github.com/vivo-project/VIVO-Harvester) in detail and hope to take fuller advantage of it moving forward.
 
 If you are interested in Pyjnius + Jena or Vivo, leave a note and we can discuss other uses for this approach.  
 
