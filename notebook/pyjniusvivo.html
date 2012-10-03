@@ -4,7 +4,7 @@
  <META http-equiv="Content-Type" content="text/html; charset=utf-8">
  <META name="Author" content="Ted Lawless">
      <title>
-       Ted Lawless  -- Using Python and Pyjinus to connect to Jena models
+       Ted Lawless  -- Using Python and Pyjnius to connect to Jena models
      </title>
 	 <link rel="stylesheet" type="text/css" href="../media/style.css">
    <link rel="stylesheet" href="http://yandex.st/highlightjs/7.2/styles/default.min.css">
@@ -24,7 +24,7 @@
     </script>
    </head>
    <body>
-   <div id="header">Ted Lawless  -- Using Python and Pyjinus to connect to Jena models</div>
+   <div id="header">Ted Lawless  -- Using Python and Pyjnius to connect to Jena models</div>
    <div id="main">
     <pre>10-03-12</pre>
     <p>At <a href="http://library.brown.edu/">work</a>, Im loading data into <a href="http://vivoweb.org/">Vivo</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The Vivo web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current Vivo release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the Vivo codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.  <br />
@@ -39,12 +39,12 @@
 <li>delete RDF created with processing scripts.<br />
 </li>
 </ul>
-<p>A <a href="http://news.ycombinator.com/item?id=4407624">recent post</a> on Hacker News pointed me to a project called <a href="http://pyjnius.readthedocs.org/en/latest/index.html">Pyjinius</a>, which is "a Python library for accessing Java classes."<br />
+<p>A <a href="http://news.ycombinator.com/item?id=4407624">recent post</a> on Hacker News pointed me to a project called <a href="http://pyjnius.readthedocs.org/en/latest/index.html">Pyjnius</a>, which is "a Python library for accessing Java classes."<br />
 </p>
-<p>For the last couple of weeks, we have been using Pyjinius, with pretty good results.  We are able to write our ingestion scripts in Python, using <a href="http://rdflib.readthedocs.org/en/latest/index.html">RDFLib</a>, but still use the Jena and Vivo harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).<br />
+<p>For the last couple of weeks, we have been using Pyjnius, with pretty good results.  We are able to write our ingestion scripts in Python, using <a href="http://rdflib.readthedocs.org/en/latest/index.html">RDFLib</a>, but still use the Jena and Vivo harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).<br />
 </p>
-<p>I have included a couple of examples of how you might use Pyjinus to connect to a Jena database (in our case Vivo).  This <a href="https://gist.github.com/3829194">Gist</a> contains some code that we are using in Vivo data loading scripts.  We are just beginning to explore the <a href="https://github.com/vivo-project/VIVO-Harvester">Vivo harvester</a> in detail and hope to take fuller advantage of it moving forward.</p>
-<p>If you are interested in Pyjinius + Jena or Vivo, leave a note and we can discuss other uses for this approach.<br />
+<p>I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case Vivo).  This <a href="https://gist.github.com/3829194">Gist</a> contains some code that we are using in Vivo data loading scripts.  We are just beginning to explore the <a href="https://github.com/vivo-project/VIVO-Harvester">Vivo harvester</a> in detail and hope to take fuller advantage of it moving forward.</p>
+<p>If you are interested in Pyjnius + Jena or Vivo, leave a note and we can discuss other uses for this approach.<br />
 </p>
 <h3 id="example-of-connecting-to-an-existing-jena-database">Example of connecting to an existing Jena database.</h3>
 <pre><code class="python">from jnius import autoclass
