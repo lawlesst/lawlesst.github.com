@@ -21,7 +21,7 @@ If you are interested in Pyjinius + Jena or Vivo, leave a note and we can discus
 
 ### Example of connecting to an existing Jena database.  
 
-```
+~~~~{.python}
 from jnius import autoclass
 
 #Load java classes
@@ -46,10 +46,10 @@ while namespaces.hasNext():
 model.close()
 store.close()
 conn.close()
-```
+~~~~
 
 The output for a default Vivo install should look something like the following:
-```
+~~~~
 http://vitro.mannlib.cornell.edu/ns/vitro/public#
 http://www.w3.org/1999/02/22-rdf-syntax-ns#
 http://purl.org/NET/c4dm/event.owl#
@@ -60,11 +60,11 @@ http://purl.org/dc/terms/
 http://vivoweb.org/ontology/core#
 http://vitro.mannlib.cornell.edu/ns/vitro/0.7#
 http://www.w3.org/2000/01/rdf-schema#
-```
+~~~~
 
 #### Performing SPARQL queries
 This example is closer to the operation of thing you might want to perform.  It executes a SPARQL select query on the Vivo model.  
-```
+~~~~{.python}
 from jnius import autoclass
 
 QueryFactory = autoclass('com.hp.hpl.jena.query.QueryFactory')
@@ -110,12 +110,12 @@ qset.close()
 model.close()
 store.close()
 conn.close()
-```
+~~~~
 
 #### Pyjnius Installation 
-The [installation instructions](http://pyjnius.readthedocs.org/en/latest/installation.html) for Pyjnius are pretty straightforward.  I would recommend installing it within a [virtualenv](http://pypi.python.org/pypi/virtualenv) environment.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a [JDK](http://en.wikipedia.org/wiki/Java_Development_Kit) installed. You will also want to make sure your [classpath](http://en.wikipedia.org/wiki/Classpath_(Java)) is set if you want to use external libraries.  
+The [installation instructions](http://pyjnius.readthedocs.org/en/latest/installation.html) for Pyjnius are pretty straightforward.  I would recommend installing it with [virtualenv](http://pypi.python.org/pypi/virtualenv).  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a [JDK](http://en.wikipedia.org/wiki/Java_Development_Kit) installed. You will also want to make sure your [classpath](http://en.wikipedia.org/wiki/Classpath_(Java)) is set if you want to use external libraries.  
 
-```
+~~~~
 vagrant@lucid32:~$ mkdir pyjnius-project
 vagrant@lucid32:~$ cd pyjnius-project/
 vagrant@lucid32:~/pyjnius-project$ virtualenv venv
@@ -149,4 +149,4 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> stack.pop()
 'hello'
 >>> exit()
-```
+~~~~
