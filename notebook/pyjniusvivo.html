@@ -26,7 +26,7 @@
    <body>
    <div id="header">Ted Lawless  -- Using Python and Pyjinus to connect to Jena models</div>
    <div id="main">
-    <pre>09-30-12</pre>
+    <pre>10-03-12</pre>
     <p>At <a href="http://library.brown.edu/">work</a>, Im loading data into <a href="http://vivoweb.org/">Vivo</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The Vivo web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current Vivo release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the Vivo codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.  <br />
 </p>
 <p>Here's a quick list of operations on the Vivo model that we would like to be able perform via ingestion scripts:</p>
@@ -136,7 +136,7 @@ conn.close()
 </code></pre>
 
 <h4 id="pyjnius-installation">Pyjnius Installation</h4>
-<p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it within a <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a> environment.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.<br />
+<p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it with <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.<br />
 </p>
 <pre><code>vagrant@lucid32:~$ mkdir pyjnius-project
 vagrant@lucid32:~$ cd pyjnius-project/

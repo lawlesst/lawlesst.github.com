@@ -1,5 +1,5 @@
 title:Using Python and Pyjinus to connect to Jena models
-date:09-30-12
+date:10-03-12
 ----
 
 At [work](http://library.brown.edu/), I’m loading data into [Vivo](http://vivoweb.org/), an application built with the [Jena Framework](http://jena.apache.org/).  The Vivo web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current Vivo release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the Vivo codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.    
