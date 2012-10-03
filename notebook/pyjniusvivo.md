@@ -2,7 +2,7 @@ title:Using Python and Pyjinus to connect to Jena models
 date:09-30-12
 ----
 
-At [work](http://library.brown.edu/), I’m loading data into [Vivo](http://vivoweb.org/), an appplication built with the [Jena Framework](http://jena.apache.org/) for building Semantic Web applications.  The Vivo web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current Vivo release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the Vivo codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.    
+At [work](http://library.brown.edu/), I’m loading data into [Vivo](http://vivoweb.org/), an application built with the [Jena Framework](http://jena.apache.org/).  The Vivo web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current Vivo release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the Vivo codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.    
 
 Here's a quick list of operations on the Vivo model that we would like to be able perform via ingestion scripts:
 
@@ -63,7 +63,7 @@ http://www.w3.org/2000/01/rdf-schema#
 ```
 
 #### Performing SPARQL queries
-This example is closer to the type of thing you might want to perform.  It executes a SPARQL select query on the Vivo model.  
+This example is closer to the operation of thing you might want to perform.  It executes a SPARQL select query on the Vivo model.  
 ```
 from jnius import autoclass
 
@@ -113,7 +113,7 @@ conn.close()
 ```
 
 #### Pyjnius Installation 
-The [installation instructions](http://pyjnius.readthedocs.org/en/latest/installation.html) for Pyjnius are pretty straightforward.  I would recommend installing it within a [virtualenv](http://pypi.python.org/pypi/virtualenv) environment.  These are the installation steps an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a [JDK](http://en.wikipedia.org/wiki/Java_Development_Kit) installed. You will also want to make sure your [classpath](http://en.wikipedia.org/wiki/Classpath_(Java)) is set if you want to use external libraries.  
+The [installation instructions](http://pyjnius.readthedocs.org/en/latest/installation.html) for Pyjnius are pretty straightforward.  I would recommend installing it within a [virtualenv](http://pypi.python.org/pypi/virtualenv) environment.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a [JDK](http://en.wikipedia.org/wiki/Java_Development_Kit) installed. You will also want to make sure your [classpath](http://en.wikipedia.org/wiki/Classpath_(Java)) is set if you want to use external libraries.  
 
 ```
 vagrant@lucid32:~$ mkdir pyjnius-project
