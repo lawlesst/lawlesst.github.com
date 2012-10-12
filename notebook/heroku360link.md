@@ -26,4 +26,4 @@ The app is running on Heroku and the code is on [Github](https://github.com/lawl
 
 For more details about working with the API, Daniel Talsky did a nice job of [explaining the API](http://journal.code4lib.org/articles/108) in Issue 4, 2008  of the Code4Lib Journal.    
 
-At Brown we have seem some performance issues with the API, particularly with Pubmed ID lookups, but these issues are also present in the default interface too.  Overall it's been quite rewarding to have control over the link resolver interface and to dive in and add new features that make it easier for patrons to get to library content.  
+At Brown we have seen some performance issues with the API, particularly with Pubmed ID lookups, but these issues are also present in the default interface too.  Overall it's been quite rewarding to have control over the link resolver interface and to dive in and add new features that make it easier for patrons to get to library content.  
