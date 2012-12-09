@@ -1,0 +1,1 @@
+Occassionally I will write about my experience with various projects.  Below is a list of those writings.  If you would like to speak about any of these topics, please contact me by leaving a comment on one of the articles below or by sending an email lawlesst at gmail dot com.  

@@ -84,9 +84,9 @@ posts = []
 for directory in src_dirs:
   sources = glob.glob('%s/*.md' % directory)
   for src_file in sources:
-    if src_file == 'index.md':
-      continue
     d, fname = src_file.split(os.path.sep)
+    if fname == 'index.md':
+      continue
     html_fname = fname.replace('.md', '.html')
     print>>sys.stderr, d, fname
     txt = open(src_file).read()
@@ -126,19 +126,14 @@ for directory in src_dirs:
     #set the content
     html = html.replace('{{content}}', content)
 
-    if d == NOTEBOOK_DIR:
+    #write out to file.
+    out_file = '%s/%s' % (directory, html_fname)
+    
+    if (d == NOTEBOOK_DIR):
       #add disqus
       html += DISQUS
       posts.append((title, post_date, html_fname))
-
-    #write out to file.
-    out_file = '%s/%s' % (directory, html_fname)
-    f = open(out_file, 'w')
-    f.write(html)
-    f.close()
-
-    #store notebook files for rss
-    if d == NOTEBOOK_DIR:
+      #store notebook files for rss
       link = "%s/%s" % (BASE_URL, out_file)
       f = MyRSSItem(
         title = title,
@@ -151,6 +146,8 @@ for directory in src_dirs:
       )
       feed.append(f)
 
+    with open(out_file, 'w') as f:
+      f.write(html)
 
 #Generate the feed.
 rss = PyRSS2Gen.RSS2(
@@ -185,5 +182,28 @@ with open('index.md') as index_file:
 html += TWITTER
 with open('index.html', 'w') as out_file:
   out_file.write(html)
+
+
+#Add a very similar page as notebook/index.html
+post_index = "<div id=\"post-index\"><h3>Notebook</h3><ul>"
+post_item = "<li><a href=\"./%s\">%s</a>, <span class=\"index-date\">%s</span></li>"
+sp = sorted(posts, key=lambda post: post[1], reverse=True)
+for title, date, fname in sp:
+  str_post_date = datetime.datetime.strftime(date, "%m-%d-%y")
+  post_index += post_item % (fname, title, str_post_date)
+
+#Prep template by removing date and pre tags
+html = template.replace('{{date}}', '').replace('<pre></pre>', '').replace('{{title}}', '')
+with open('notebook/index.md') as index_file:
+  #build the markdown
+  content = build_content(index_file.read())
+  html += post_index + '</ul></div>'
+  html = html.replace('{{content}}', content)
+
+html += TWITTER
+with open('notebook/index.html', 'w') as out_file:
+  out_file.write(html)
+
+
 
 
