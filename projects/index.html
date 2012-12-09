@@ -4,11 +4,9 @@
  <META http-equiv="Content-Type" content="text/html; charset=utf-8">
  <META name="Author" content="Ted Lawless">
      <title>
-       Ted Lawless  -- Projects
+       Ted Lawless Projects
      </title>
 	 <link rel="stylesheet" type="text/css" href="../media/style.css">
-   <link rel="stylesheet" href="http://yandex.st/highlightjs/7.2/styles/default.min.css">
-   <script src="http://yandex.st/highlightjs/7.2/highlight.min.js"></script>
    <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -24,8 +22,11 @@
     </script>
    </head>
    <body>
-   <div id="header">Ted Lawless  -- Projects</div>
+   <div id="header">
+        <h1><a href="./">Ted Lawless</a></h1> 
+   </div>
    <div id="main">
+    <h3>Projects</h3>  
     
     <div class="toc">
 <ul>
@@ -55,56 +56,56 @@
 </li>
 </ul>
 </div>
-<h1 id="brown-university">Brown University</h1>
-<h2 id="easyarticle">easyArticle</h2>
+<h3 id="brown-university">Brown University</h3>
+<h4 id="easyarticle">easyArticle</h4>
 <p>Developed a <a href="http://library.brown.edu/easyarticle/get/eaT/">new link-resolver front end</a> to provide quick and easy access to library collections.  Uses various web APIs, including 360Link from Serials Solutions, Mendeley, JSTOR, and Microsoft Academic Search, to pull citation and access information as well as article abstracts and citing articles.  Wrote code to place requests in ILLiad, the library interlibrary loan system, on behalf of the user so that articles not in the librarys collection can be requested with one-click.  Developed export routine and indexing process to allow library print holdings to be available via OpenURL.<br />
 </p>
-<h2 id="vufind-and-summon">Vufind and Summon</h2>
+<h4 id="vufind-and-summon">Vufind and Summon</h4>
 <p>Customized and implemented the open-source <a href="http://library.brown.edu/">library search</a> front-end Vufind.  Developed code to index multiple sets of local content - digital collections, research guides, student dissertations - and integrated that content with standard library catalog data.  Developed record drivers to allow for custom display of various content types.  Developed export scripts for ILS and local repository systems to keep index up-to-date.  Customized the <a href="http://lucene.apache.org/solr/">Apache Solr</a> schema to meet the librarys needs.  The project won a university-wide staff innovation award.<br />
 </p>
-<h2 id="the-minassian-collection-of-quranic-manuscripts">The Minassian Collection of Quranic Manuscripts</h2>
+<h4 id="the-minassian-collection-of-quranic-manuscripts">The Minassian Collection of Quranic Manuscripts</h4>
 <p>Ingested metadata and raw images for ancient Quranic manuscripts into the Brown Digital Repository.  Wrote scripts to create derivative images for access copies.  Worked with curator and metadata specialists to index MODS metadata in Apache Solr for <a href="http://library.brown.edu/cds/projects/quran">public search and browsing</a> via a Django web application.  Implemented a sitemap to maximize the collections presence in search engines. </p>
-<h2 id="library-accessions-and-cataloging-statistical-reporting-database">Library accessions and cataloging statistical reporting database</h2>
+<h4 id="library-accessions-and-cataloging-statistical-reporting-database">Library accessions and cataloging statistical reporting database</h4>
 <p>Worked with library departmental managers to develop a staff database to track accessions and cataloging activity in the library collections.  Coded custom logic for parsing MARC records and tabulating various statistical counts.  Developed ILS export routines to update the statistical database daily.  Implemented charts and CSV downloads of data to assist staff with analysis.<br />
 </p>
-<h2 id="book-locator">Book locator</h2>
+<h4 id="book-locator">Book locator</h4>
 <p>Rewrote an existing application that provides users with a <a href="http://library.brown.edu/find/Record/b5863423">specific floor and aisle location</a> for a given item in the library.  Included a web service that supports client-side integration so that the service can be easily integrated into <a href="http://library.brown.edu/easyarticle/borrow/get/BRj/">other sites</a>.  This system includes an administrative interface that allows library staff to maintain the database of call number locations.  This project was presented at the Innovative Interfaces Users Group meeting and shared the <a href="https://bitbucket.org/bul/book-locator/overview">code</a> publicly.<br />
 </p>
-<h2 id="new-titles-at-the-library">New Titles at the library</h2>
+<h4 id="new-titles-at-the-library">New Titles at the library</h4>
 <p>Developed a Django-based, <a href="http://lucene.apache.org/solr/">Apache Solr</a> powered facet <a href="http://library.brown.edu/titles">search application</a> that highlights recent acquisitions in the library collections.  Modified and extended an open-source code base, <a href="http://code.google.com/p/kochief/">Kochief</a>.  Developed, in conjunction with technical services librarians, a customized MARC record parsing routine.  Implemented and adapted a <a href="https://github.com/mjgiarlo/library-callnumber-lc">Library of Congress call number normalization</a> process that allows subject librarians to assign titles to university disciplines based off of the assigned call number.<br />
 </p>
-<h2 id="repository-ingestion-and-indexing-processeses">Repository ingestion and indexing processeses</h2>
+<h4 id="repository-ingestion-and-indexing-processeses">Repository ingestion and indexing processeses</h4>
 <p>Adapted a Modified and maintained a complex set of Perl scripts that modify metadata and manipulate images for ingestion in to the librarys digital repository. <br />
 </p>
-<h2 id="time-off-recording-system">Time-off Recording System</h2>
+<h4 id="time-off-recording-system">Time-off Recording System</h4>
 <p>Developed a Django application to allow staff and supervisors to manage vacation and sick time.  Built Javascript based timesheet that keeps a running total of staff.  Integrated external databases with organizational chart into local system to track and manage staff and supervisory relationships.  In coordination with Human Resources, developed business logic to handle university policies.<br />
 </p>
-<h1 id="columbia-law-school">Columbia Law School</h1>
-<h2 id="research-guides">Research Guides</h2>
+<h3 id="columbia-law-school">Columbia Law School</h3>
+<h4 id="research-guides">Research Guides</h4>
 <p>Evaluated and implemented new content management system for <a href="http://library.law.columbia.edu/guides An_Introduction_to_African_Legal_Resources">library research guides</a>.  Developed customized theme to match institutional web presence.  Developed workflow for converting existing documents to new system and trained student to convert the guides.  Installed development and live versions of CMS (Mediawiki). </p>
-<h2 id="hathi-trust-and-open-library">Hathi Trust and Open Library</h2>
+<h4 id="hathi-trust-and-open-library">Hathi Trust and Open Library</h4>
 <p>Using APIs provided by the Hathi Trust and the Open Library, inserts 
 links to full text public domain titles in <a href="http://pegasus.law.columbia.edu/record=b428691">bibliographic records</a>.  Relies completely on the APIs.  Requires no changes to the existing <a href="http://pegasus.law.columbia.edu/record=b309402">bibliographic record</a>.  Holdings are identified using the OCLC number.  A real time query is sent to the APIs as the page loads.  If the item isn't in the public domain, no link is displayed.<br />
 </p>
-<h2 id="offsite-request-form">Offsite request form</h2>
+<h4 id="offsite-request-form">Offsite request form</h4>
 <p>Implemented a simplified and less error-prone <a href="http://pegasus.law.columbia.edu/record=b609702">request process</a> for titles located in the library's offsite storage facility.  A request link is inserted next to the item barcode and patrons simply provide contact information.  Javascript transfers the necessary metadata from the record screen to the record request form.  Uses the <a href="http://jquery.com/">jQuery</a> Javascript library.</p>
-<h2 id="text-a-call-number">Text a call number</h2>
+<h4 id="text-a-call-number">Text a call number</h4>
 <p>A Python-based web utility that allows patrons to <a href="http://pegasus.law.columbia.edu/record=b480398">text a call number and location</a> to mobile phones.  Retrieves bibliographic information for the title using the <a href="http://code.google.com/p/majax2/">Majax</a> library from Virginia Tech.<br />
 </p>
-<h2 id="e-resources-web-page">E-resources web page</h2>
+<h4 id="e-resources-web-page">E-resources web page</h4>
 <p>Developed new layout and presentation for <a href="http://library.law.columbia.edu/eresources/">electronic resources and database web page</a>.  Users are allowed to filter results by area of law.  Online listing is updated by a nightly Python script that pulls data directly from the library's ERM system.  Uses the <a href="http://simile-widgets.org/exhibit/">Exhibit</a> data presentation tools originally developed at MIT.</p>
-<h2 id="new-books-list">New books list</h2>
+<h4 id="new-books-list">New books list</h4>
 <p>Developed a more automated routine to display monthly lists of <a href="http://library.law.columbia.edu/newbooks/april2010.html">new acquisitions</a>.
 Allows users to focuses on titles in particular subject areas or jurisdictions. 
 Uses information exported from the ILS to determine which titles should appear on the list and assigns a jurisdiction based on call number.  Also uses <a href="http://simile-widgets.org/exhibit/">Exhibit</a> for the presentation.</p>
-<h2 id="electronic-bookplates">Electronic bookplates</h2>
+<h4 id="electronic-bookplates">Electronic bookplates</h4>
 <p>An <a href="http://pegasus.law.columbia.edu/record=b730730">electronic form</a> of a traditional bookplate recognizing donated materials.  The tool inserts the plate as the page loads using a local note in the bibliographic record.  Also uses <a href="http://jquery.com/">jQuery</a>.</p>
-<h2 id="staff-wiki">Staff Wiki</h2>
+<h4 id="staff-wiki">Staff Wiki</h4>
 <p>Installed and manage a staff wiki for storing documentation, library procedures and guidelines.  Serves as the library's intranet.  Uses open-source Mediawiki platform.  Integrated with institutional LDAP service for ease of use.  Implemented automated backup routines and developed custom skin/theme.</p>
-<h2 id="batch-record-retrieval">Batch record retrieval</h2>
+<h4 id="batch-record-retrieval">Batch record retrieval</h4>
 <p>Developed an ordering and processing routine that allows the library to automatically download bibliographic records, or 'copy cataloging'.  Uses a customized Z39.50 client written in Python.  Records are selected based
 on library defined rules for record retrieval.</p>
-<h2 id="custom-programming-for-technical-services">Custom programming for technical services</h2>
+<h4 id="custom-programming-for-technical-services">Custom programming for technical services</h4>
 <p>Code various scripts to assist technical service staff with day-to-day functions.</p>
 <ul>
 <li>Examples: <ul>

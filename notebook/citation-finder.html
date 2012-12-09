@@ -4,11 +4,9 @@
  <META http-equiv="Content-Type" content="text/html; charset=utf-8">
  <META name="Author" content="Ted Lawless">
      <title>
-       Ted Lawless  -- Free text citations to library content
+       Ted Lawless Free text citations to library content
      </title>
 	 <link rel="stylesheet" type="text/css" href="../media/style.css">
-   <link rel="stylesheet" href="http://yandex.st/highlightjs/7.2/styles/default.min.css">
-   <script src="http://yandex.st/highlightjs/7.2/highlight.min.js"></script>
    <script type="text/javascript">
 
       var _gaq = _gaq || [];
@@ -24,10 +22,13 @@
     </script>
    </head>
    <body>
-   <div id="header">Ted Lawless  -- Free text citations to library content</div>
+   <div id="header">
+        <h1><a href="./">Ted Lawless</a></h1> 
+   </div>
    <div id="main">
+    <h3>Free text citations to library content</h3>  
     <pre>10-17-12</pre>
-    <p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind, as usual, has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
+    <p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
 <blockquote class="modern">
     Looks like they also have an API for submitting a free-form citation, and getting back matches with DOI!  Its sort of a holy grail for me to provide a service where users can paste in a free-form citation, and get to our access/delivery options.
 </blockquote>
@@ -38,12 +39,12 @@
 <p>I put together a <a href="http://sleepy-island-6218.herokuapp.com/">demo application</a> that takes input from users, sends it to the CrossRef service, and, if a DOI is found, sends that DOI off to the <a href="http://www.serialssolutions.com/en/services/360-link">360Link</a> link resolver API to find a full text link in a library.  The screencast below shows two examples. </p>
 <iframe src="http://www.screenr.com/embed/itV8" width="650" height="396" frameborder="0"></iframe>
 
-<p>The code for the demo is <a href="https://github.com/lawlesst/citation-finder">available on Github</a>.  The server side code is minimal and built with <a href="http://flask.pocoo.org/">Flask</a>, the Python microframework for building web applications.  The bulk of the action takes place on the client side, using jQuery and jQuery templates.<br />
+<p>The code for the demo is <a href="https://github.com/lawlesst/citation-finder">available on Github</a>.  The server side code is minimal and built with <a href="http://flask.pocoo.org/">Flask</a>, the Python microframework for building web applications.  On the client side, jQuery and jQuery templates pull in the data and render it to the user.<br />
 </p>
-<h4 id="recapfuture-work">Recap/future work</h4>
+<h4 id="recap-future-directions">Recap &amp; future directions</h4>
 <p>The user interface and interaction could certainly stand for some improvement.  The citations that are resolvable are limited to what's in CrossRef's database, see their list of <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">disclaimers</a>.  But - this work indicates building a service like this for library users is feasible and will be increasingly more valuable as services like these develop.<br />
 </p>
-<p>CrossRef apparently <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">doesn't parse</a> the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be nice to try a similar approach with the <a href="http://api.summon.serialssolutions.com/">Summon API</a> and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.<br />
+<p>CrossRef apparently <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">doesn't parse</a> the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be worthwhile to try a similar approach with the <a href="http://api.summon.serialssolutions.com/">Summon API</a> and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.<br />
 </p>
 <h4 id="examples">Examples</h4>
 <p>If you are short on citations to try, here are a few I pulled from a <a href="http://repository.library.brown.edu:8080/fedora/objects/bdr:160/datastreams/PDF/content">dissertation</a>.  The third citation is to a working paper and doesn't resolve to a DOI via CrossRef so the interface offers a link to a search in Google Scholar, which does return a <a href="http://neeo.univ-tlse1.fr/294/1/collard_dellas.pdf">PDF to the paper</a>.<br />

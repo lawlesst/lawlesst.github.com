@@ -15,9 +15,9 @@ I put together a [demo application](http://sleepy-island-6218.herokuapp.com/) th
 
 <iframe src="http://www.screenr.com/embed/itV8" width="650" height="396" frameborder="0"></iframe>
 
-The code for the demo is [available on Github](https://github.com/lawlesst/citation-finder).  The server side code is minimal and built with [Flask](http://flask.pocoo.org/), the Python microframework for building web applications.  The bulk of the action takes place on the client side, using jQuery and jQuery templates.  
+The code for the demo is [available on Github](https://github.com/lawlesst/citation-finder).  The server side code is minimal and built with [Flask](http://flask.pocoo.org/), the Python microframework for building web applications.  On the client side, jQuery and jQuery templates pull in the data and render it to the user.  
 
-####Recap/future work
+####Recap & future directions
 The user interface and interaction could certainly stand for some improvement.  The citations that are resolvable are limited to what's in CrossRef's database, see their list of [disclaimers](http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html).  But - this work indicates building a service like this for library users is feasible and will be increasingly more valuable as services like these develop.  
 
 CrossRef apparently [doesn't parse](http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html) the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be worthwhile to try a similar approach with the [Summon API](http://api.summon.serialssolutions.com/) and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.  

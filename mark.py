@@ -6,6 +6,7 @@ import fnmatch
 import glob
 import os
 import re
+import shutil
 import sys
 import time
 
@@ -73,12 +74,20 @@ class MyRSSItem(RSSItem):
     handler.endElement("content:encoded")
     #_element(handler, "content:encoded", content)
 
+def build_content(txt):
+  #build the markdown
+  content = markdown.markdown(unicode(txt, errors='ignore'), extensions=['toc', 'footnotes', 'fenced_code'])
+  return content
 
+posts = []
 #build the html
 for directory in src_dirs:
   sources = glob.glob('%s/*.md' % directory)
   for src_file in sources:
+    if src_file == 'index.md':
+      continue
     d, fname = src_file.split(os.path.sep)
+    html_fname = fname.replace('.md', '.html')
     print>>sys.stderr, d, fname
     txt = open(src_file).read()
     #Get the title marker
@@ -90,14 +99,13 @@ for directory in src_dirs:
       title_marker = '%s%s' % (title_field, title)
       post_date = datetime.datetime.strptime(post_date.strip(), "%m-%d-%y")   
       str_post_date = datetime.datetime.strftime(post_date, "%m-%d-%y")
-      print post_date
       #remove meta info
       txt = txt[match_end:]
     else: 
         field_label = ''
         title = ''
     #build the markdown
-    content = markdown.markdown(unicode(txt, errors='ignore'), extensions=['toc', 'footnotes', 'fenced_code'])
+    content = build_content(txt)
     #add the date for notebook pages
     if d == NOTEBOOK_DIR:
       html = template.replace('{{date}}', str_post_date)
@@ -109,15 +117,11 @@ for directory in src_dirs:
     if title == "":
       html = html.replace('{{title}}', '')
     else:
-      html = html.replace('{{title}}', ' -- ' + title)
-      #for non notebook pages don't add the title to the h1
-      #if d == NOTEBOOK_DIR:
+      html = html.replace('{{title}}', title)
 
     #if we are in the root directory, adjust the media path
     if d == '.':
       html = html.replace('../media', './media')
-      if fname == 'index.md':
-        content += TWITTER
 
     #set the content
     html = html.replace('{{content}}', content)
@@ -125,9 +129,10 @@ for directory in src_dirs:
     if d == NOTEBOOK_DIR:
       #add disqus
       html += DISQUS
+      posts.append((title, post_date, html_fname))
 
     #write out to file.
-    out_file = '%s/%s' % (directory, fname.replace('.md', '.html'))
+    out_file = '%s/%s' % (directory, html_fname)
     f = open(out_file, 'w')
     f.write(html)
     f.close()
@@ -155,5 +160,30 @@ rss = PyRSS2Gen.RSS2(
     lastBuildDate = datetime.datetime.utcnow(),
     items = feed
     )
-rss.write_xml(open("feed.rss", "w"))
+with open('feed.rss', 'w') as feed_file:
+  rss.write_xml(feed_file)
+
+#Generate the index page
+#Sort posts by date
+post_index = "<div id=\"post-index\"><h3>Notebook</h3><ul>"
+post_item = "<li><a href=\"./notebook/%s\">%s</a>, <span class=\"index-date\">%s</span></li>"
+sp = sorted(posts, key=lambda post: post[1], reverse=True)
+for title, date, fname in sp:
+  print title, date
+  str_post_date = datetime.datetime.strftime(date, "%m-%d-%y")
+  post_index += post_item % (fname, title, str_post_date)
+
+#Prep template by removing date and pre tags
+html = template.replace('{{date}}', '').replace('<pre></pre>', '').replace('{{title}}', '')
+with open('index.md') as index_file:
+  #build the markdown
+  content = build_content(index_file.read())
+  html += post_index + '</ul></div>'
+  html = html.replace('../media', './media')
+  html = html.replace('{{content}}', content)
+
+html += TWITTER
+with open('index.html', 'w') as out_file:
+  out_file.write(html)
+
 

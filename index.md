@@ -1,1 +1,1 @@
-I work with software in libraries. 
+I work with software in libraries.  I am interested in making library services more efficient and convenient for researchers.  I am currently involved with [VuFind](http://vufind.org), [VIVO](http://vivoweb.org), and a locally developed link resolver system called [easyArticle](http://lawlesst.github.com/notebook/delivery.html).  If you would like to speak about any of these topics, please contact me by leaving a comment on one of the articles below or by sending an email lawlesst at gmail dot com.  
