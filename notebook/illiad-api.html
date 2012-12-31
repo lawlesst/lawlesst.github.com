@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+ <head>
+ <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <META name="Author" content="Ted Lawless">
+     <title>
+       Ted Lawless  A Python module for placing requests in ILLiad 
+     </title>
+	 <link rel="stylesheet" type="text/css" href="../media/style.css">
+   <link rel="stylesheet" href="http://yandex.st/highlightjs/7.2/styles/default.min.css">
+   <script src="http://yandex.st/highlightjs/7.2/highlight.min.js"></script>
+   <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2790298-5']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+   </head>
+   <body>
+   <div id="header">
+        <h1><a href="../">Ted Lawless</a></h1> 
+   </div>
+   <div id="main">
+    <h3> A Python module for placing requests in ILLiad </h3>  
+    <pre>12-31-12</pre>
+    <blockquote>
+<p>This post describes a <a href="https://github.com/lawlesst/illiad-api">Python module</a> for creating requests in <a href="http://www.atlas-sys.com/illiad/">ILLiad</a>, the interlibrary loan software used in libraries.  </p>
+</blockquote>
+<p>Many libraries use <a href="http://www.atlas-sys.com/illiad/">ILLiad</a> as the software system for document delivery and interlibrary loan services.  As a developer working with this system, you might find a need to create ILLiad requests programmatically from another system.  This other system could be your library catalog or OpenURL resolver or just a standalone script that processes batches of requests.  However ILLiad doesn't support an API for creating requests.  In response to this, at <a href="http://library.brown.edu">Brown University Libraries</a> we have developed a Python module that serves as a programming interface to ILLiad.  The code for the module is <a href="https://github.com/lawlesst/illiad-api">available on Github</a> for downloading, forking, and inspection.  It relies on two Python libraries, <a href="http://docs.python-requests.org/en/latest/">requests</a> for creating HTTP requests and <a href="http://packages.python.org/pyquery/">pyquery</a>, which provides a nice syntax for parsing HTML documents.</p>
+<h3 id="request-workflow">Request workflow</h3>
+<p>This is the basic worfklow for the module:</p>
+<ul>
+<li>authenticate or verify the user in your external system.  </li>
+<li>establish an ILLiad session on behalf of the user.  Retain the returned session cookie for further requests.</li>
+<li>pass an OpenURL to ILLiad for the item the user is requesting.</li>
+<li>parse the response, which is an HTML form with populated values from the OpenURL.  If you were doing this manually from the ILLiad user interface, this would be the pre-populated form that the user sees and either enhances with more information or clicks submit to process.  </li>
+<li>post the values returned by the step above to the ILLiad server. </li>
+<li>parse the response.  This will response will contain either the transaction number for the request or an error message describing what when wrong.  </li>
+<li>log the user out.    </li>
+</ul>
+<h3 id="example-in-code">Example in code</h3>
+<p><div style="width: 800px; margin: 1em; padding:1em;">
+<script src="https://gist.github.com/4422229.js"></script>
+</div></p>
+<h3 id="how-does-the-module-work">How does the module work?</h3>
+<p>ILLiad ships with a set of web forms that will respond to <a href="http://en.wikipedia.org/wiki/OpenURL">OpenURL</a> requests and pre-populate forms with the appropriate data.  This module will complete the ILLiad web forms and submit requests on users' behalf.  The module is made possible by opening ILLiad web pages on a user's behalf, parsing the responses, and posting values to the ILLiad server.</p>
+<p>The library does rely on screen scraping the HTML returned by the ILLiad application but experience has shown that this method is quite stable and robust enough to be used in production systems.  Versions of this library have been in place at Brown for four years or more and have processed over 10,000 user requests during the last six months.  One of the common problems encountered when relying on screen scraping to provide functionality is that the HTML can change without notice.  In this case the ILLiad software is managed by the library so the chances of it changing without notice is small.  As an extra measure to protect against unforeseen HTML changes, we have place the HTML pages that are used with this library on a different web path than the user pages (something like http://illiad.school.edu/api-pages/) so that we can update the user pages without changing the markup that this library relies on.  </p>
+<p>The module as implemented relies on the <a href="https://prometheus.atlas-sys.com/display/illiad/RemoteAuth+Authentication">RemoteAuth</a> in ILLiad.  This allows users to be authenticated via an HTTP header and can be used with systems like <a href="http://en.wikipedia.org/wiki/Shibboleth">Shibboleth</a> or <a href="http://en.wikipedia.org/wiki/Central_Authentication_Service">CAS</a>.  The module will pass the appropriate header for authentication and save the session cookie for further requests.  This eliminates the need to store the user's ILLiad credentials in a local database, which could be seen as a security risk.  If this is not a concern for your project, you could use a modified version of this library without enabling the RemoteAuth functionality.  Leave a comment below if you would like some help in getting started with that.  </p>
+<h3 id="example-in-video">Example in video</h3>
+<p>The screencast below shows an example of this library being integrated into the library's OpenURL resolver.  The user in this example authenticates with the campus Shibboleth system and places a request in ILLiad directly from the resolver interface.  There is no need to visit ILLiad to place the request.<br />
+<div style="width: 700px; margin: 1em; padding:1em;">
+<iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"></iframe>
+</div></p>
+<p>If you are interested in learning more about this project or run into problems when getting started with the library, please leave a comment below.  </p>
+   </div>
+   </body>
+ </html>
+<div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'tedlawlessnotebook'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
