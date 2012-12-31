@@ -14,7 +14,7 @@ This is the basic worfklow for the module:
  * pass an OpenURL to ILLiad for the item the user is requesting.
  * parse the response, which is an HTML form with populated values from the OpenURL.  If you were doing this manually from the ILLiad user interface, this would be the pre-populated form that the user sees and either enhances with more information or clicks submit to process.  
  * post the values returned by the step above to the ILLiad server. 
- * parse the response.  This will response will contain either an error message or the transaction number for the request.  
+ * parse the response.  This will response will contain either the transaction number for the request or an error message describing what when wrong.  
  * log the user out.    
 
 ###Example in code
@@ -27,7 +27,7 @@ ILLiad ships with a set of web forms that will respond to [OpenURL](http://en.wi
 
 The library does rely on screen scraping the HTML returned by the ILLiad application but experience has shown that this method is quite stable and robust enough to be used in production systems.  Versions of this library have been in place at Brown for four years or more and have processed over 10,000 user requests during the last six months.  One of the common problems encountered when relying on screen scraping to provide functionality is that the HTML can change without notice.  In this case the ILLiad software is managed by the library so the chances of it changing without notice is small.  As an extra measure to protect against unforeseen HTML changes, we have place the HTML pages that are used with this library on a different web path than the user pages (something like http://illiad.school.edu/api-pages/) so that we can update the user pages without changing the markup that this library relies on.  
 
-The module as implemented relies on the [RemoteAuth](https://prometheus.atlas-sys.com/display/illiad/RemoteAuth+Authentication) in ILLiad.  This allows users to be authenticated via an HTTP header and can be used with systems like [Shibboleth](http://en.wikipedia.org/wiki/Shibboleth) or [CAS](http://en.wikipedia.org/wiki/Central_Authentication_Service).  The module will pass the appropriate header for authentication and save the session cookie for further requests.  This also eliminates the need to store the user's ILLiad credentials in a local database, which could be seen as a security risk.  If this is not a concern for your project, you could use a modified version of this library without enabling the RemoteAuth functionality.  Leave a comment below if you would like some help in getting started with that.  
+The module as implemented relies on the [RemoteAuth](https://prometheus.atlas-sys.com/display/illiad/RemoteAuth+Authentication) in ILLiad.  This allows users to be authenticated via an HTTP header and can be used with systems like [Shibboleth](http://en.wikipedia.org/wiki/Shibboleth) or [CAS](http://en.wikipedia.org/wiki/Central_Authentication_Service).  The module will pass the appropriate header for authentication and save the session cookie for further requests.  This eliminates the need to store the user's ILLiad credentials in a local database, which could be seen as a security risk.  If this is not a concern for your project, you could use a modified version of this library without enabling the RemoteAuth functionality.  Leave a comment below if you would like some help in getting started with that.  
 
 ###Example in video
 The screencast below shows an example of this library being integrated into the library's OpenURL resolver.  The user in this example authenticates with the campus Shibboleth system and places a request in ILLiad directly from the resolver interface.  There is no need to visit ILLiad to place the request.  
@@ -35,4 +35,4 @@ The screencast below shows an example of this library being integrated into the 
 <iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"></iframe>
 </div>
 
-If you are interested in learning more about this project or run into problems when getting started with the library, please leave a comment below and I will get back to you.  
+If you are interested in learning more about this project or run into problems when getting started with the library, please leave a comment below.  
