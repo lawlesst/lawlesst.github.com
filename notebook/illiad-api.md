@@ -14,7 +14,7 @@ This is the basic worfklow for the module:
  * pass an OpenURL to ILLiad for the item the user is requesting.
  * parse the response, which is an HTML form with populated values from the OpenURL.  If you were doing this manually from the ILLiad user interface, this would be the pre-populated form that the user sees and either enhances with more information or clicks submit to process.  
  * post the values returned by the step above to the ILLiad server. 
- * parse the response.  This will response will contain either the transaction number for the request or an error message describing what when wrong.  
+ * parse the response.  This response will contain either the transaction number for the request or an error message describing what when wrong.  
  * log the user out.    
 
 ###Example in code
