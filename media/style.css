@@ -164,15 +164,15 @@ iframe {
 
 code {
   font-family: Menlo, monospace;
-  padding: 4px;
-  margin: 0 2px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
+  width: 700px;
+  margin: 2em;
+  margin-left: 3em;
   font-size: 12px;
-  border: 1px solid #d5e0e4;
   overflow: auto; 
-  }
+  padding: 2em;
+}
+
+
 
 div#post-index {
   	margin-left: 3em;
