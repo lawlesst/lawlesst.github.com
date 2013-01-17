@@ -139,7 +139,7 @@ print faculty.label
 
 The code below includes the snippets above and can be downloaded and run for testing.  RDFAlchemy is [available on PyPi](http://pypi.python.org/pypi/RDFAlchemy/) and also on [Github](https://github.com/gjhiggins/RDFAlchemy).  There are [other examples](https://github.com/gjhiggins/RDFAlchemy/tree/master/rdfalchemy/samples) in the Github repository that could be helpful for getting started.  
 
-For the VIVO implementation work I am doing, I creating RDFAlchemy class definitions for other VIVO classes, like InformationResources, Events, Roles, Positions, etc.  If you are interested in those, please leave a note below. 
+For the VIVO implementation work I am doing, I am creating RDFAlchemy class definitions for other VIVO classes, like InformationResources, Events, Roles, Positions, etc.  If you are interested in those, please leave a note below. 
 
 <div style="width: 800px; margin: 1em; padding:1em; font-size:1em;">
 <script src="https://gist.github.com/4429683.js"></script>
