@@ -6,7 +6,7 @@ date:01-01-12
 ### Brown University
 ## VIVO
 
-Leading the technical implementation of [VIVO](http://vivoweb.org/), a Semantic Web application that tracks and connects the activity of researchers.  Developing a Python toolkit for mapping, cleaning, and loading data from a variety of campus and third party sources.  Customizing and debugging the web application as needed.  Participating in development and implementation conference calls with other universities building and implementing VIVO.  Using RDF tools such as [Jena](http://jena.apache.org/), [SPARQL](http://en.wikipedia.org/wiki/SPARQL), [D2RQ](http://d2rq.org/), [rdflib](http://rdflib.readthedocs.org/en/latest/index.html), and RDFAlchemy](https://rdfalchemy.readthedocs.org/en/latest/). 
+Leading the technical implementation of [VIVO](http://vivoweb.org/), a Semantic Web application that tracks and connects the activity of researchers.  Developing a Python toolkit for mapping, cleaning, and loading data from a variety of campus and third party sources.  Customizing and debugging the web application as needed.  Participating in development and implementation conference calls with other universities building and implementing VIVO.  Using RDF tools such as [Jena](http://jena.apache.org/), [SPARQL](http://en.wikipedia.org/wiki/SPARQL), [D2RQ](http://d2rq.org/), [rdflib](http://rdflib.readthedocs.org/en/latest/index.html), and [RDFAlchemy](https://rdfalchemy.readthedocs.org/en/latest/). 
 
 #### easyArticle
 
