@@ -4,6 +4,10 @@ date:01-01-12
 [TOC]
 
 ### Brown University
+## VIVO
+
+Leading the technical implementation of [VIVO](http://vivoweb.org/), a Semantic Web application that tracks and connects the activity of researchers.  Developing a Python toolkit for mapping, cleaning, and loading data from a variety of campus and third party sources.  Customizing and debugging the web application as needed.  Participating in development and implementation conference calls with other universities building and implementing VIVO.  Using RDF tools such as [Jena](http://jena.apache.org/), [SPARQL](http://en.wikipedia.org/wiki/SPARQL), [D2RQ](http://d2rq.org/), [rdflib](http://rdflib.readthedocs.org/en/latest/index.html), and RDFAlchemy](https://rdfalchemy.readthedocs.org/en/latest/). 
+
 #### easyArticle
 
 Developed a [new link-resolver front end](http://library.brown.edu/easyarticle/get/eaT/) to provide quick and easy access to library collections.  Uses various web APIs, including 360Link from Serials Solutions, Mendeley, JSTOR, and Microsoft Academic Search, to pull citation and access information as well as article abstracts and citing articles.  Wrote code to place requests in ILLiad, the library interlibrary loan system, on behalf of the user so that articles not in the library’s collection can be requested with one-click.  Developed export routine and indexing process to allow library print holdings to be available via OpenURL.  
