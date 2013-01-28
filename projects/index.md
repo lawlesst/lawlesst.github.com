@@ -12,9 +12,9 @@ Leading the technical implementation of [VIVO](http://vivoweb.org/), a Semantic 
 
 Developed a [new link-resolver front end](http://library.brown.edu/easyarticle/get/eaT/) to provide quick and easy access to library collections.  Uses various web APIs, including 360Link from Serials Solutions, Mendeley, JSTOR, and Microsoft Academic Search, to pull citation and access information as well as article abstracts and citing articles.  Wrote code to place requests in ILLiad, the library interlibrary loan system, on behalf of the user so that articles not in the library’s collection can be requested with one-click.  Developed export routine and indexing process to allow library print holdings to be available via OpenURL.  
 
-#### Vufind and Summon
+#### VuFind and Summon
 
-Customized and implemented the open-source [library search](http://library.brown.edu/) front-end Vufind.  Developed code to index multiple sets of local content - digital collections, research guides, student dissertations - and integrated that content with standard library catalog data.  Developed record drivers to allow for custom display of various content types.  Developed export scripts for ILS and local repository systems to keep index up-to-date.  Customized the [Apache Solr](http://lucene.apache.org/solr/) schema to meet the library’s needs.  The project won a university-wide staff innovation award.  
+Customized and implemented the open-source [library search](http://library.brown.edu/) front-end VuFind.  Developed code to index multiple sets of local content - digital collections, research guides, student dissertations - and integrated that content with standard library catalog data.  Developed record drivers to allow for custom display of various content types.  Developed export scripts for ILS and local repository systems to keep index up-to-date.  Customized the [Apache Solr](http://lucene.apache.org/solr/) schema to meet the library’s needs.  The project won a university-wide staff innovation award.  
 
 #### The Minassian Collection of Qur’anic Manuscripts
 
