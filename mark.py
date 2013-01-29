@@ -85,7 +85,7 @@ for directory in src_dirs:
   sources = glob.glob('%s/*.md' % directory)
   for src_file in sources:
     d, fname = src_file.split(os.path.sep)
-    if fname == 'index.md':
+    if (fname == 'index.md') and (directory != 'projects'):
       continue
     html_fname = fname.replace('.md', '.html')
     print>>sys.stderr, d, fname
