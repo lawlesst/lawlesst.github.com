@@ -9,11 +9,12 @@ The examples on the Stack View website show how to pull data in from a variety o
 One way to get the data necessary for Stack View is via [Z39.50](http://en.wikipedia.org/wiki/Z39.50).  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.  
 
 <!-- stackview.css to style the stack -->
-<link rel="stylesheet" href="http://librarylab.law.harvard.edu/projects/stackview/demo/lib/jquery.stackview.css" type="text/css">
+<link rel="stylesheet" href="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.css" type="text/css">
+
  
 <!-- stackview.js and all js dependencies -->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://librarylab.law.harvard.edu/projects/stackview/demo/lib/jquery.stackview.min.js"></script>
+<script type="text/javascript" src="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.min.js"></script>
  
 <div id="stackview" title="Sample Stack View" style="margin: 2em; "></div>
     

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Tue, 19 Mar 2013 01:45:06 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Free text citations to library content</title><link>http://lawlesst.github.com/notebook/citation-finder.html</link><content:encoded><![CDATA[<p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Tue, 19 Mar 2013 01:50:07 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Free text citations to library content</title><link>http://lawlesst.github.com/notebook/citation-finder.html</link><content:encoded><![CDATA[<p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
 <blockquote class="modern">
     Looks like they also have an API for submitting a free-form citation, and getting back matches with DOI!  Its sort of a holy grail for me to provide a service where users can paste in a free-form citation, and get to our access/delivery options.
 </blockquote>
@@ -396,12 +396,12 @@ print faculty.label
 <p>One way to get the data necessary for Stack View is via <a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a>.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.  </p>
 <!-- stackview.css to style the stack -->
 
-<p><link rel="stylesheet" href="http://librarylab.law.harvard.edu/projects/stackview/demo/lib/jquery.stackview.css" type="text/css"></p>
+<p><link rel="stylesheet" href="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.css" type="text/css"></p>
 <!-- stackview.js and all js dependencies -->
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 
-<script type="text/javascript" src="http://librarylab.law.harvard.edu/projects/stackview/demo/lib/jquery.stackview.min.js"></script>
+<script type="text/javascript" src="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.min.js"></script>
 
 <div id="stackview" title="Sample Stack View" style="margin: 2em; "></div>
 
