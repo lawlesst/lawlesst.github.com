@@ -2,9 +2,9 @@ title:Using Python and Pyjnius to connect to Jena models
 date:10-03-12
 ----
 
-At [work](http://library.brown.edu/), I’m loading data into [Vivo](http://vivoweb.org/), an application built with the [Jena Framework](http://jena.apache.org/).  The Vivo web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current Vivo release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the Vivo codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.    
+At [work](http://library.brown.edu/), I’m loading data into [VIVO](http://vivoweb.org/), an application built with the [Jena Framework](http://jena.apache.org/).  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.    
 
-Here's a quick list of operations on the Vivo model that we would like to be able perform via ingestion scripts:
+Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:
 
  * generate a new, unique identifier to assign to new resources.  
  * find an existing resource in the model and return it's URI.  
@@ -13,11 +13,11 @@ Here's a quick list of operations on the Vivo model that we would like to be abl
 
 A [recent post](http://news.ycombinator.com/item?id=4407624) on Hacker News pointed me to a project called [Pyjnius](http://pyjnius.readthedocs.org/en/latest/index.html), which is "a Python library for accessing Java classes."  
 
-For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using [RDFLib](http://rdflib.readthedocs.org/en/latest/index.html), but still use the Jena and Vivo harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  
+For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using [RDFLib](http://rdflib.readthedocs.org/en/latest/index.html), but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  
 
-I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case Vivo).  This [Gist](https://gist.github.com/3829194) contains code that we are using in Vivo data loading scripts.  We are just beginning to explore the [Vivo harvester](https://github.com/vivo-project/VIVO-Harvester) in detail and hope to take fuller advantage of it moving forward.
+I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case VIVO).  This [Gist](https://gist.github.com/3829194) contains code that we are using in VIVO data loading scripts.  We are just beginning to explore the [VIVO harvester](https://github.com/vivo-project/VIVO-Harvester) in detail and hope to take fuller advantage of it moving forward.
 
-If you are interested in Pyjnius + Jena or Vivo, leave a note and we can discuss other uses for this approach.  
+If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.  
 
 ### Example of connecting to an existing Jena database.  
 
@@ -48,7 +48,7 @@ store.close()
 conn.close()
 ~~~~
 
-The output for a default Vivo install should look something like the following:
+The output for a default VIVO install should look something like the following:
 ~~~~
 http://vitro.mannlib.cornell.edu/ns/vitro/public#
 http://www.w3.org/1999/02/22-rdf-syntax-ns#
@@ -63,7 +63,7 @@ http://www.w3.org/2000/01/rdf-schema#
 ~~~~
 
 #### Performing SPARQL queries
-This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the Vivo model.  
+This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.  
 ~~~~{.python}
 from jnius import autoclass
 
