@@ -97,14 +97,11 @@ qset = QueryExecutionFactory.create(query, model)
 qexec = qset.execSelect()
 results = ResultSetFormatter.toList(qexec).listIterator()
 
-while True:
-    if results.hasNext():
-        next_result = results.next()
-        uri = next_result.get('?thing').toString()
-        label = next_result.get('?label').toString()
-        print uri, label
-    else:
-        break
+while results.hasNext():
+    next_result = results.next()
+    uri = next_result.get('?thing').toString()
+    label = next_result.get('?label').toString()
+    print uri, label
 
 qset.close()
 model.close()
