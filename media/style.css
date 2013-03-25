@@ -29,9 +29,11 @@ blockquote {
 	padding: .25em;
 }
 
-div#main {width: 85%;
+div#main {
 		margin-left: auto;
 		margin-right: auto;
+		padding: .5em;
+		max-width: 980px;
 	}
 
 div.toc {
