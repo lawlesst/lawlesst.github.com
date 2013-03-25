@@ -2,7 +2,7 @@ title:Caching VIVO profiles with ETags and mod_cache
 date:03-25-13
 ----
 
-> This document describes a proof of concept for caching [VIVO](http://www.vivoweb.org/) profiles with ETags and mod_cache.  The [code](https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py) for the filter is available on [Github](https://github.com/Brown-University-Library/vivo/tree/etag).  The use of mod_cache and ETags described here could be applied to other web applications.  
+> This document describes a proof of concept for caching [VIVO](http://www.vivoweb.org/) profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  
 
 ### The problem - page load time  
 

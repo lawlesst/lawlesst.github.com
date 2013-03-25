@@ -33,7 +33,7 @@
     <h3>Caching VIVO profiles with ETags and mod_cache</h3>  
     <pre>03-25-13</pre>
     <blockquote>
-<p>This document describes a proof of concept for caching <a href="http://www.vivoweb.org/">VIVO</a> profiles with ETags and mod_cache.  The <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">code</a> for the filter is available on <a href="https://github.com/Brown-University-Library/vivo/tree/etag">Github</a>.  The use of mod_cache and ETags described here could be applied to other web applications.  </p>
+<p>This document describes a proof of concept for caching <a href="http://www.vivoweb.org/">VIVO</a> profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  </p>
 </blockquote>
 <h3 id="the-problem-page-load-time">The problem - page load time</h3>
 <p>A recurring question in the <a href="http://www.vivoweb.org/">VIVO</a> implementation community is how sites can speed up the loading of profile pages.  As a VIVO implementation grows in size and tracks more and more scholarly activity, profile pages can be pulling in hundreds of relationships to render the page, which results in more data being retrieved from the underling <a href="http://jena.apache.org/documentation/rdf/index.html">Jena</a> <a href="http://jena.apache.org/documentation/sdb/index.html">SDB store</a> and longer page load times.  For example, a profile page for a faculty member with hundreds of publications, which isn't uncommon, can lead to multiple second page loads.  </p>
