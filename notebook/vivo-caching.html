@@ -107,13 +107,13 @@
 
 <p>A key point in this configuration is described in the <a href="http://httpd.apache.org/docs/2.2/caching.html#overview">mod_cache documentation</a>, "When content expires from the cache and is re-requested from the backend or content provider, rather than pass on the original request, Apache will use a conditional request instead."  If a page hasn't expired within mod_cache, the request will be served directly from the cache and not reach the VIVO application at all.  This might be desirable in implementations where data is updated at regular intervals.  But in implementations where self-editing of profiles will be supported, it will be necessary to frequently validate the ETag to make sure users are seeing the freshest copy of the data.  To have mod_cache generate conditional requests often, set the default expire and max expire values to something quite low - five seconds in the example above.  The page will still be served from the cache if the content hasn't changed (since the servlet filter will respond with a 304 Not Modified), but the conditional request will allow the servlet filter to verify the state of the profile before serving the cached copy. </p>
 <h3 id="summary-and-limitations">Summary and limitations</h3>
-<p>In our non-public instances of VIVO, the above configuration and code do significantly improve page rendering times for public VIVO profiles.  If a profile page is in the cache, the rendering time drops to the sub-second range that users expect.  We plan to further test this filter with <a href="http://jmeter.apache.org/">JMeter</a> to see how it performs while serving concurrent requests.<br />
+<p>In our non-public instances of VIVO, the above configuration and code do significantly improve page rendering times for VIVO profiles.  If a profile page is in the cache, the rendering time drops to the second range that users expect.  We plan to further test this filter with <a href="http://jmeter.apache.org/">JMeter</a> to see how it performs while serving concurrent requests.<br />
 </p>
 <p>There are also several limitations to consider: </p>
 <ul>
 <li>each page load will generate a (extra?) Solr request for each page load to validate and create the ETag.<br />
 </li>
-<li>each page load generates the ETag; it's not stored.  This could be addressed, as mentioned in the above email thread, by storing the ETag in the Solr document so that it could be retrieved each time rather than generated.<br />
+<li><s>each page load generates the ETag; it's not stored.  This could be addressed, as mentioned in the above email thread, by storing the ETag in the Solr document so that it could be retrieved each time rather than generated.</s> This concern has been addressed by <a href="http://lawlesst.github.com/notebook/solr-etags.html">configuring Solr</a> to generate and store document signatures. <br />
 </li>
 <li>no improvement to page load times for logged in users.  This may or may not be a problem depending on how the VIVO instance is used.<br />
 </li>
