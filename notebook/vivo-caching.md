@@ -11,7 +11,7 @@ padding:.5em;
 </style>
 <div class="clean-gray">Update - 3/29/13 - since writing this, I learned about Solr's built in support for generating signatures of document contents.  Taking advantage of this feature of Solr simplifies the servlet filter code described below and addresses one of the limitations of the caching system described below.  See the updated <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">servlet filter code</a> and the <a href="http://lawlesst.github.com/notebook/solr-etags.html">Solr configuration</a>.  The remaining steps described still apply.</div>
 
->This document describes a proof of concept for caching [VIVO](http://www.vivoweb.org/) profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  
+This document describes a proof of concept for caching [VIVO](http://www.vivoweb.org/) profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  
 
 ### The problem - page load time  
 
