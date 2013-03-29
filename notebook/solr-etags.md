@@ -23,7 +23,8 @@ This feature is nicely documented on the Solr wiki under [Deduplication](http://
        -->
        <bool name="overwriteDupes">false</bool>
        <!-- using the Lookup3Signature since the documentation says it is faster
-       and we should not encounter actual duplicates in a VIVO Solr index. -->
+       and we should not encounter actual duplicates in a VIVO Solr index since we
+       are including the URI in the Solr document. -->
        <str name="signatureClass">solr.processor.Lookup3Signature</str>
      </processor>
      <processor class="solr.LogUpdateProcessorFactory" />
