@@ -32,8 +32,10 @@
    <div id="main">
     <h3> Reading and writing RDF for VIVO with RDFAlchemy</h3>  
     <pre>01-02-13</pre>
-    <p>For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into <a href="http://www.vivoweb.org/">VIVO</a>, the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is <a href="https://rdfalchemy.readthedocs.org/en/latest/">RDFAlchemy</a>.  RDFAlchemy takes its lead from the Python SQL toolkit <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>. It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.      </p>
-<p>To demonstrate I have created a basic FacultyMember class definition that models RDF for loading information about faculty into VIVO.  For sample data I am using the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.csv">people.csv</a> file provided in the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">VIVO Data Ingest Guide</a>.<sup id="fnref:outdated"><a class="footnote-ref" href="#fn:outdated" rel="footnote">1</a></sup>  Each RDFAlchemy class definition has an RDF type assignment to identify the <a href="http://en.wikipedia.org/wiki/RDF_Schema#Classes">RDF Class</a> that the object is linked to.  The remaining attributes, known as descriptors, are the specific <a href="http://www.vivoweb.org/glossary/term/47">data or object properties</a> of the object.  The right hand side of the descriptor assignment includes whether the property is a single or repeating value (all single here) and the specific RDF property and namespace.  This will become the predicate in the outputted triples.  If you have worked with <a href="https://docs.djangoproject.com/en/dev/topics/db/models/">Django models</a> or SQLAlchemy previously, this should seem quite familiar.  </p>
+    <p>For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into <a href="http://www.vivoweb.org/">VIVO</a>, the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is <a href="https://rdfalchemy.readthedocs.org/en/latest/">RDFAlchemy</a>.  RDFAlchemy takes its lead from the Python SQL toolkit <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>. It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.    <br />
+</p>
+<p>To demonstrate I have created a basic FacultyMember class definition that models RDF for loading information about faculty into VIVO.  For sample data I am using the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.csv">people.csv</a> file provided in the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">VIVO Data Ingest Guide</a>.<sup id="fnref:outdated"><a href="#fn:outdated" rel="footnote">1</a></sup>  Each RDFAlchemy class definition has an RDF type assignment to identify the <a href="http://en.wikipedia.org/wiki/RDF_Schema#Classes">RDF Class</a> that the object is linked to.  The remaining attributes, known as descriptors, are the specific <a href="http://www.vivoweb.org/glossary/term/47">data or object properties</a> of the object.  The right hand side of the descriptor assignment includes whether the property is a single or repeating value (all single here) and the specific RDF property and namespace.  This will become the predicate in the outputted triples.  If you have worked with <a href="https://docs.djangoproject.com/en/dev/topics/db/models/">Django models</a> or SQLAlchemy previously, this should seem quite familiar.<br />
+</p>
 <pre><code class="python">
 class FacultyMember(rdfSubject):
     rdf_type = core.FacultyMember
@@ -52,13 +54,15 @@ class FacultyMember(rdfSubject):
 </code></pre>
 
 <h3 id="writing-rdf">Writing RDF</h3>
-<p>Now that the FacultyMember class is defined we can write RDF that we can load into VIVO.  The incoming data is in a CSV file and looks like this.   </p>
+<p>Now that the FacultyMember class is defined we can write RDF that we can load into VIVO.  The incoming data is in a CSV file and looks like this. <br />
+</p>
 <pre><code class="csv">person_ID,name,first,last,middle,email,phone,fax,title
 3130,&quot;Burks, Rosella &quot;,Rosella,Burks,,BurksR@univ.edu,963.555.1253,963.777.4065,Professor 
 3297,&quot;Avila, Damien &quot;,Damien,Avila,,AvilaD@univ.edu,963.555.1352,963.777.7914,Professor 
 </code></pre>
 
-<p>Next we open and loop through the CSV file pulling out the values from cells and assigning them to our FaculyMember objects.   </p>
+<p>Next we open and loop through the CSV file pulling out the values from cells and assigning them to our FaculyMember objects. <br />
+</p>
 <pre><code class="python">
 #Create a graph
 g = rdfSubject.db
@@ -88,7 +92,8 @@ g.close()
 
 </code></pre>
 
-<p>The output of the script should look like the following.  This file could be loaded directly into VIVO using the "Add/remove RDF" tool from the administrative page.  </p>
+<p>The output of the script should look like the following.  This file could be loaded directly into VIVO using the "Add/remove RDF" tool from the administrative page.<br />
+</p>
 <pre><code class="python">&lt;http://localhost/vivo/faculty8&gt; a core:FacultyMember;
     rdfs:label &quot;Derek, Antoine Mccoy&quot;;
     local:peopleID &quot;2561&quot;;
@@ -113,7 +118,8 @@ g.close()
 </code></pre>
 
 <h3 id="reading-rdf">Reading RDF</h3>
-<p>The classes created for writing RDF with RDFAlchemy can also be helpful for extracting data from RDF.  For example, if you have exported a set of data from VIVO or retrieved it via a SPARQL query and now want to perform operations on it, the class definitions above will provide access to specific properties.  In the example below we load the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3">people.n3</a> file from the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">Data Ingest Guide</a> and filter it to show only those people who have the moniker "Assistant Professor".  The FacultyMember class, and all RDF Alchemy rdfSubject classes, has a method 'filter_by' which takes a descriptor and a value for querying.  </p>
+<p>The classes created for writing RDF with RDFAlchemy can also be helpful for extracting data from RDF.  For example, if you have exported a set of data from VIVO or retrieved it via a SPARQL query and now want to perform operations on it, the class definitions above will provide access to specific properties.  In the example below we load the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3">people.n3</a> file from the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">Data Ingest Guide</a> and filter it to show only those people who have the moniker "Assistant Professor".  The FacultyMember class, and all RDF Alchemy rdfSubject classes, has a method 'filter_by' which takes a descriptor and a value for querying.<br />
+</p>
 <pre><code class="python">
 #Load the n3 file as a rdfSubject db.
 people_n3 = 'http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3'
@@ -128,7 +134,8 @@ for fac in asst_professors:
     print &quot;%s\t%s\t%s&quot; % (fac.label, fac.work_email, fac.resUri.toPython())
 </code></pre>
 
-<p>The output of this script should look like below.  </p>
+<p>The output of this script should look like below.<br />
+</p>
 <pre><code class="python">====================
 Assistant Professors
 ====================
@@ -139,14 +146,16 @@ Chuck, Lloyd Haney      ChuckL@univ.edu http://localhost/vivo/faculty15
 
 </code></pre>
 
-<p>Another class method 'get_by' is also available for retrieving single class instances.    </p>
+<p>Another class method 'get_by' is also available for retrieving single class instances.  <br />
+</p>
 <pre><code class="python">#Use get_by to retrieve a single faculty member
 faculty = FacultyMember.get_by(hr_id='3958')
 print faculty.label
 </code></pre>
 
 <h3 id="wrap-up">Wrap Up</h3>
-<p>The code below includes the snippets above and can be downloaded and run for testing.  RDFAlchemy is <a href="http://pypi.python.org/pypi/RDFAlchemy/">available on PyPi</a> and also on <a href="https://github.com/gjhiggins/RDFAlchemy">Github</a>.  There are <a href="https://github.com/gjhiggins/RDFAlchemy/tree/master/rdfalchemy/samples">other examples</a> in the Github repository that could be helpful for getting started.  </p>
+<p>The code below includes the snippets above and can be downloaded and run for testing.  RDFAlchemy is <a href="http://pypi.python.org/pypi/RDFAlchemy/">available on PyPi</a> and also on <a href="https://github.com/gjhiggins/RDFAlchemy">Github</a>.  There are <a href="https://github.com/gjhiggins/RDFAlchemy/tree/master/rdfalchemy/samples">other examples</a> in the Github repository that could be helpful for getting started.<br />
+</p>
 <p>For the VIVO implementation work I am doing, I am creating RDFAlchemy class definitions for other VIVO classes, like InformationResources, Events, Roles, Positions, etc.  If you are interested in those, please leave a note below. </p>
 <div style="width: 800px; margin: 1em; padding:1em; font-size:1em;">
 <script src="https://gist.github.com/4429683.js"></script>
@@ -156,7 +165,7 @@ print faculty.label
 <hr />
 <ol>
 <li id="fn:outdated">
-<p>The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  &#160;<a class="footnote-backref" href="#fnref:outdated" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  &#160;<a href="#fnref:outdated" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

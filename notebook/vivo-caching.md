@@ -2,7 +2,9 @@ title:Caching VIVO profiles with ETags and mod_cache
 date:03-25-13
 ----
 
-> This document describes a proof of concept for caching [VIVO](http://www.vivoweb.org/) profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  
+*Update* - 3/29/13 - since writing this, I learned about Solr's built in support for generating signatures of document contents.  Taking advantage of this feature of Solr simplifies the servlet filter code described below and addresses one of the limitations of the caching system described below.  See the updated [servlet filter code](https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py) and the [Solr configuration](http://lawlesst.github.com/notebook/solr-etags.html).  The remaining steps described still apply.   
+
+>This document describes a proof of concept for caching [VIVO](http://www.vivoweb.org/) profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  
 
 ### The problem - page load time  
 

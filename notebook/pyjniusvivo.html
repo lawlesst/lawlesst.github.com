@@ -32,18 +32,25 @@
    <div id="main">
     <h3>Using Python and Pyjnius to connect to Jena models</h3>  
     <pre>10-03-12</pre>
-    <p>At <a href="http://library.brown.edu/">work</a>, Im loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.    </p>
+    <p>At <a href="http://library.brown.edu/">work</a>, Im loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.  <br />
+</p>
 <p>Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:</p>
 <ul>
-<li>generate a new, unique identifier to assign to new resources.  </li>
-<li>find an existing resource in the model and return it's URI.  </li>
+<li>generate a new, unique identifier to assign to new resources.<br />
+</li>
+<li>find an existing resource in the model and return it's URI.<br />
+</li>
 <li>load RDF created with processing scripts directly from those scripts. </li>
-<li>delete RDF created with processing scripts.  </li>
+<li>delete RDF created with processing scripts.<br />
+</li>
 </ul>
-<p>A <a href="http://news.ycombinator.com/item?id=4407624">recent post</a> on Hacker News pointed me to a project called <a href="http://pyjnius.readthedocs.org/en/latest/index.html">Pyjnius</a>, which is "a Python library for accessing Java classes."  </p>
-<p>For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using <a href="http://rdflib.readthedocs.org/en/latest/index.html">RDFLib</a>, but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  </p>
+<p>A <a href="http://news.ycombinator.com/item?id=4407624">recent post</a> on Hacker News pointed me to a project called <a href="http://pyjnius.readthedocs.org/en/latest/index.html">Pyjnius</a>, which is "a Python library for accessing Java classes."<br />
+</p>
+<p>For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using <a href="http://rdflib.readthedocs.org/en/latest/index.html">RDFLib</a>, but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).<br />
+</p>
 <p>I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case VIVO).  This <a href="https://gist.github.com/3829194">Gist</a> contains code that we are using in VIVO data loading scripts.  We are just beginning to explore the <a href="https://github.com/vivo-project/VIVO-Harvester">VIVO harvester</a> in detail and hope to take fuller advantage of it moving forward.</p>
-<p>If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.  </p>
+<p>If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.<br />
+</p>
 <h3 id="example-of-connecting-to-an-existing-jena-database">Example of connecting to an existing Jena database.</h3>
 <pre><code class="python">from jnius import autoclass
 
@@ -85,14 +92,14 @@ http://www.w3.org/2000/01/rdf-schema#
 </code></pre>
 
 <h4 id="performing-sparql-queries">Performing SPARQL queries</h4>
-<p>This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.  </p>
+<p>This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.<br />
+</p>
 <pre><code class="python">from jnius import autoclass
 
 QueryFactory = autoclass('com.hp.hpl.jena.query.QueryFactory')
 QueryExecutionFactory = autoclass('com.hp.hpl.jena.query.QueryExecutionFactory')
 ResultSetFormatter = autoclass('com.hp.hpl.jena.query.ResultSetFormatter')
 String = autoclass('java.lang.String')
-
 
 storeDesc = StoreDesc(LayoutType.LayoutTripleNodesHash, DatabaseType.MySQL)
 conn = SDBConnection(DB_URL, DB_USER, DB_PASSWD)
@@ -131,7 +138,8 @@ conn.close()
 </code></pre>
 
 <h4 id="pyjnius-installation">Pyjnius Installation</h4>
-<p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it with <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.  </p>
+<p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it with <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.<br />
+</p>
 <pre><code>vagrant@lucid32:~$ mkdir pyjnius-project
 vagrant@lucid32:~$ cd pyjnius-project/
 vagrant@lucid32:~/pyjnius-project$ virtualenv venv

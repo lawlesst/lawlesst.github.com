@@ -37,24 +37,30 @@
     Looks like they also have an API for submitting a free-form citation, and getting back matches with DOI!  Its sort of a holy grail for me to provide a service where users can paste in a free-form citation, and get to our access/delivery options.
 </blockquote>
 
-<p>I've been doing a lot of work with <a href="./delivery.html">delivery</a> services lately and also see the value in being able to match raw text citations to actual content the library has licensed.  So I took Jonathan's statement as a bit of a challenge and an opportunity to explore the CrossRef API.  </p>
+<p>I've been doing a lot of work with <a href="./delivery.html">delivery</a> services lately and also see the value in being able to match raw text citations to actual content the library has licensed.  So I took Jonathan's statement as a bit of a challenge and an opportunity to explore the CrossRef API.<br />
+</p>
 <h4 id="demo">Demo</h4>
 <p>I put together a <a href="http://sleepy-island-6218.herokuapp.com/">demo application</a> that takes input from users, sends it to the CrossRef service, and, if a DOI is found, sends that DOI off to the <a href="http://www.serialssolutions.com/en/services/360-link">360Link</a> link resolver API to find a full text link in a library.  The screencast below shows two examples. </p>
 <iframe src="http://www.screenr.com/embed/itV8" width="650" height="396" frameborder="0"></iframe>
 
-<p>The code for the demo is <a href="https://github.com/lawlesst/citation-finder">available on Github</a>.  The server side code is minimal and built with <a href="http://flask.pocoo.org/">Flask</a>, the Python microframework for building web applications.  On the client side, jQuery and jQuery templates pull in the data and render it to the user.  </p>
+<p>The code for the demo is <a href="https://github.com/lawlesst/citation-finder">available on Github</a>.  The server side code is minimal and built with <a href="http://flask.pocoo.org/">Flask</a>, the Python microframework for building web applications.  On the client side, jQuery and jQuery templates pull in the data and render it to the user.<br />
+</p>
 <h4 id="recap-future-directions">Recap &amp; future directions</h4>
-<p>The user interface and interaction could certainly stand for some improvement.  The citations that are resolvable are limited to what's in CrossRef's database, see their list of <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">disclaimers</a>.  But - this work indicates building a service like this for library users is feasible and will be increasingly more valuable as services like these develop.  </p>
-<p>CrossRef apparently <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">doesn't parse</a> the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be worthwhile to try a similar approach with the <a href="http://api.summon.serialssolutions.com/">Summon API</a> and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.  </p>
+<p>The user interface and interaction could certainly stand for some improvement.  The citations that are resolvable are limited to what's in CrossRef's database, see their list of <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">disclaimers</a>.  But - this work indicates building a service like this for library users is feasible and will be increasingly more valuable as services like these develop.<br />
+</p>
+<p>CrossRef apparently <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">doesn't parse</a> the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be worthwhile to try a similar approach with the <a href="http://api.summon.serialssolutions.com/">Summon API</a> and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.<br />
+</p>
 <h4 id="examples">Examples</h4>
-<p>If you are short on citations to try, here are a few I pulled from a <a href="http://repository.library.brown.edu:8080/fedora/objects/bdr:160/datastreams/PDF/content">dissertation</a>.  The third citation is to a working paper and doesn't resolve to a DOI via CrossRef so the interface offers a link to a search in Google Scholar, which does return a <a href="http://neeo.univ-tlse1.fr/294/1/collard_dellas.pdf">PDF to the paper</a>.  </p>
+<p>If you are short on citations to try, here are a few I pulled from a <a href="http://repository.library.brown.edu:8080/fedora/objects/bdr:160/datastreams/PDF/content">dissertation</a>.  The third citation is to a working paper and doesn't resolve to a DOI via CrossRef so the interface offers a link to a search in Google Scholar, which does return a <a href="http://neeo.univ-tlse1.fr/294/1/collard_dellas.pdf">PDF to the paper</a>.<br />
+</p>
 <pre><code>Christiano, L. J., M. Eichenbaum, and C. L. Evans (2005): Nominal Rigidities and the Dynamic Eects of a Shock to Monetary Policy, Journal of Political Economy, 113(1), 145.
 
 Clarida, R., J. Gali, and M. Gertler (1999): The Science of Monetary Policy: A New Keynesian Perspective, Journal of Economic Literature, 37(4), 16611707.
 
 Collard, F., and H. Dellas (2004): The new Keynesian model with imperfect information and learning, Working Paper, University of Toulouse.
 </code></pre>
-<p>Another feature of the demo app to note is that you can append a library's Serials Solutions code to the URL and the demo will search holdings for that library.  For example, this link will search the <a href="http://sleepy-island-6218.herokuapp.com/lg5jh7pa3n/">University of Victoria</a> holdings.  John Durno of Victoria has an <a href="http://journal.code4lib.org/articles/7308">article</a> in the most recent Code4Lib journal on some of their work with the 360Link API and delivery services.    </p>
+<p>Another feature of the demo app to note is that you can append a library's Serials Solutions code to the URL and the demo will search holdings for that library.  For example, this link will search the <a href="http://sleepy-island-6218.herokuapp.com/lg5jh7pa3n/">University of Victoria</a> holdings.  John Durno of Victoria has an <a href="http://journal.code4lib.org/articles/7308">article</a> in the most recent Code4Lib journal on some of their work with the 360Link API and delivery services.  <br />
+</p>
    </div>
    </body>
  </html>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+ <head>
+ <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <META name="Author" content="Ted Lawless">
+     <title>
+       Ted Lawless Solr Document Signatures
+     </title>
+	 <link rel="stylesheet" type="text/css" href="../media/style.css">
+   <link rel="stylesheet" href="../media/highlight-default.min.css">
+   <link rel="stylesheet" href="../media/tomorrow-night-eighties.css">
+   <script src="http://yandex.st/highlightjs/7.2/highlight.min.js"></script>
+   <script>hljs.initHighlightingOnLoad();</script>
+   <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2790298-5']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+   </head>
+   <body>
+   <div id="header">
+        <h1><a href="../">Ted Lawless</a></h1> 
+   </div>
+   <div id="main">
+    <h3>Solr Document Signatures</h3>  
+    <pre>03-29-13</pre>
+    <p>I previously <a href="lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.<br />
+</p>
+<p>This feature is nicely documented on the Solr wiki under <a href="http://wiki.apache.org/solr/Deduplication">Deduplication</a>.  The exact changes I made are listed and commented below.<br />
+</p>
+<h3 id="solr-configuration">Solr configuration</h3>
+<h4 id="solrconfigxml">solrconfig.xml</h4>
+<ul>
+<li>Add the update request processor to the UpdateRequest chain.</li>
+</ul>
+<pre><code class="xml">
+&lt;updateRequestProcessorChain name=&quot;etag&quot;&gt;
+     &lt;processor class=&quot;solr.processor.SignatureUpdateProcessorFactory&quot;&gt;
+       &lt;bool name=&quot;enabled&quot;&gt;true&lt;/bool&gt;
+       &lt;str name=&quot;signatureField&quot;&gt;etag&lt;/str&gt;
+       &lt;!-- For VIVO we don't want to overwrite duplicates if we 
+       somehow come across one.
+       --&gt;
+       &lt;bool name=&quot;overwriteDupes&quot;&gt;false&lt;/bool&gt;
+       &lt;!-- using the Lookup3Signature since the documentation says it is faster
+       and we should not encounter actual duplicates in a VIVO Solr index. --&gt;
+       &lt;str name=&quot;signatureClass&quot;&gt;solr.processor.Lookup3Signature&lt;/str&gt;
+     &lt;/processor&gt;
+     &lt;processor class=&quot;solr.LogUpdateProcessorFactory&quot; /&gt;
+     &lt;processor class=&quot;solr.RunUpdateProcessorFactory&quot; /&gt;
+   &lt;/updateRequestProcessorChain&gt;
+
+</code></pre>
+
+<ul>
+<li>Add the update chain to the update request handler so that it is called after each document is updated.<br />
+</li>
+</ul>
+<pre><code class="xml">  &lt;requestHandler name=&quot;/update&quot; 
+                  class=&quot;solr.XmlUpdateRequestHandler&quot;&gt;
+       &lt;lst name=&quot;defaults&quot;&gt;
+         &lt;str name=&quot;update.processor&quot;&gt;etag&lt;/str&gt;
+       &lt;/lst&gt;
+    &lt;/requestHandler&gt;
+
+####schema.xml
+
+~~~~~{.xml}
+
+* Add the field to store the signature to the index.
+
+~~~~~{.xml}
+&lt;!-- In this case we want to store it for retrieval by our web application 
+    so stored=true.  We won't be searching on this field and won't be using it
+    to automatically overwrite duplicates so indexed=false. --&gt;
+&lt;field name=&quot;etag&quot; type=&quot;string&quot; stored=&quot;true&quot; indexed=&quot;false&quot; multiValued=&quot;false&quot; /&gt;
+
+</code></pre>
+
+<p>After making these adjustments, restarting Solr and re-indexing your content, you should see a new field in the Solr documents called 'etag' and its content should be a hash of its contents.<br />
+</p>
+<p>Solr also has <a href="http://wiki.apache.org/solr/SolrAndHTTPCaches">built in support for ETags and caching in general</a>, but I don't think this is quite what I want in this situation.<br />
+</p>
+   </div>
+   </body>
+ </html>
+<div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'tedlawlessnotebook'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
