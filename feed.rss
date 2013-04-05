@@ -1,112 +1,85 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Fri, 29 Mar 2013 21:27:30 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Free text citations to library content</title><link>http://lawlesst.github.com/notebook/citation-finder.html</link><content:encoded><![CDATA[<p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Fri, 05 Apr 2013 13:44:43 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Free text citations to library content</title><link>http://lawlesst.github.com/notebook/citation-finder.html</link><content:encoded><![CDATA[<p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
 <blockquote class="modern">
     Looks like they also have an API for submitting a free-form citation, and getting back matches with DOI!  Its sort of a holy grail for me to provide a service where users can paste in a free-form citation, and get to our access/delivery options.
 </blockquote>
 
-<p>I've been doing a lot of work with <a href="./delivery.html">delivery</a> services lately and also see the value in being able to match raw text citations to actual content the library has licensed.  So I took Jonathan's statement as a bit of a challenge and an opportunity to explore the CrossRef API.<br />
-</p>
+<p>I've been doing a lot of work with <a href="./delivery.html">delivery</a> services lately and also see the value in being able to match raw text citations to actual content the library has licensed.  So I took Jonathan's statement as a bit of a challenge and an opportunity to explore the CrossRef API.  </p>
 <h4 id="demo">Demo</h4>
 <p>I put together a <a href="http://sleepy-island-6218.herokuapp.com/">demo application</a> that takes input from users, sends it to the CrossRef service, and, if a DOI is found, sends that DOI off to the <a href="http://www.serialssolutions.com/en/services/360-link">360Link</a> link resolver API to find a full text link in a library.  The screencast below shows two examples. </p>
 <iframe src="http://www.screenr.com/embed/itV8" width="650" height="396" frameborder="0"></iframe>
 
-<p>The code for the demo is <a href="https://github.com/lawlesst/citation-finder">available on Github</a>.  The server side code is minimal and built with <a href="http://flask.pocoo.org/">Flask</a>, the Python microframework for building web applications.  On the client side, jQuery and jQuery templates pull in the data and render it to the user.<br />
-</p>
+<p>The code for the demo is <a href="https://github.com/lawlesst/citation-finder">available on Github</a>.  The server side code is minimal and built with <a href="http://flask.pocoo.org/">Flask</a>, the Python microframework for building web applications.  On the client side, jQuery and jQuery templates pull in the data and render it to the user.  </p>
 <h4 id="recap-future-directions">Recap &amp; future directions</h4>
-<p>The user interface and interaction could certainly stand for some improvement.  The citations that are resolvable are limited to what's in CrossRef's database, see their list of <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">disclaimers</a>.  But - this work indicates building a service like this for library users is feasible and will be increasingly more valuable as services like these develop.<br />
-</p>
-<p>CrossRef apparently <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">doesn't parse</a> the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be worthwhile to try a similar approach with the <a href="http://api.summon.serialssolutions.com/">Summon API</a> and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.<br />
-</p>
+<p>The user interface and interaction could certainly stand for some improvement.  The citations that are resolvable are limited to what's in CrossRef's database, see their list of <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">disclaimers</a>.  But - this work indicates building a service like this for library users is feasible and will be increasingly more valuable as services like these develop.  </p>
+<p>CrossRef apparently <a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html">doesn't parse</a> the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be worthwhile to try a similar approach with the <a href="http://api.summon.serialssolutions.com/">Summon API</a> and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.  </p>
 <h4 id="examples">Examples</h4>
-<p>If you are short on citations to try, here are a few I pulled from a <a href="http://repository.library.brown.edu:8080/fedora/objects/bdr:160/datastreams/PDF/content">dissertation</a>.  The third citation is to a working paper and doesn't resolve to a DOI via CrossRef so the interface offers a link to a search in Google Scholar, which does return a <a href="http://neeo.univ-tlse1.fr/294/1/collard_dellas.pdf">PDF to the paper</a>.<br />
-</p>
+<p>If you are short on citations to try, here are a few I pulled from a <a href="http://repository.library.brown.edu:8080/fedora/objects/bdr:160/datastreams/PDF/content">dissertation</a>.  The third citation is to a working paper and doesn't resolve to a DOI via CrossRef so the interface offers a link to a search in Google Scholar, which does return a <a href="http://neeo.univ-tlse1.fr/294/1/collard_dellas.pdf">PDF to the paper</a>.  </p>
 <pre><code>Christiano, L. J., M. Eichenbaum, and C. L. Evans (2005): Nominal Rigidities and the Dynamic Eects of a Shock to Monetary Policy, Journal of Political Economy, 113(1), 145.
 
 Clarida, R., J. Gali, and M. Gertler (1999): The Science of Monetary Policy: A New Keynesian Perspective, Journal of Economic Literature, 37(4), 16611707.
 
 Collard, F., and H. Dellas (2004): The new Keynesian model with imperfect information and learning, Working Paper, University of Toulouse.
 </code></pre>
-<p>Another feature of the demo app to note is that you can append a library's Serials Solutions code to the URL and the demo will search holdings for that library.  For example, this link will search the <a href="http://sleepy-island-6218.herokuapp.com/lg5jh7pa3n/">University of Victoria</a> holdings.  John Durno of Victoria has an <a href="http://journal.code4lib.org/articles/7308">article</a> in the most recent Code4Lib journal on some of their work with the 360Link API and delivery services.  <br />
-</p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/citation-finder.html</guid><pubDate>Wed, 17 Oct 2012 00:00:00 GMT</pubDate></item><item><title>Focusing on Delivery</title><link>http://lawlesst.github.com/notebook/delivery.html</link><content:encoded><![CDATA[<p>A <a href="https://twitter.com/hochstenbach/status/251929102024597504">Twitter exchange</a> between <a href="https://twitter.com/intent/user?screen_name=hochstenbach">Patrick Hochstenbach</a> and <a href="https://twitter.com/rcallewaert">Rosemie Callewaert
+<p>Another feature of the demo app to note is that you can append a library's Serials Solutions code to the URL and the demo will search holdings for that library.  For example, this link will search the <a href="http://sleepy-island-6218.herokuapp.com/lg5jh7pa3n/">University of Victoria</a> holdings.  John Durno of Victoria has an <a href="http://journal.code4lib.org/articles/7308">article</a> in the most recent Code4Lib journal on some of their work with the 360Link API and delivery services.    </p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/citation-finder.html</guid><pubDate>Wed, 17 Oct 2012 00:00:00 GMT</pubDate></item><item><title>Focusing on Delivery</title><link>http://lawlesst.github.com/notebook/delivery.html</link><content:encoded><![CDATA[<p>A <a href="https://twitter.com/hochstenbach/status/251929102024597504">Twitter exchange</a> between <a href="https://twitter.com/intent/user?screen_name=hochstenbach">Patrick Hochstenbach</a> and <a href="https://twitter.com/rcallewaert">Rosemie Callewaert
 </a> voiced the opinion that library "discovery systems should focus more on delivery".  I agree - completely - and would like to describe some of the work I've been a part of recently that focuses on delivery of library content. </p>
-<p>At the Brown University Library, we have recently taken steps to improve the delivery of journal articles to library users.  We call the project easyArticle<sup id="fnref:code"><a href="#fn:code" rel="footnote">1</a></sup>.  When a user clicks on the 'Findit @Brown' link in various databases (including Google Scholar) or clicks the access link in our <a href="http://www.serialssolutions.com/en/services/summon/">Summon</a> <a href="http://library.brown.edu/find/Summon/Search?lookfor=learning+to+use+word+processors&amp;type=AllFields&amp;filter[]=holdingsOnly%3A%22false%22&amp;view=list">front-end</a>, she is routed through this system.<br />
-</p>
-<p>In its most basic form, easyArticle is a front-end to the 360Link link resolver from Serials Solutions.  However it adds a fair amount of functionality beyond the typical link resolver.  The biggest addition to date is the automated submission of Interlibrary Loan and document delivery requests.  This along with the <a href="http://library.brown.edu/its/software/easyborrow/">easyBorrow</a> project at Brown, which focuses on obtaining copies of books, consist of our "delivery" services.<br />
-</p>
-<p>This screencast demonstrates a search in Google Scholar that leads to the user requesting an article via Interlibrary Loan through this application<sup id="fnref:code"><a href="#fn:code" rel="footnote">1</a></sup>.  Below the screencast is a list of user scenarios and how the easyArticle system is delivery the content to the user.  <br />
+<p>At the Brown University Library, we have recently taken steps to improve the delivery of journal articles to library users.  We call the project easyArticle<sup id="fnref:code"><a class="footnote-ref" href="#fn:code" rel="footnote">1</a></sup>.  When a user clicks on the 'Findit @Brown' link in various databases (including Google Scholar) or clicks the access link in our <a href="http://www.serialssolutions.com/en/services/summon/">Summon</a> <a href="http://library.brown.edu/find/Summon/Search?lookfor=learning+to+use+word+processors&amp;type=AllFields&amp;filter[]=holdingsOnly%3A%22false%22&amp;view=list">front-end</a>, she is routed through this system.  </p>
+<p>In its most basic form, easyArticle is a front-end to the 360Link link resolver from Serials Solutions.  However it adds a fair amount of functionality beyond the typical link resolver.  The biggest addition to date is the automated submission of Interlibrary Loan and document delivery requests.  This along with the <a href="http://library.brown.edu/its/software/easyborrow/">easyBorrow</a> project at Brown, which focuses on obtaining copies of books, consist of our "delivery" services.  </p>
+<p>This screencast demonstrates a search in Google Scholar that leads to the user requesting an article via Interlibrary Loan through this application<sup id="fnref:code"><a class="footnote-ref" href="#fn:code" rel="footnote">1</a></sup>.  Below the screencast is a list of user scenarios and how the easyArticle system is delivery the content to the user.  <br />
 <div style="width: 700px; margin: 1em; margin-left:auto; margin-right:auto; padding:1em;">
 <iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"></iframe>
 </div></p>
 <h3 id="user-scenarios-for-our-easyarticle-link-resolver-or-article-delivery-platform">User scenarios for our easyArticle link resolver, or article delivery platform.</h3>
 <h4 id="library-has-a-license-to-an-electronic-version-of-the-article-or-knows-of-an-open-access-electronic-copy-of-the-article">Library has a license to an electronic version of the article or knows of an open access electronic copy of the article.</h4>
-<p>The user is <a href="http://library.brown.edu/easyarticle/get/eaB/">presented with link</a> to the electronic version, much like most link resolvers.  Although this page is served by a locally developed web application so we have complete control over its appearance and content.<br />
-</p>
+<p>The user is <a href="http://library.brown.edu/easyarticle/get/eaB/">presented with link</a> to the electronic version, much like most link resolvers.  Although this page is served by a locally developed web application so we have complete control over its appearance and content.  </p>
 <h4 id="library-holds-the-print-version-of-the-article">Library holds the print version of the article.</h4>
 <p>Students are presented with the location in the stacks of the item.  <a href="http://library.brown.edu/easyarticle/get/eaC/">Example</a>. This also uses a locally developed web service, called the <a href="https://bitbucket.org/bul/book-locator">book locator</a>, to give the user the exact floor and aisle location of the item.</p>
 <p>Faculty can click a 'request' link that will create a document delivery request in Illiad.  Library staff will then retrieve the item from the stacks, scan it, and it will be delivered via the document delivery software. </p>
 <h4 id="library-does-not-license-an-electronic-copy-of-the-article-and-does-not-hold-a-print-copy-of-the-article">Library does not license an electronic copy of the article and does not hold a print copy of the article.</h4>
-<p>Users are offered a request link.  If the user is not authenticated, the user is prompted to login via the campus Shibboleth system.  After clicking a confirmation button, the request is submitted to Illiad.<br />
-</p>
-<p>The library is a member of the <a href="http://rapid2.library.colostate.edu/Public/AboutRapid">RapidILL</a> resource sharing network.  Requests that are available via this network are delivered to the users with 24 hours (Monday through Friday) of receipt.  If you aren't familiar with Rapid, there is more information in this <a href="http://www.ilds2011.org/presentations/Delaney_RapidILL_ILDS2011_2011-09-19.pdf">presentation</a>.  It's a great collaborative effort.<br />
-</p>
-<p>Requests not available via Rapid are then processed through normal ILL procedures and documents are delivered directly via the Illiad software.<br />
-</p>
+<p>Users are offered a request link.  If the user is not authenticated, the user is prompted to login via the campus Shibboleth system.  After clicking a confirmation button, the request is submitted to Illiad.  </p>
+<p>The library is a member of the <a href="http://rapid2.library.colostate.edu/Public/AboutRapid">RapidILL</a> resource sharing network.  Requests that are available via this network are delivered to the users with 24 hours (Monday through Friday) of receipt.  If you aren't familiar with Rapid, there is more information in this <a href="http://www.ilds2011.org/presentations/Delaney_RapidILL_ILDS2011_2011-09-19.pdf">presentation</a>.  It's a great collaborative effort.  </p>
+<p>Requests not available via Rapid are then processed through normal ILL procedures and documents are delivered directly via the Illiad software.  </p>
 <h4 id="something-goes-wrong">Something goes wrong.</h4>
-<p>Unfortunately not all OpenURLs contain enough metadata or the holdings information in the knowledgebase isn't quite right and users can't get the article they are looking for.  In these instances, we offer users a simple problem report form that contains a link to the citation and their IP address that will help staff track down the problem.  This has led to speedier resolution of problems and a more centralized place to track problems and identify which platforms aren't working well with OpenURL.<br />
-</p>
+<p>Unfortunately not all OpenURLs contain enough metadata or the holdings information in the knowledgebase isn't quite right and users can't get the article they are looking for.  In these instances, we offer users a simple problem report form that contains a link to the citation and their IP address that will help staff track down the problem.  This has led to speedier resolution of problems and a more centralized place to track problems and identify which platforms aren't working well with OpenURL.  </p>
 <div class="footnote">
 <hr />
 <ol>
 <li id="fn:code">
-<p>Many of the components of this application are <a href="https://github.com/lawlesst">available on Github</a> as separate Python modules.  I also <a href="http://lawlesst.github.com/notebook/heroku360link.html">wrote previously</a> about building a demo application on Heroku that provides the basic functionality of this application. &#160;<a href="#fnref:code" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Many of the components of this application are <a href="https://github.com/lawlesst">available on Github</a> as separate Python modules.  I also <a href="http://lawlesst.github.com/notebook/heroku360link.html">wrote previously</a> about building a demo application on Heroku that provides the basic functionality of this application. &#160;<a class="footnote-backref" href="#fnref:code" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/delivery.html</guid><pubDate>Sun, 30 Sep 2012 00:00:00 GMT</pubDate></item><item><title>Django, Heroku, and the 360Link API</title><link>http://lawlesst.github.com/notebook/heroku360link.html</link><content:encoded><![CDATA[<blockquote>
 <p>This post describes a <a href="http://damp-tor-3124.herokuapp.com/">demo application</a> that serves as a front-end to the <a href="http://www.serialssolutions.com/en/services/360-link">360Link OpenURL resolver</a>
-from Serials Solutions.  The code is available on <a href="https://github.com/lawlesst/dj360link">Github</a> and the application is running on Heroku.  <br />
-</p>
+from Serials Solutions.  The code is available on <a href="https://github.com/lawlesst/dj360link">Github</a> and the application is running on Heroku.    </p>
 </blockquote>
 <p>A recent <a href="http://serials.infomotions.com/code4lib/archive/2012/201209/2516.html">thread</a> on the Code4Lib mailing list discussed technical details of the <a href="http://www.serialssolutions.com/en/services/360-link">360Link </a> OpenURL resolver.  The technical details are interesting because the OpenURL resolver is often the last handoff from the library systems to the location on the web where users can actually get what they are looking for.  If something goes wrong, it's a frustating experience for everyone involved. </p>
-<p>Over the last year, my colleagues and I at Brown University Library have developed a new front-end to 360Link using the <a href="http://www.serialssolutions.com/en/services/360-search/xml-api">360Link API</a>.  It's been serving OpenURL requests since February and, as of August, has completely replaced our use of the default 360Link interface.  The main objective of this project was to streamline the delivery of content found in various databases.<br />
-</p>
-<p>Since 360Link is rather popular in academic libraries and other libaries might be interested in implementing their own front-end, I decided to put together a demo <a href="https://www.djangoproject.com/">Django</a> application that uses the API to create a basic link resolver.  <br />
-</p>
+<p>Over the last year, my colleagues and I at Brown University Library have developed a new front-end to 360Link using the <a href="http://www.serialssolutions.com/en/services/360-search/xml-api">360Link API</a>.  It's been serving OpenURL requests since February and, as of August, has completely replaced our use of the default 360Link interface.  The main objective of this project was to streamline the delivery of content found in various databases.  </p>
+<p>Since 360Link is rather popular in academic libraries and other libaries might be interested in implementing their own front-end, I decided to put together a demo <a href="https://www.djangoproject.com/">Django</a> application that uses the API to create a basic link resolver.    </p>
 <p>Here are a few sample links.  You can also paste an OpenURL into the form on the <a href="http://damp-tor-3124.herokuapp.com/">index page</a></p>
 <ul>
 <li><a href="http://damp-tor-3124.herokuapp.com/?doi=doi/10.2202/1542-0485.1188">Sample article lookup</a></li>
 <li><a href="http://damp-tor-3124.herokuapp.com/?pmid=22953657">Pubmed lookup</a></li>
 <li><a href="http://damp-tor-3124.herokuapp.com/?pmid=22953657&amp;output=json">JSON(P) responses</a> via content negotiation or adding output=json to the OpenURL. </li>
-<li><a href="http://damp-tor-3124.herokuapp.com/dl2af5jf3e/?pmid=22953657">Another sample response</a> but a customer code has been added to the url to switch to another library's API.<br />
-</li>
+<li><a href="http://damp-tor-3124.herokuapp.com/dl2af5jf3e/?pmid=22953657">Another sample response</a> but a customer code has been added to the url to switch to another library's API.  </li>
 </ul>
-<p>You can easily switch libraries by adding another library's Serials Solutions customer code to the URL - e.g Brown's default 360Link interface is at http://rl3tp7zf5x.search.serialssolutions.com/ so the customer code is "rl3tp7z5x".  While testing this, I noticed that some library's API requires authentictation but most seem to be open and testable.<br />
-</p>
-<p>To run some real requests through this app, you could login to <a href="http://www.mendeley.com/">Mendeley</a> and set it as your resolver in the Find this paper at dropdown menu. <br />
-</p>
-<p>The app is running on Heroku and the code is on <a href="https://github.com/lawlesst/dj360link">Github</a>.  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  So it takes less work to get started with the API than you might suspect.<br />
-</p>
-<p>For more details about working with the API, Daniel Talsky did a nice job of <a href="http://journal.code4lib.org/articles/108">explaining the API</a> in Issue 4, 2008  of the Code4Lib Journal.  <br />
-</p>
-<p>At Brown we have seen some performance issues with the API, particularly with Pubmed ID lookups, but these issues are also present in the default interface too.  Overall it's been quite rewarding to have control over the link resolver interface and to dive in and add new features that make it easier for patrons to get to library content.<br />
-</p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/heroku360link.html</guid><pubDate>Tue, 11 Sep 2012 00:00:00 GMT</pubDate></item><item><title> A Python module for placing requests in ILLiad </title><link>http://lawlesst.github.com/notebook/illiad-api.html</link><content:encoded><![CDATA[<blockquote>
-<p>This post describes a <a href="https://github.com/lawlesst/illiad-api">Python module</a> for creating requests in <a href="http://www.atlas-sys.com/illiad/">ILLiad</a>, the interlibrary loan software used in libraries.<br />
-</p>
+<p>You can easily switch libraries by adding another library's Serials Solutions customer code to the URL - e.g Brown's default 360Link interface is at http://rl3tp7zf5x.search.serialssolutions.com/ so the customer code is "rl3tp7z5x".  While testing this, I noticed that some library's API requires authentictation but most seem to be open and testable.  </p>
+<p>To run some real requests through this app, you could login to <a href="http://www.mendeley.com/">Mendeley</a> and set it as your resolver in the Find this paper at dropdown menu.   </p>
+<p>The app is running on Heroku and the code is on <a href="https://github.com/lawlesst/dj360link">Github</a>.  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  So it takes less work to get started with the API than you might suspect.  </p>
+<p>For more details about working with the API, Daniel Talsky did a nice job of <a href="http://journal.code4lib.org/articles/108">explaining the API</a> in Issue 4, 2008  of the Code4Lib Journal.    </p>
+<p>At Brown we have seen some performance issues with the API, particularly with Pubmed ID lookups, but these issues are also present in the default interface too.  Overall it's been quite rewarding to have control over the link resolver interface and to dive in and add new features that make it easier for patrons to get to library content.  </p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/heroku360link.html</guid><pubDate>Tue, 11 Sep 2012 00:00:00 GMT</pubDate></item><item><title> A Python module for placing requests in ILLiad </title><link>http://lawlesst.github.com/notebook/illiad-api.html</link><content:encoded><![CDATA[<blockquote>
+<p>This post describes a <a href="https://github.com/lawlesst/illiad-api">Python module</a> for creating requests in <a href="http://www.atlas-sys.com/illiad/">ILLiad</a>, the interlibrary loan software used in libraries.  </p>
 </blockquote>
 <p>Many libraries use <a href="http://www.atlas-sys.com/illiad/">ILLiad</a> as the software system for document delivery and interlibrary loan services.  As a developer working with this system, you might find a need to create ILLiad requests programmatically from another system.  This other system could be your library catalog or OpenURL resolver or just a standalone script that processes batches of requests.  However ILLiad doesn't support an API for creating requests.  In response to this, at <a href="http://library.brown.edu">Brown University Libraries</a> we have developed a Python module that serves as a programming interface to ILLiad.  The code for the module is <a href="https://github.com/lawlesst/illiad-api">available on Github</a> for downloading, forking, and inspection.  It relies on two Python libraries, <a href="http://docs.python-requests.org/en/latest/">requests</a> for creating HTTP requests and <a href="http://packages.python.org/pyquery/">pyquery</a>, which provides a nice syntax for parsing HTML documents.</p>
 <h3 id="request-workflow">Request workflow</h3>
 <p>This is the basic worfklow for the module:</p>
 <ul>
-<li>authenticate or verify the user in your external system.<br />
-</li>
+<li>authenticate or verify the user in your external system.  </li>
 <li>establish an ILLiad session on behalf of the user.  Retain the returned session cookie for further requests.</li>
 <li>pass an OpenURL to ILLiad for the item the user is requesting.</li>
-<li>parse the response, which is an HTML form with populated values from the OpenURL.  If you were doing this manually from the ILLiad user interface, this would be the pre-populated form that the user sees and either enhances with more information or clicks submit to process.<br />
-</li>
+<li>parse the response, which is an HTML form with populated values from the OpenURL.  If you were doing this manually from the ILLiad user interface, this would be the pre-populated form that the user sees and either enhances with more information or clicks submit to process.  </li>
 <li>post the values returned by the step above to the ILLiad server. </li>
-<li>parse the response.  This response will contain either the transaction number for the request or an error message describing what when wrong.<br />
-</li>
-<li>log the user out.  <br />
-</li>
+<li>parse the response.  This response will contain either the transaction number for the request or an error message describing what when wrong.  </li>
+<li>log the user out.    </li>
 </ul>
 <h3 id="example-in-code">Example in code</h3>
 <p><div style="width: 800px; margin: 1em; padding:1em;">
@@ -114,35 +87,25 @@ from Serials Solutions.  The code is available on <a href="https://github.com/la
 </div></p>
 <h3 id="how-does-the-module-work">How does the module work?</h3>
 <p>ILLiad ships with a set of web forms that will respond to <a href="http://en.wikipedia.org/wiki/OpenURL">OpenURL</a> requests and pre-populate forms with the appropriate data.  The module will open ILLiad web pages on a user's behalf, parse the responses, and post values to the ILLiad server.</p>
-<p>The module does rely on screen scraping the HTML returned by the ILLiad application but experience has shown that this method is quite stable and robust enough to be used in production systems.  Versions of this module have been in place at Brown for four years or more and have processed over 10,000 user requests during the last six months.  One of the common problems encountered when relying on screen scraping to provide functionality is that the HTML can change without notice.  In this case the ILLiad software is managed by the library so the chances of it changing without notice is small.  As an extra measure to protect against unforeseen HTML changes, we have place the HTML pages that are used with this module on a different web path than the user pages (something like http://illiad.school.edu/api-pages/) so that we can update the user pages without changing the markup that this module relies on.<br />
-</p>
-<p>The module as implemented relies on the <a href="https://prometheus.atlas-sys.com/display/illiad/RemoteAuth+Authentication">RemoteAuth</a> in ILLiad.  This allows users to be authenticated via an HTTP header and can be used with systems like <a href="http://en.wikipedia.org/wiki/Shibboleth">Shibboleth</a> or <a href="http://en.wikipedia.org/wiki/Central_Authentication_Service">CAS</a>.  The module will pass the appropriate header for authentication and save the session cookie for further requests.  This eliminates the need to store the user's ILLiad credentials in a local database, which could be seen as a security risk.  If this is not a concern for your project, you could use a modified version of this module without enabling the RemoteAuth functionality.  Leave a comment below if you would like some help in getting started with that.<br />
-</p>
+<p>The module does rely on screen scraping the HTML returned by the ILLiad application but experience has shown that this method is quite stable and robust enough to be used in production systems.  Versions of this module have been in place at Brown for four years or more and have processed over 10,000 user requests during the last six months.  One of the common problems encountered when relying on screen scraping to provide functionality is that the HTML can change without notice.  In this case the ILLiad software is managed by the library so the chances of it changing without notice is small.  As an extra measure to protect against unforeseen HTML changes, we have place the HTML pages that are used with this module on a different web path than the user pages (something like http://illiad.school.edu/api-pages/) so that we can update the user pages without changing the markup that this module relies on.  </p>
+<p>The module as implemented relies on the <a href="https://prometheus.atlas-sys.com/display/illiad/RemoteAuth+Authentication">RemoteAuth</a> in ILLiad.  This allows users to be authenticated via an HTTP header and can be used with systems like <a href="http://en.wikipedia.org/wiki/Shibboleth">Shibboleth</a> or <a href="http://en.wikipedia.org/wiki/Central_Authentication_Service">CAS</a>.  The module will pass the appropriate header for authentication and save the session cookie for further requests.  This eliminates the need to store the user's ILLiad credentials in a local database, which could be seen as a security risk.  If this is not a concern for your project, you could use a modified version of this module without enabling the RemoteAuth functionality.  Leave a comment below if you would like some help in getting started with that.  </p>
 <h3 id="example-in-video">Example in video</h3>
 <p>The screencast below shows an example of this module being integrated into the library's OpenURL resolver.  The user in this example authenticates with the campus Shibboleth system and places a request in ILLiad directly from the resolver interface.  There is no need to visit ILLiad to place the request.<br />
 <div style="width: 700px; margin: 1em; padding:1em;">
 <iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"></iframe>
 </div></p>
-<p>If you are interested in learning more about this project or run into problems when getting started with the module, please leave a comment below.<br />
-</p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/illiad-api.html</guid><pubDate>Mon, 31 Dec 2012 00:00:00 GMT</pubDate></item><item><title>Using Python and Pyjnius to connect to Jena models</title><link>http://lawlesst.github.com/notebook/pyjniusvivo.html</link><content:encoded><![CDATA[<p>At <a href="http://library.brown.edu/">work</a>, Im loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.  <br />
-</p>
+<p>If you are interested in learning more about this project or run into problems when getting started with the module, please leave a comment below.  </p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/illiad-api.html</guid><pubDate>Mon, 31 Dec 2012 00:00:00 GMT</pubDate></item><item><title>Using Python and Pyjnius to connect to Jena models</title><link>http://lawlesst.github.com/notebook/pyjniusvivo.html</link><content:encoded><![CDATA[<p>At <a href="http://library.brown.edu/">work</a>, Im loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.    </p>
 <p>Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:</p>
 <ul>
-<li>generate a new, unique identifier to assign to new resources.<br />
-</li>
-<li>find an existing resource in the model and return it's URI.<br />
-</li>
+<li>generate a new, unique identifier to assign to new resources.  </li>
+<li>find an existing resource in the model and return it's URI.  </li>
 <li>load RDF created with processing scripts directly from those scripts. </li>
-<li>delete RDF created with processing scripts.<br />
-</li>
+<li>delete RDF created with processing scripts.  </li>
 </ul>
-<p>A <a href="http://news.ycombinator.com/item?id=4407624">recent post</a> on Hacker News pointed me to a project called <a href="http://pyjnius.readthedocs.org/en/latest/index.html">Pyjnius</a>, which is "a Python library for accessing Java classes."<br />
-</p>
-<p>For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using <a href="http://rdflib.readthedocs.org/en/latest/index.html">RDFLib</a>, but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).<br />
-</p>
+<p>A <a href="http://news.ycombinator.com/item?id=4407624">recent post</a> on Hacker News pointed me to a project called <a href="http://pyjnius.readthedocs.org/en/latest/index.html">Pyjnius</a>, which is "a Python library for accessing Java classes."  </p>
+<p>For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using <a href="http://rdflib.readthedocs.org/en/latest/index.html">RDFLib</a>, but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  </p>
 <p>I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case VIVO).  This <a href="https://gist.github.com/3829194">Gist</a> contains code that we are using in VIVO data loading scripts.  We are just beginning to explore the <a href="https://github.com/vivo-project/VIVO-Harvester">VIVO harvester</a> in detail and hope to take fuller advantage of it moving forward.</p>
-<p>If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.<br />
-</p>
+<p>If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.  </p>
 <h3 id="example-of-connecting-to-an-existing-jena-database">Example of connecting to an existing Jena database.</h3>
 <pre><code class="python">from jnius import autoclass
 
@@ -184,8 +147,7 @@ http://www.w3.org/2000/01/rdf-schema#
 </code></pre>
 
 <h4 id="performing-sparql-queries">Performing SPARQL queries</h4>
-<p>This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.<br />
-</p>
+<p>This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.  </p>
 <pre><code class="python">from jnius import autoclass
 
 QueryFactory = autoclass('com.hp.hpl.jena.query.QueryFactory')
@@ -230,8 +192,7 @@ conn.close()
 </code></pre>
 
 <h4 id="pyjnius-installation">Pyjnius Installation</h4>
-<p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it with <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.<br />
-</p>
+<p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it with <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.  </p>
 <pre><code>vagrant@lucid32:~$ mkdir pyjnius-project
 vagrant@lucid32:~$ cd pyjnius-project/
 vagrant@lucid32:~/pyjnius-project$ virtualenv venv
@@ -265,10 +226,8 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 &gt;&gt;&gt; stack.pop()
 'hello'
 &gt;&gt;&gt; exit()
-</code></pre>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/pyjniusvivo.html</guid><pubDate>Wed, 03 Oct 2012 00:00:00 GMT</pubDate></item><item><title>Solr Document Signatures</title><link>http://lawlesst.github.com/notebook/solr-etags.html</link><content:encoded><![CDATA[<p>I previously <a href="lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.<br />
-</p>
-<p>This feature is nicely documented on the Solr wiki under <a href="http://wiki.apache.org/solr/Deduplication">Deduplication</a>.  The exact changes I made are listed below.  For my application, using this built-in updateRequestProcessor eliminates the need to generate hashes as part of the indexing code or on the fly in cache validation logic.<br />
-</p>
+</code></pre>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/pyjniusvivo.html</guid><pubDate>Wed, 03 Oct 2012 00:00:00 GMT</pubDate></item><item><title>Solr Document Signatures</title><link>http://lawlesst.github.com/notebook/solr-etags.html</link><content:encoded><![CDATA[<p>I previously <a href="http://lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.  </p>
+<p>This feature is nicely documented on the Solr wiki under <a href="http://wiki.apache.org/solr/Deduplication">Deduplication</a>.  The exact changes I made are listed below.  For my application, using this built-in updateRequestProcessor eliminates the need to generate hashes as part of the indexing code or on the fly in cache validation logic.  </p>
 <h3 id="solr-configuration">Solr configuration</h3>
 <h4 id="solrconfigxml">solrconfig.xml</h4>
 <ul>
@@ -295,8 +254,7 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 </code></pre>
 
 <ul>
-<li>Add the update chain to the update request handler so that it is called after each document is updated.<br />
-</li>
+<li>Add the update chain to the update request handler so that it is called after each document is updated.  </li>
 </ul>
 <pre><code class="xml">  &lt;requestHandler name=&quot;/update&quot; 
                   class=&quot;solr.XmlUpdateRequestHandler&quot;&gt;
@@ -305,24 +263,21 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
        &lt;/lst&gt;
     &lt;/requestHandler&gt;
 
-####schema.xml
+</code></pre>
 
-~~~~~{.xml}
-
-* Add the field to store the signature to the index.
-
-~~~~~{.xml}
-&lt;!-- In this case we want to store it for retrieval by our web application 
+<h4 id="schemaxml">schema.xml</h4>
+<ul>
+<li>Add the field to store the signature to the index.</li>
+</ul>
+<pre><code class="xml">&lt;!-- In this case we want to store it for retrieval by our web application 
     so stored=true.  We won't be searching on this field and won't be using it
     to automatically overwrite duplicates so indexed=false. --&gt;
 &lt;field name=&quot;etag&quot; type=&quot;string&quot; stored=&quot;true&quot; indexed=&quot;false&quot; multiValued=&quot;false&quot; /&gt;
 
 </code></pre>
 
-<p>After making these adjustments, restarting Solr and re-indexing your content, you should see a new field in the Solr documents called 'etag' and its content should be a hash of its contents.<br />
-</p>
-<p>Solr also has <a href="http://wiki.apache.org/solr/SolrAndHTTPCaches">built in support for ETags and caching in general</a>, but I don't think this is quite what I want in this situation.<br />
-</p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/solr-etags.html</guid><pubDate>Fri, 29 Mar 2013 00:00:00 GMT</pubDate></item><item><title>Caching VIVO profiles with ETags and mod_cache</title><link>http://lawlesst.github.com/notebook/vivo-caching.html</link><content:encoded><![CDATA[<style>.clean-gray{
+<p>After making these adjustments, restarting Solr and re-indexing your content, you should see a new field in the Solr documents called 'etag' and its content should be a hash of its contents.  </p>
+<p>Solr also has <a href="http://wiki.apache.org/solr/SolrAndHTTPCaches">built in support for ETags and caching in general</a>, but I don't think this is quite what I want in this situation.  </p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/solr-etags.html</guid><pubDate>Fri, 29 Mar 2013 00:00:00 GMT</pubDate></item><item><title>Caching VIVO profiles with ETags and mod_cache</title><link>http://lawlesst.github.com/notebook/vivo-caching.html</link><content:encoded><![CDATA[<style>.clean-gray{
 border:solid 1px #DEDEDE; 
 background:#EFEFEF;
 color:#222222;
@@ -332,31 +287,24 @@ padding:.5em;
 
 <div class="clean-gray">Update - 3/29/13 - since writing this, I learned about Solr's built in support for generating signatures of document contents.  Taking advantage of this feature of Solr simplifies the servlet filter code described below and addresses one of the limitations of the caching system described below.  See the updated <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">servlet filter code</a> and the <a href="http://lawlesst.github.com/notebook/solr-etags.html">Solr configuration</a>.  The remaining steps described still apply.</div>
 
-<p>This document describes a proof of concept for caching <a href="http://www.vivoweb.org/">VIVO</a> profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.<br />
-</p>
+<p>This document describes a proof of concept for caching <a href="http://www.vivoweb.org/">VIVO</a> profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  </p>
 <h3 id="the-problem-page-load-time">The problem - page load time</h3>
-<p>A recurring question in the <a href="http://www.vivoweb.org/">VIVO</a> implementation community is how sites can speed up the loading of profile pages.  As a VIVO implementation grows in size and tracks more and more scholarly activity, profile pages can be pulling in hundreds of relationships to render the page, which results in more data being retrieved from the underling <a href="http://jena.apache.org/documentation/rdf/index.html">Jena</a> <a href="http://jena.apache.org/documentation/sdb/index.html">SDB store</a> and longer page load times.  For example, a profile page for a faculty member with hundreds of publications, which isn't uncommon, can lead to multiple second page loads.<br />
-</p>
+<p>A recurring question in the <a href="http://www.vivoweb.org/">VIVO</a> implementation community is how sites can speed up the loading of profile pages.  As a VIVO implementation grows in size and tracks more and more scholarly activity, profile pages can be pulling in hundreds of relationships to render the page, which results in more data being retrieved from the underling <a href="http://jena.apache.org/documentation/rdf/index.html">Jena</a> <a href="http://jena.apache.org/documentation/sdb/index.html">SDB store</a> and longer page load times.  For example, a profile page for a faculty member with hundreds of publications, which isn't uncommon, can lead to multiple second page loads.  </p>
 <h3 id="the-approach-etags-plus-mod_cache">The approach - ETags plus mod_cache</h3>
-<p>An <a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479">email thread</a> on the implementation mailing list in August of 2012 concluded that using <a href="http://en.wikipedia.org/wiki/HTTP_ETag">HTTP ETags</a> to cache public pages could be the best route.<br />
-</p>
+<p>An <a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479">email thread</a> on the implementation mailing list in August of 2012 concluded that using <a href="http://en.wikipedia.org/wiki/HTTP_ETag">HTTP ETags</a> to cache public pages could be the best route.  </p>
 <p>The caching system described below will consist of two main components:</p>
 <ul>
 <li>
-<p>A simple servlet filter, called <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">EtagFilter.py</a>, that validates a client's ETag or generates a new ETag.<br />
-</p>
+<p>A simple servlet filter, called <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">EtagFilter.py</a>, that validates a client's ETag or generates a new ETag.  </p>
 </li>
 <li>
 <p>Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a> as a reverse-proxy.</p>
 </li>
 </ul>
-<p>This caching configuration will only be utilized for users that are not logged in.  Requests initiated by logged in users will be generated dynamically as normal.<br />
-</p>
+<p>This caching configuration will only be utilized for users that are not logged in.  Requests initiated by logged in users will be generated dynamically as normal.  </p>
 <h4 id="generating-the-etag">Generating the ETag</h4>
-<p>The <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETag</a> is generated by looking up the requested individual resource in the VIVO Solr index and creating a hash of the contents of specified fields.  This approach is laid out in the <a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479">email thread</a> discussing possible implementations of caching in VIVO.  This approach assumes that the Solr document for a given individual is the most up-to-date representation of the contents, which given VIVO's near real-time indexing of content changes this seems to be an OK assumption.<br />
-</p>
-<p>The incoming request header is inspected for an "If-None-Match" field which contains the ETag for the version of the page that the client last requested.  If this ETag matches the ETag generated for the current state of the individual (e.g. no updates have been made since the client last fetched the page), then a HTTP response is immediately generated with a 304 Not Modified status code and the request is not processed further.  This tells the client to use the cached version of the page.<br />
-</p>
+<p>The <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETag</a> is generated by looking up the requested individual resource in the VIVO Solr index and creating a hash of the contents of specified fields.  This approach is laid out in the <a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479">email thread</a> discussing possible implementations of caching in VIVO.  This approach assumes that the Solr document for a given individual is the most up-to-date representation of the contents, which given VIVO's near real-time indexing of content changes this seems to be an OK assumption.  </p>
+<p>The incoming request header is inspected for an "If-None-Match" field which contains the ETag for the version of the page that the client last requested.  If this ETag matches the ETag generated for the current state of the individual (e.g. no updates have been made since the client last fetched the page), then a HTTP response is immediately generated with a 304 Not Modified status code and the request is not processed further.  This tells the client to use the cached version of the page.  </p>
 <pre><code class="python">    def doFilter(self, request, response, chain):
         #Don't generate etags for logged in users.  
         login_status = request.session.getValue('loginStatus')
@@ -381,14 +329,11 @@ padding:.5em;
 </code></pre>
 
 <p>The full source for the <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">EtagFilter.py</a> and changes to the VIVO <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/web.xml#L84">web.xml</a> are on Github.</p>
-<p>Since modern browsers support ETags, the above servlet filter will provide caching on a client by client basis.  This means that if User A accesses a VIVO profile at 10am and then returns to view the profile at 12pm, the 12pm request will be served from the cache, provided the profile wasn't updated between 10 and 12.  This will be a nice benefit for regular users of the site but we can do better by using an HTTP accelerator, or reverse proxy.<br />
-</p>
+<p>Since modern browsers support ETags, the above servlet filter will provide caching on a client by client basis.  This means that if User A accesses a VIVO profile at 10am and then returns to view the profile at 12pm, the 12pm request will be served from the cache, provided the profile wasn't updated between 10 and 12.  This will be a nice benefit for regular users of the site but we can do better by using an HTTP accelerator, or reverse proxy.  </p>
 <h3 id="use-mod_cache-as-a-reverse-proxy">Use mod_cache as a reverse proxy</h3>
 <p>Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a> is an Apache module that stores on disk copies of content and provides methods for retrieving or expiring pages stored within it, serving as a built-in <a href="http://en.wikipedia.org/wiki/Reverse_proxy">reverse proxy</a>.</p>
-<p>By using mod_cache, the VIVO application is essentially serving one client (mod_cache) for non logged in users which increases the likelihood that a profile page will be available in the cache.  Building on our example above, if User A views a VIVO profile at 10am the profile is generated and stored in mod_cache.  When User B views the profile at 11am, mod_cache issues a conditional request with the ETag.  The servlet filter recognizes the conditional request, validates the ETag (assuming content hasn't updated) and issues the 304 Not Modified response which tells mod_cache to serve the cached copy of the profile.  This process, while rather wordy, happens much faster than generating a new profile since no SPARQL queries have to be generated against the SDB store. <br />
-</p>
-<p>Below is a sample mod_cache configuration.  On a typical RedHat server this would be placed at /etc/httpd/conf.d/mod_cache.conf.<br />
-</p>
+<p>By using mod_cache, the VIVO application is essentially serving one client (mod_cache) for non logged in users which increases the likelihood that a profile page will be available in the cache.  Building on our example above, if User A views a VIVO profile at 10am the profile is generated and stored in mod_cache.  When User B views the profile at 11am, mod_cache issues a conditional request with the ETag.  The servlet filter recognizes the conditional request, validates the ETag (assuming content hasn't updated) and issues the 304 Not Modified response which tells mod_cache to serve the cached copy of the profile.  This process, while rather wordy, happens much faster than generating a new profile since no SPARQL queries have to be generated against the SDB store.   </p>
+<p>Below is a sample mod_cache configuration.  On a typical RedHat server this would be placed at /etc/httpd/conf.d/mod_cache.conf.  </p>
 <pre><code>&lt;IfModule mod_cache.c&gt;
      CacheRoot /var/cache/apache2
      CacheEnable disk /display
@@ -403,41 +348,30 @@ padding:.5em;
 
 <p>A key point in this configuration is described in the <a href="http://httpd.apache.org/docs/2.2/caching.html#overview">mod_cache documentation</a>, "When content expires from the cache and is re-requested from the backend or content provider, rather than pass on the original request, Apache will use a conditional request instead."  If a page hasn't expired within mod_cache, the request will be served directly from the cache and not reach the VIVO application at all.  This might be desirable in implementations where data is updated at regular intervals.  But in implementations where self-editing of profiles will be supported, it will be necessary to frequently validate the ETag to make sure users are seeing the freshest copy of the data.  To have mod_cache generate conditional requests often, set the default expire and max expire values to something quite low - five seconds in the example above.  The page will still be served from the cache if the content hasn't changed (since the servlet filter will respond with a 304 Not Modified), but the conditional request will allow the servlet filter to verify the state of the profile before serving the cached copy. </p>
 <h3 id="summary-and-limitations">Summary and limitations</h3>
-<p>In our non-public instances of VIVO, the above configuration and code do significantly improve page rendering times for VIVO profiles.  If a profile page is in the cache, the rendering time drops to the second range that users expect.  We plan to further test this filter with <a href="http://jmeter.apache.org/">JMeter</a> to see how it performs while serving concurrent requests.<br />
-</p>
+<p>In our non-public instances of VIVO, the above configuration and code do significantly improve page rendering times for VIVO profiles.  If a profile page is in the cache, the rendering time drops to the second range that users expect.  We plan to further test this filter with <a href="http://jmeter.apache.org/">JMeter</a> to see how it performs while serving concurrent requests.  </p>
 <p>There are also several limitations to consider: </p>
 <ul>
-<li>each page load will generate a (extra?) Solr request for each page load to validate and create the ETag.<br />
-</li>
-<li><s>each page load generates the ETag; it's not stored.  This could be addressed, as mentioned in the above email thread, by storing the ETag in the Solr document so that it could be retrieved each time rather than generated.</s> This concern has been addressed by <a href="http://lawlesst.github.com/notebook/solr-etags.html">configuring Solr</a> to generate and store document signatures. <br />
-</li>
-<li>no improvement to page load times for logged in users.  This may or may not be a problem depending on how the VIVO instance is used.<br />
-</li>
-<li>the current servlet filter is written in Jython.  It would be best to write this in Java to not introduce another VIVO dependency.<br />
-</li>
+<li>each page load will generate a (extra?) Solr request for each page load to validate and create the ETag.  </li>
+<li><s>each page load generates the ETag; it's not stored.  This could be addressed, as mentioned in the above email thread, by storing the ETag in the Solr document so that it could be retrieved each time rather than generated.</s> This concern has been addressed by <a href="http://lawlesst.github.com/notebook/solr-etags.html">configuring Solr</a> to generate and store document signatures.   </li>
+<li>no improvement to page load times for logged in users.  This may or may not be a problem depending on how the VIVO instance is used.  </li>
+<li>the current servlet filter is written in Jython.  It would be best to write this in Java to not introduce another VIVO dependency.  </li>
 </ul>
 <h3 id="further-resources">Further resources</h3>
 <ul>
 <li><a href="http://www.softslate.com/blog/2011/07/apache-modcache-in-real-world.html">Apache mod_cache in the Real World</a> was helpful in understanding how mod_cache works.</li>
-<li>The Jython <a href="http://www.jython.org/jythonbook/en/1.0/SimpleWebApps.html">servlet</a> and <a href="http://www.jython.org/javadoc/org/python/util/PyFilter.html">PyFilter</a> documentation.<br />
-</li>
-<li><a href="http://start.sethanil.com/ot/10">Making Life Easier for a Programmer Servlets That Use Jython</a> helps piece together the Jython documentation.<br />
-</li>
+<li>The Jython <a href="http://www.jython.org/jythonbook/en/1.0/SimpleWebApps.html">servlet</a> and <a href="http://www.jython.org/javadoc/org/python/util/PyFilter.html">PyFilter</a> documentation.  </li>
+<li><a href="http://start.sethanil.com/ot/10">Making Life Easier for a Programmer Servlets That Use Jython</a> helps piece together the Jython documentation.  </li>
 </ul>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-caching.html</guid><pubDate>Mon, 25 Mar 2013 00:00:00 GMT</pubDate></item><item><title>A utility script for developing VIVO custom list views </title><link>http://lawlesst.github.com/notebook/vivo-listview.html</link><content:encoded><![CDATA[<p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system. </p>
-<p>To speed up the development of these SPARQL queries, my colleague and I put together a <a href="https://gist.github.com/lawlesst/5192700">Python script</a> to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called <a href="https://gist.github.com/lawlesst/5192700">generate_listview.py</a>, parses the VIVO XML based list view config files (<a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml">example</a>) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.<br />
-</p>
-<p>A script like this isn't necessary for developing custom list views but we have found it to be useful and makes us a bit more productive.  You can run these queries in the browser using the built-in SPARQL query interface.  However, the list views use a pattern of creating a new graph via SPARQL CONSTRUCT queries and then running a final SELECT query against the constructed graph, which is hard, if not impossible, to simulate in the browser.  This script will simulate that flow and allow you to see all the actions in one step as you run the query.<br />
-</p>
-<p>Since this script is not exactly the same as what VIVO does when you load a profile in your browser, you will likely encounter aspects of list views that it doesn't handle well.  For example, you won't be able to use ARQ functions in the final SELECT query, since it's executed with RDFLib rather than VIVO.  But overall this could be a convenient tool to have available.  We think it is.<br />
-</p>
+<p>To speed up the development of these SPARQL queries, my colleague and I put together a <a href="https://gist.github.com/lawlesst/5192700">Python script</a> to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called <a href="https://gist.github.com/lawlesst/5192700">generate_listview.py</a>, parses the VIVO XML based list view config files (<a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml">example</a>) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.  </p>
+<p>A script like this isn't necessary for developing custom list views but we have found it to be useful and makes us a bit more productive.  You can run these queries in the browser using the built-in SPARQL query interface.  However, the list views use a pattern of creating a new graph via SPARQL CONSTRUCT queries and then running a final SELECT query against the constructed graph, which is hard, if not impossible, to simulate in the browser.  This script will simulate that flow and allow you to see all the actions in one step as you run the query.  </p>
+<p>Since this script is not exactly the same as what VIVO does when you load a profile in your browser, you will likely encounter aspects of list views that it doesn't handle well.  For example, you won't be able to use ARQ functions in the final SELECT query, since it's executed with RDFLib rather than VIVO.  But overall this could be a convenient tool to have available.  We think it is.  </p>
 <h4 id="getting-started">Getting started</h4>
 <ul>
 <li>
 <p><a href="https://gist.github.com/lawlesst/5192700">Download the scripts</a> and place them in a directory. </p>
 </li>
 <li>
-<p>Install required Python modules.<br />
-</p>
+<p>Install required Python modules.  </p>
 </li>
 </ul>
 <pre><code>$ pip install git+git://github.com/RDFLib/rdflib-sparql.git
@@ -452,22 +386,18 @@ $ pip install requests
 </code></pre>
 
 <ul>
-<li>View the output in the terminal.  Adjust the listViewConfig.xml file and rerun until it meets your needs. <br />
-</li>
+<li>View the output in the terminal.  Adjust the listViewConfig.xml file and rerun until it meets your needs.   </li>
 </ul>
 <h4 id="other-resources">Other resources</h4>
 <ul>
 <li>
-<p>The <a href="https://github.com/vivo-project/VIVO/blob/develop/doc/list_view_configuration_guidelines.txt">list view documentation</a> included with VIVO covers the list view process in more detail.<br />
-</p>
+<p>The <a href="https://github.com/vivo-project/VIVO/blob/develop/doc/list_view_configuration_guidelines.txt">list view documentation</a> included with VIVO covers the list view process in more detail.  </p>
 </li>
 <li>
 <p>A <a href="http://www.vivoweb.org/files/presentations/12ws3/Cooks_tour.pdf">presentationn</a> from the 2012 VIVO conference details possible approaches to customizing VIVO.</p>
 </li>
-</ul>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-listview.html</guid><pubDate>Mon, 18 Mar 2013 00:00:00 GMT</pubDate></item><item><title> Reading and writing RDF for VIVO with RDFAlchemy</title><link>http://lawlesst.github.com/notebook/vivo-rdfalchemy.html</link><content:encoded><![CDATA[<p>For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into <a href="http://www.vivoweb.org/">VIVO</a>, the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is <a href="https://rdfalchemy.readthedocs.org/en/latest/">RDFAlchemy</a>.  RDFAlchemy takes its lead from the Python SQL toolkit <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>. It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.    <br />
-</p>
-<p>To demonstrate I have created a basic FacultyMember class definition that models RDF for loading information about faculty into VIVO.  For sample data I am using the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.csv">people.csv</a> file provided in the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">VIVO Data Ingest Guide</a>.<sup id="fnref:outdated"><a href="#fn:outdated" rel="footnote">1</a></sup>  Each RDFAlchemy class definition has an RDF type assignment to identify the <a href="http://en.wikipedia.org/wiki/RDF_Schema#Classes">RDF Class</a> that the object is linked to.  The remaining attributes, known as descriptors, are the specific <a href="http://www.vivoweb.org/glossary/term/47">data or object properties</a> of the object.  The right hand side of the descriptor assignment includes whether the property is a single or repeating value (all single here) and the specific RDF property and namespace.  This will become the predicate in the outputted triples.  If you have worked with <a href="https://docs.djangoproject.com/en/dev/topics/db/models/">Django models</a> or SQLAlchemy previously, this should seem quite familiar.<br />
-</p>
+</ul>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-listview.html</guid><pubDate>Mon, 18 Mar 2013 00:00:00 GMT</pubDate></item><item><title> Reading and writing RDF for VIVO with RDFAlchemy</title><link>http://lawlesst.github.com/notebook/vivo-rdfalchemy.html</link><content:encoded><![CDATA[<p>For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into <a href="http://www.vivoweb.org/">VIVO</a>, the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is <a href="https://rdfalchemy.readthedocs.org/en/latest/">RDFAlchemy</a>.  RDFAlchemy takes its lead from the Python SQL toolkit <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>. It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.      </p>
+<p>To demonstrate I have created a basic FacultyMember class definition that models RDF for loading information about faculty into VIVO.  For sample data I am using the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.csv">people.csv</a> file provided in the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">VIVO Data Ingest Guide</a>.<sup id="fnref:outdated"><a class="footnote-ref" href="#fn:outdated" rel="footnote">1</a></sup>  Each RDFAlchemy class definition has an RDF type assignment to identify the <a href="http://en.wikipedia.org/wiki/RDF_Schema#Classes">RDF Class</a> that the object is linked to.  The remaining attributes, known as descriptors, are the specific <a href="http://www.vivoweb.org/glossary/term/47">data or object properties</a> of the object.  The right hand side of the descriptor assignment includes whether the property is a single or repeating value (all single here) and the specific RDF property and namespace.  This will become the predicate in the outputted triples.  If you have worked with <a href="https://docs.djangoproject.com/en/dev/topics/db/models/">Django models</a> or SQLAlchemy previously, this should seem quite familiar.  </p>
 <pre><code class="python">
 class FacultyMember(rdfSubject):
     rdf_type = core.FacultyMember
@@ -486,15 +416,13 @@ class FacultyMember(rdfSubject):
 </code></pre>
 
 <h3 id="writing-rdf">Writing RDF</h3>
-<p>Now that the FacultyMember class is defined we can write RDF that we can load into VIVO.  The incoming data is in a CSV file and looks like this. <br />
-</p>
+<p>Now that the FacultyMember class is defined we can write RDF that we can load into VIVO.  The incoming data is in a CSV file and looks like this.   </p>
 <pre><code class="csv">person_ID,name,first,last,middle,email,phone,fax,title
 3130,&quot;Burks, Rosella &quot;,Rosella,Burks,,BurksR@univ.edu,963.555.1253,963.777.4065,Professor 
 3297,&quot;Avila, Damien &quot;,Damien,Avila,,AvilaD@univ.edu,963.555.1352,963.777.7914,Professor 
 </code></pre>
 
-<p>Next we open and loop through the CSV file pulling out the values from cells and assigning them to our FaculyMember objects. <br />
-</p>
+<p>Next we open and loop through the CSV file pulling out the values from cells and assigning them to our FaculyMember objects.   </p>
 <pre><code class="python">
 #Create a graph
 g = rdfSubject.db
@@ -524,8 +452,7 @@ g.close()
 
 </code></pre>
 
-<p>The output of the script should look like the following.  This file could be loaded directly into VIVO using the "Add/remove RDF" tool from the administrative page.<br />
-</p>
+<p>The output of the script should look like the following.  This file could be loaded directly into VIVO using the "Add/remove RDF" tool from the administrative page.  </p>
 <pre><code class="python">&lt;http://localhost/vivo/faculty8&gt; a core:FacultyMember;
     rdfs:label &quot;Derek, Antoine Mccoy&quot;;
     local:peopleID &quot;2561&quot;;
@@ -550,8 +477,7 @@ g.close()
 </code></pre>
 
 <h3 id="reading-rdf">Reading RDF</h3>
-<p>The classes created for writing RDF with RDFAlchemy can also be helpful for extracting data from RDF.  For example, if you have exported a set of data from VIVO or retrieved it via a SPARQL query and now want to perform operations on it, the class definitions above will provide access to specific properties.  In the example below we load the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3">people.n3</a> file from the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">Data Ingest Guide</a> and filter it to show only those people who have the moniker "Assistant Professor".  The FacultyMember class, and all RDF Alchemy rdfSubject classes, has a method 'filter_by' which takes a descriptor and a value for querying.<br />
-</p>
+<p>The classes created for writing RDF with RDFAlchemy can also be helpful for extracting data from RDF.  For example, if you have exported a set of data from VIVO or retrieved it via a SPARQL query and now want to perform operations on it, the class definitions above will provide access to specific properties.  In the example below we load the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3">people.n3</a> file from the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">Data Ingest Guide</a> and filter it to show only those people who have the moniker "Assistant Professor".  The FacultyMember class, and all RDF Alchemy rdfSubject classes, has a method 'filter_by' which takes a descriptor and a value for querying.  </p>
 <pre><code class="python">
 #Load the n3 file as a rdfSubject db.
 people_n3 = 'http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3'
@@ -566,8 +492,7 @@ for fac in asst_professors:
     print &quot;%s\t%s\t%s&quot; % (fac.label, fac.work_email, fac.resUri.toPython())
 </code></pre>
 
-<p>The output of this script should look like below.<br />
-</p>
+<p>The output of this script should look like below.  </p>
 <pre><code class="python">====================
 Assistant Professors
 ====================
@@ -578,16 +503,14 @@ Chuck, Lloyd Haney      ChuckL@univ.edu http://localhost/vivo/faculty15
 
 </code></pre>
 
-<p>Another class method 'get_by' is also available for retrieving single class instances.  <br />
-</p>
+<p>Another class method 'get_by' is also available for retrieving single class instances.    </p>
 <pre><code class="python">#Use get_by to retrieve a single faculty member
 faculty = FacultyMember.get_by(hr_id='3958')
 print faculty.label
 </code></pre>
 
 <h3 id="wrap-up">Wrap Up</h3>
-<p>The code below includes the snippets above and can be downloaded and run for testing.  RDFAlchemy is <a href="http://pypi.python.org/pypi/RDFAlchemy/">available on PyPi</a> and also on <a href="https://github.com/gjhiggins/RDFAlchemy">Github</a>.  There are <a href="https://github.com/gjhiggins/RDFAlchemy/tree/master/rdfalchemy/samples">other examples</a> in the Github repository that could be helpful for getting started.<br />
-</p>
+<p>The code below includes the snippets above and can be downloaded and run for testing.  RDFAlchemy is <a href="http://pypi.python.org/pypi/RDFAlchemy/">available on PyPi</a> and also on <a href="https://github.com/gjhiggins/RDFAlchemy">Github</a>.  There are <a href="https://github.com/gjhiggins/RDFAlchemy/tree/master/rdfalchemy/samples">other examples</a> in the Github repository that could be helpful for getting started.  </p>
 <p>For the VIVO implementation work I am doing, I am creating RDFAlchemy class definitions for other VIVO classes, like InformationResources, Events, Roles, Positions, etc.  If you are interested in those, please leave a note below. </p>
 <div style="width: 800px; margin: 1em; padding:1em; font-size:1em;">
 <script src="https://gist.github.com/4429683.js"></script>
@@ -597,14 +520,12 @@ print faculty.label
 <hr />
 <ol>
 <li id="fn:outdated">
-<p>The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  &#160;<a href="#fnref:outdated" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  &#160;<a class="footnote-backref" href="#fnref:outdated" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
-</div>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-rdfalchemy.html</guid><pubDate>Wed, 02 Jan 2013 00:00:00 GMT</pubDate></item><item><title>Using Z39.50 to produce a Stack View.  </title><link>http://lawlesst.github.com/notebook/z3950-scan.html</link><content:encoded><![CDATA[<p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library brosing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library. <br />
-</p>
+</div>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-rdfalchemy.html</guid><pubDate>Wed, 02 Jan 2013 00:00:00 GMT</pubDate></item><item><title>Using Z39.50 to produce a Stack View.  </title><link>http://lawlesst.github.com/notebook/z3950-scan.html</link><content:encoded><![CDATA[<p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library brosing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library.   </p>
 <p>The examples on the Stack View website show how to pull data in from a variety of sources and example scripts are provided.  But many libraries might want to pull data in from their own catalog.  Additionally libraries might want to display the items in call number order so that the virtual Stack View approximates what a user would see if they were actually browsing the shelves in your library.</p>
-<p>One way to get the data necessary for Stack View is via <a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a>.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.<br />
-</p>
+<p>One way to get the data necessary for Stack View is via <a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a>.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.  </p>
 <!-- stackview.css to style the stack -->
 
 <p><link rel="stylesheet" href="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.css" type="text/css"></p>
@@ -1207,20 +1128,15 @@ print faculty.label
 </script>
 
 <h3 id="z3950">Z39.50</h3>
-<p><a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a> is a pre-Web protocol for search and retrieval.  The major advantage to using Z39.50 for data sources in examples like these is that it has been implemented widely (if varyingly) and most ILS systems provide servers both for querying internal data and allowing others to query the data in the system.  In the current library systems environment, it may be the only API to the underlying data.    <br />
-</p>
-<p>For more information about the protocol and working with it I recommend the <a href="http://www.indexdata.com/blog/2009/08/z3950-dummies">Z39.50 for Dummies</a> series that <a href="http://www.indexdata.com">IndexData</a> put together in 2009.  You can also read some of the arguments for and against still using Z39.50 in the comment thread of this blog post on <a href="http://dltj.org/article/z3950-for-dummies/">Disruptive Library Technology Jester</a>.<br />
-</p>
+<p><a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a> is a pre-Web protocol for search and retrieval.  The major advantage to using Z39.50 for data sources in examples like these is that it has been implemented widely (if varyingly) and most ILS systems provide servers both for querying internal data and allowing others to query the data in the system.  In the current library systems environment, it may be the only API to the underlying data.      </p>
+<p>For more information about the protocol and working with it I recommend the <a href="http://www.indexdata.com/blog/2009/08/z3950-dummies">Z39.50 for Dummies</a> series that <a href="http://www.indexdata.com">IndexData</a> put together in 2009.  You can also read some of the arguments for and against still using Z39.50 in the comment thread of this blog post on <a href="http://dltj.org/article/z3950-for-dummies/">Disruptive Library Technology Jester</a>.  </p>
 <h3 id="z3950-scan-results">Z39.50 scan results</h3>
-<p>Some Z39.50 implementations provide a facility for 'scanning' a collection by various indexes.  Scan results are like the <a href="http://josiah.brown.edu/search~S7/t?SEARCH=on+the+road">title</a>, <a href="http://josiah.brown.edu/search/c?searchtype=c&amp;searcharg=PS3521.E716">call number</a>, and <a href="http://josiah.brown.edu/search~S7/d?search=blizzards">subject</a> browses seen in most 'classic' library catalogs.<br />
-</p>
+<p>Some Z39.50 implementations provide a facility for 'scanning' a collection by various indexes.  Scan results are like the <a href="http://josiah.brown.edu/search~S7/t?SEARCH=on+the+road">title</a>, <a href="http://josiah.brown.edu/search/c?searchtype=c&amp;searcharg=PS3521.E716">call number</a>, and <a href="http://josiah.brown.edu/search~S7/d?search=blizzards">subject</a> browses seen in most 'classic' library catalogs.  </p>
 <p>The Library of Congress Z39.50 implementor agreement says that <a href="http://www.loc.gov/z3950/agency/contributions/2.html">scan</a>, "returns results that consist of terms with complementary data, representing rows from an ordered list. The results can be presented to an end user, enabling him or her to browse forward and optionally backwards.."</p>
 <p>The examples below use the Python <a href="https://github.com/asl2/PyZ3950">PyZ3950</a> library.  You can install it with 'pip install Pyz3950'.  It's also helpful to use <a href="https://github.com/edsu/pymarc/">pymarc</a> to handle the returned MARC records.</p>
-<p>The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.<br />
-</p>
+<p>The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.  </p>
 <h3 id="call-number-scan">Call number scan.</h3>
-<p>Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.  <br />
-</p>
+<p>Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.    </p>
 <pre><code class="python">from PyZ3950 import zoom
 
 conn = zoom.Connection('library.school.edu', 210)
@@ -1249,8 +1165,7 @@ for index, rec in enumerate(results):
 conn.close()
 </code></pre>
 
-<p>Running this search against the <a href="http://library.brown.edu/">Brown University Library</a> library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.<br />
-</p>
+<p>Running this search against the <a href="http://library.brown.edu/">Brown University Library</a> library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.  </p>
 <pre><code>        Ps 3521 E716 D4^   1 entry
         Ps 3521 E716 D6^   1 entry
         Ps 3521 E716 D6 1959^   1 entry
@@ -1266,8 +1181,7 @@ conn.close()
 </code></pre>
 
 <h3 id="call-number-scan-and-fetching-metadata">Call number scan and fetching metadata</h3>
-<p>Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with <a href="https://github.com/edsu/pymarc/">pymarc</a> and a Record object is created that allows us to convert the data into more friendly formats.<br />
-</p>
+<p>Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with <a href="https://github.com/edsu/pymarc/">pymarc</a> and a Record object is created that allows us to convert the data into more friendly formats.  </p>
 <pre><code class="python">from PyZ3950 import zoom
 import pymarc
 

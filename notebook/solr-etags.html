@@ -32,10 +32,8 @@
    <div id="main">
     <h3>Solr Document Signatures</h3>  
     <pre>03-29-13</pre>
-    <p>I previously <a href="lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.<br />
-</p>
-<p>This feature is nicely documented on the Solr wiki under <a href="http://wiki.apache.org/solr/Deduplication">Deduplication</a>.  The exact changes I made are listed below.  For my application, using this built-in updateRequestProcessor eliminates the need to generate hashes as part of the indexing code or on the fly in cache validation logic.<br />
-</p>
+    <p>I previously <a href="http://lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.  </p>
+<p>This feature is nicely documented on the Solr wiki under <a href="http://wiki.apache.org/solr/Deduplication">Deduplication</a>.  The exact changes I made are listed below.  For my application, using this built-in updateRequestProcessor eliminates the need to generate hashes as part of the indexing code or on the fly in cache validation logic.  </p>
 <h3 id="solr-configuration">Solr configuration</h3>
 <h4 id="solrconfigxml">solrconfig.xml</h4>
 <ul>
@@ -62,8 +60,7 @@
 </code></pre>
 
 <ul>
-<li>Add the update chain to the update request handler so that it is called after each document is updated.<br />
-</li>
+<li>Add the update chain to the update request handler so that it is called after each document is updated.  </li>
 </ul>
 <pre><code class="xml">  &lt;requestHandler name=&quot;/update&quot; 
                   class=&quot;solr.XmlUpdateRequestHandler&quot;&gt;
@@ -72,24 +69,21 @@
        &lt;/lst&gt;
     &lt;/requestHandler&gt;
 
-####schema.xml
+</code></pre>
 
-~~~~~{.xml}
-
-* Add the field to store the signature to the index.
-
-~~~~~{.xml}
-&lt;!-- In this case we want to store it for retrieval by our web application 
+<h4 id="schemaxml">schema.xml</h4>
+<ul>
+<li>Add the field to store the signature to the index.</li>
+</ul>
+<pre><code class="xml">&lt;!-- In this case we want to store it for retrieval by our web application 
     so stored=true.  We won't be searching on this field and won't be using it
     to automatically overwrite duplicates so indexed=false. --&gt;
 &lt;field name=&quot;etag&quot; type=&quot;string&quot; stored=&quot;true&quot; indexed=&quot;false&quot; multiValued=&quot;false&quot; /&gt;
 
 </code></pre>
 
-<p>After making these adjustments, restarting Solr and re-indexing your content, you should see a new field in the Solr documents called 'etag' and its content should be a hash of its contents.<br />
-</p>
-<p>Solr also has <a href="http://wiki.apache.org/solr/SolrAndHTTPCaches">built in support for ETags and caching in general</a>, but I don't think this is quite what I want in this situation.<br />
-</p>
+<p>After making these adjustments, restarting Solr and re-indexing your content, you should see a new field in the Solr documents called 'etag' and its content should be a hash of its contents.  </p>
+<p>Solr also has <a href="http://wiki.apache.org/solr/SolrAndHTTPCaches">built in support for ETags and caching in general</a>, but I don't think this is quite what I want in this situation.  </p>
    </div>
    </body>
  </html>

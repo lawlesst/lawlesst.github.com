@@ -32,11 +32,9 @@
    <div id="main">
     <h3>Using Z39.50 to produce a Stack View.  </h3>  
     <pre>02-08-13</pre>
-    <p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library brosing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library. <br />
-</p>
+    <p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library brosing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library.   </p>
 <p>The examples on the Stack View website show how to pull data in from a variety of sources and example scripts are provided.  But many libraries might want to pull data in from their own catalog.  Additionally libraries might want to display the items in call number order so that the virtual Stack View approximates what a user would see if they were actually browsing the shelves in your library.</p>
-<p>One way to get the data necessary for Stack View is via <a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a>.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.<br />
-</p>
+<p>One way to get the data necessary for Stack View is via <a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a>.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.  </p>
 <!-- stackview.css to style the stack -->
 
 <p><link rel="stylesheet" href="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.css" type="text/css"></p>
@@ -639,20 +637,15 @@
 </script>
 
 <h3 id="z3950">Z39.50</h3>
-<p><a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a> is a pre-Web protocol for search and retrieval.  The major advantage to using Z39.50 for data sources in examples like these is that it has been implemented widely (if varyingly) and most ILS systems provide servers both for querying internal data and allowing others to query the data in the system.  In the current library systems environment, it may be the only API to the underlying data.    <br />
-</p>
-<p>For more information about the protocol and working with it I recommend the <a href="http://www.indexdata.com/blog/2009/08/z3950-dummies">Z39.50 for Dummies</a> series that <a href="http://www.indexdata.com">IndexData</a> put together in 2009.  You can also read some of the arguments for and against still using Z39.50 in the comment thread of this blog post on <a href="http://dltj.org/article/z3950-for-dummies/">Disruptive Library Technology Jester</a>.<br />
-</p>
+<p><a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a> is a pre-Web protocol for search and retrieval.  The major advantage to using Z39.50 for data sources in examples like these is that it has been implemented widely (if varyingly) and most ILS systems provide servers both for querying internal data and allowing others to query the data in the system.  In the current library systems environment, it may be the only API to the underlying data.      </p>
+<p>For more information about the protocol and working with it I recommend the <a href="http://www.indexdata.com/blog/2009/08/z3950-dummies">Z39.50 for Dummies</a> series that <a href="http://www.indexdata.com">IndexData</a> put together in 2009.  You can also read some of the arguments for and against still using Z39.50 in the comment thread of this blog post on <a href="http://dltj.org/article/z3950-for-dummies/">Disruptive Library Technology Jester</a>.  </p>
 <h3 id="z3950-scan-results">Z39.50 scan results</h3>
-<p>Some Z39.50 implementations provide a facility for 'scanning' a collection by various indexes.  Scan results are like the <a href="http://josiah.brown.edu/search~S7/t?SEARCH=on+the+road">title</a>, <a href="http://josiah.brown.edu/search/c?searchtype=c&amp;searcharg=PS3521.E716">call number</a>, and <a href="http://josiah.brown.edu/search~S7/d?search=blizzards">subject</a> browses seen in most 'classic' library catalogs.<br />
-</p>
+<p>Some Z39.50 implementations provide a facility for 'scanning' a collection by various indexes.  Scan results are like the <a href="http://josiah.brown.edu/search~S7/t?SEARCH=on+the+road">title</a>, <a href="http://josiah.brown.edu/search/c?searchtype=c&amp;searcharg=PS3521.E716">call number</a>, and <a href="http://josiah.brown.edu/search~S7/d?search=blizzards">subject</a> browses seen in most 'classic' library catalogs.  </p>
 <p>The Library of Congress Z39.50 implementor agreement says that <a href="http://www.loc.gov/z3950/agency/contributions/2.html">scan</a>, "returns results that consist of terms with complementary data, representing rows from an ordered list. The results can be presented to an end user, enabling him or her to browse forward and optionally backwards.."</p>
 <p>The examples below use the Python <a href="https://github.com/asl2/PyZ3950">PyZ3950</a> library.  You can install it with 'pip install Pyz3950'.  It's also helpful to use <a href="https://github.com/edsu/pymarc/">pymarc</a> to handle the returned MARC records.</p>
-<p>The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.<br />
-</p>
+<p>The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.  </p>
 <h3 id="call-number-scan">Call number scan.</h3>
-<p>Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.  <br />
-</p>
+<p>Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.    </p>
 <pre><code class="python">from PyZ3950 import zoom
 
 conn = zoom.Connection('library.school.edu', 210)
@@ -681,8 +674,7 @@ for index, rec in enumerate(results):
 conn.close()
 </code></pre>
 
-<p>Running this search against the <a href="http://library.brown.edu/">Brown University Library</a> library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.<br />
-</p>
+<p>Running this search against the <a href="http://library.brown.edu/">Brown University Library</a> library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.  </p>
 <pre><code>        Ps 3521 E716 D4^   1 entry
         Ps 3521 E716 D6^   1 entry
         Ps 3521 E716 D6 1959^   1 entry
@@ -698,8 +690,7 @@ conn.close()
 </code></pre>
 
 <h3 id="call-number-scan-and-fetching-metadata">Call number scan and fetching metadata</h3>
-<p>Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with <a href="https://github.com/edsu/pymarc/">pymarc</a> and a Record object is created that allows us to convert the data into more friendly formats.<br />
-</p>
+<p>Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with <a href="https://github.com/edsu/pymarc/">pymarc</a> and a Record object is created that allows us to convert the data into more friendly formats.  </p>
 <pre><code class="python">from PyZ3950 import zoom
 import pymarc
 
