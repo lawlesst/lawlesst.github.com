@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Thu, 08 Aug 2013 15:13:30 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Free text citations to library content</title><link>http://lawlesst.github.com/notebook/citation-finder.html</link><content:encoded><![CDATA[<p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.com</link><description>Notes on projects.</description><lastBuildDate>Fri, 09 Aug 2013 10:02:41 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Free text citations to library content</title><link>http://lawlesst.github.com/notebook/citation-finder.html</link><content:encoded><![CDATA[<p>On October 11, <a href="http://crossref.org/">CrossRef</a> <a href="http://labs.crossref.org/site/crossref_metadata_search.html">announced</a> a new metadata search service and <a href="http://search.labs.crossref.org/help/api">API</a>.  Jonathan Rochkind has a nice <a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/">writeup</a> on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: </p>
 <blockquote class="modern">
     Looks like they also have an API for submitting a free-form citation, and getting back matches with DOI!  Its sort of a holy grail for me to provide a service where users can paste in a free-form citation, and get to our access/delivery options.
 </blockquote>
@@ -94,7 +94,7 @@ from Serials Solutions.  The code is available on <a href="https://github.com/la
 <div style="width: 700px; margin: 1em; padding:1em;">
 <iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"></iframe>
 </div></p>
-<p>If you are interested in learning more about this project or run into problems when getting started with the module, please leave a comment below.  </p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/illiad-api.html</guid><pubDate>Mon, 31 Dec 2012 00:00:00 GMT</pubDate></item><item><title>An OpenRefine reconciliation service for academic journal data</title><link>http://lawlesst.github.com/notebook/journaltoc-reconcile.html</link><content:encoded><![CDATA[<p>Recently I've been working to link local data stored in <a href="http://vivoweb.org">VIVO</a> as RDF with other sources on the Web.  The <a href="http://refine.deri.ie/docs">RDF Refine extension</a> for <a href="http://openrefine.org/">OpenRefine</a><sup id="fnref:refine"><a class="footnote-ref" href="#fn:refine" rel="footnote">1</a></sup> has been a useful tool in this work.  One way to make use of the RDF Refine extension is to query a <a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API">reconciliation service</a> to match local strings to entities from another source.</p>
+<p>If you are interested in learning more about this project or run into problems when getting started with the module, please leave a comment below.  </p>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/illiad-api.html</guid><pubDate>Mon, 31 Dec 2012 00:00:00 GMT</pubDate></item><item><title>An OpenRefine reconciliation service for academic journal data</title><link>http://lawlesst.github.com/notebook/journaltoc-reconcile.html</link><content:encoded><![CDATA[<p>Recently I've been working to link local data stored in <a href="http://vivoweb.org">VIVO</a> as RDF with other sources on the Web.  The <a href="http://refine.deri.ie/docs">RDF Refine extension</a> for <a href="http://openrefine.org/">OpenRefine</a><sup id="fnref:refine"><a class="footnote-ref" href="#fn:refine" rel="footnote">1</a></sup> has been a useful tool in this work.  OpenRefine allows you to query a <a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API">reconciliation service</a> to match local strings to entities from another source and the RDF Extension allows for export as RDF.</p>
 <p>Some of the data that I'm trying to interlink involves the work of university researchers and the venues in which their research is published.  The <a href="http://www.journaltocs.ac.uk/about.php">JournalTOCs</a> project manged at <a href="http://www.hw.ac.uk/">Heriot-Watt University</a> is a good source of metadata about academic journals and articles.  This resource aggregates table of contents information from over 22,000 journals.  The JournalsTOC service also kindly offers an <a href="http://www.journaltocs.ac.uk/develop.php">API</a> for querying both article and journal metadata from their dataset.</p>
 <p>Using a <a href="https://github.com/mikejs/reconcile-demo">demo reconciliation service</a> developed by Michael Stephens as a model, I put together a basic reconciliation service for the JournalTOC data that queries the <a href="http://www.journaltocs.ac.uk/develop.php">JournalTOC API</a> and translates the response to the format that OpenRefine is expecting.  The <a href="https://github.com/lawlesst/journaltocs-reconcile">code is available on Github</a>.  This service can be run locally and OpenRefine will query it just fine.  I have tested this with local data and it looks like a good option if you are working with similar data or interested in this work.</p>
 <p>The URIs returned for publications are not quite <a href="http://www.w3.org/TR/cooluris/">cool</a>.  They are modeled after the URIs for journals that CrossRef makes available in its <a href="http://crosstech.crossref.org/2011/04/content_negotiation_for_crossr.html">RDF representation of DOIs</a> domain, e.g http://id.crossref.org/issn/1059-9495, but can't yet be resolved to RDF representations.  I'm working out a better solution for this and will write about that when I have something to report.</p>
@@ -165,7 +165,6 @@ QueryFactory = autoclass('com.hp.hpl.jena.query.QueryFactory')
 QueryExecutionFactory = autoclass('com.hp.hpl.jena.query.QueryExecutionFactory')
 ResultSetFormatter = autoclass('com.hp.hpl.jena.query.ResultSetFormatter')
 String = autoclass('java.lang.String')
-
 
 storeDesc = StoreDesc(LayoutType.LayoutTripleNodesHash, DatabaseType.MySQL)
 conn = SDBConnection(DB_URL, DB_USER, DB_PASSWD)
@@ -373,7 +372,79 @@ padding:.5em;
 <li><a href="http://www.softslate.com/blog/2011/07/apache-modcache-in-real-world.html">Apache mod_cache in the Real World</a> was helpful in understanding how mod_cache works.</li>
 <li>The Jython <a href="http://www.jython.org/jythonbook/en/1.0/SimpleWebApps.html">servlet</a> and <a href="http://www.jython.org/javadoc/org/python/util/PyFilter.html">PyFilter</a> documentation.  </li>
 <li><a href="http://start.sethanil.com/ot/10">Making Life Easier for a Programmer Servlets That Use Jython</a> helps piece together the Jython documentation.  </li>
-</ul>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-caching.html</guid><pubDate>Mon, 25 Mar 2013 00:00:00 GMT</pubDate></item><item><title>A utility script for developing VIVO custom list views </title><link>http://lawlesst.github.com/notebook/vivo-listview.html</link><content:encoded><![CDATA[<p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system. </p>
+</ul>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-caching.html</guid><pubDate>Mon, 25 Mar 2013 00:00:00 GMT</pubDate></item><item><title>Caching VIVO profiles with ETags and mod_cache</title><link>http://lawlesst.github.com/notebook/vivo-etags.html</link><content:encoded><![CDATA[<blockquote>
+<p>This post describes a Jython Servlet filter that generates <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> that can used to control an Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>.  This is intended to be a proof-of-concept of how caching with Etags and mod_cache could be used in the <a href="http://www.vivoweb.org/">VIVO</a> web application.   </p>
+</blockquote>
+<h3 id="the-problem-page-load-time">The problem - page load time</h3>
+<p>One of the recurring questions in the <a href="http://www.vivoweb.org/">VIVO</a> implementation community is how sites can speed up the generation of detailed profile pages.  As a VIVO implementation grows in size and tracks more and more scholarly activity, profile pages can be pulling in hundreds of relationships to render the page, which results in more data being retrieved from the underling <a href="http://jena.apache.org/documentation/rdf/index.html">Jena</a> <a href="http://jena.apache.org/documentation/sdb/index.html">SDB store</a>.  For example, a profile page for a faculty member with hundreds of publications, which isn't uncommon, can lead to multiple second page loads.  </p>
+<h3 id="the-approach-generate-http-etags-for-profile-pages">The approach - generate HTTP ETags for profile pages</h3>
+<p>An <a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479">email thread</a> on the implementation mailing list in August of 2012 concluded that using <a href="http://en.wikipedia.org/wiki/HTTP_ETag">HTTP ETags</a> to cache public pages could be the best route.  One of the challenges in providing caching in a RDF based application like VIVO is <a href="https://wiki.duraspace.org/display/VIVO/VIVO+v1.6+release+planning">determining when a profile has been updated</a>, since a profile page is composed of many pieces of data (publication dates for research papers, names of talks given) from many related resources.  For the purposes of this proof-of-concept, we will use a VIVO individual resource's Solr document as a proxy for the current state of the resource, as suggested in the above email thread.  If the Solr document has changed, then the resource has changed and a new page should be generated.  </p>
+<h4 id="components">Components</h4>
+<ul>
+<li>A simple Servlet filter that validates a clients ETag or generates a new one</li>
+<li>Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a> as an HTTP accelerator </li>
+</ul>
+<h4 id="servlet-filter">Servlet filter</h4>
+<p>ETags  <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">EtagFilter.py</a> <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/web.xml#L84">web.xml</a></p>
+<h4 id="generating-the-etag">Generating the ETag</h4>
+<p>The ETag is generated by looking up the requested individual resource in the VIVO Solr index and creating a md5 hash of the contents specified fields.  This is basically what is laid out in the <a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479">email thread</a> discussing possible implementations of caching in VIVO.  This assumes that the Solr document for a given individual is the most up-to-date representation of the contents, which given VIVOs near real-time indexing of content changes this seems to be an OK assumption.  </p>
+<p>The incoming request header is inspected for an "If-None-Match" field which contains the ETag for the version of the page that the client last requested.  If this ETag matches the ETag generated for the current state of the individual (e.g. no updates have been made since the client last fetched the page), then a HTTP response is immediately generated with a 304 Not Modified and the request is not processed further.  This tells the client to use the cached version of the page.  </p>
+<pre><code class="python">    def doFilter(self, request, response, chain):
+        #Don't generate etags for logged in users.  
+        login_status = request.session.getValue('loginStatus')
+        if (login_status) and (login_status.isLoggedIn()):
+            logging.debug(&quot;User is logged in.  Caching disabled.&quot;)
+        else:
+            url_string = str(request.getRequestURL())
+            individual = self.get_url_individual(url_string)
+            doc = self.get_solr_doc(individual)
+            etag = self.make_etag(doc)
+            if etag is not None:
+                non_match = request.getHeader(&quot;If-None-Match&quot;)
+                #If we have an incoming matching etag return 304.
+                if (non_match) and (non_match == etag):
+                    logging.debug('Etag matched.') 
+                    return response.sendError(HttpServletResponse.SC_NOT_MODIFIED)
+                else:
+                    logging.debug('Etag did not match.')
+                    #Else set the new etag.
+                    response.setHeader(&quot;ETag&quot;, '%s' % etag)
+        #Always
+        chain.doFilter(request, response)
+</code></pre>
+
+<h3 id="use-mod_cache-as-an-http-accelerator">Use mod_cache as an HTTP accelerator</h3>
+<p>Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a> is an Apache module that stores on disk copies of content </p>
+<p>In early iterations of this caching configuration, situations arose where the user was not getting the most recent page or a logged in user was getting a cached page when a new profile page should be generated for each request from a logged in user.  A key point in resolving this is the ETag and mod_cache's support for ETags.  As the mod-cache documentation explains, "When content expires from the cache and is re-requested from the backend or content provider, rather than pass on the original request, Apache will use a conditional request instead.  HTTP offers a number of headers which allow a client, or cache to discern between different versions of the same content. For example if a resource was served with an "Etag:" header, it is possible to make a conditional request with an "If-None-Match:" header."<sup id="fnref:mod_cache"><a class="footnote-ref" href="#fn:mod_cache" rel="footnote">1</a></sup></p>
+<pre><code>&lt;IfModule mod_cache.c&gt;
+     CacheRoot /var/cache/apache2
+     CacheEnable disk /display
+     CacheEnable disk /individual
+     CacheIgnoreNoLastMod On
+     CacheDefaultExpire 5
+     CacheMaxExpire 5
+     CacheIgnoreHeaders Set-Cookie
+&lt;/IfModule&gt;
+
+</code></pre>
+
+<h3 id="summary-and-limitations">Summary and limitations</h3>
+<p>In our non-public instances of VIVO, the above configuration and code do seem to significantly improve page rendering times for public VIVO profiles.  </p>
+<h4 id="limitations-or-improvements">Limitations or improvements</h4>
+<ul>
+<li>generating a (extra?) Solr request for each page load to validate the </li>
+<li>generating the ETag for each profile page load.  This could be addressed, as mentioned in the above email thread, by storing the ETag in the Solr document so that it could be retrieved each time rather than generated.  </li>
+<li>no improvement to page load times for logged in users.  This may or may not be a problem depending on how the VIVO instance is used.  </li>
+<li>the current Servlet filter is written in Jython.  This would be better written in Java to not introduce another dependency for VIVO.  </li>
+</ul>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:mod_cache">
+<p>http://httpd.apache.org/docs/2.2/caching.html#overview&#160;<a class="footnote-backref" href="#fnref:mod_cache" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>]]></content:encoded><description></description><guid>http://lawlesst.github.com/notebook/vivo-etags.html</guid><pubDate>Sat, 23 Mar 2013 00:00:00 GMT</pubDate></item><item><title>A utility script for developing VIVO custom list views </title><link>http://lawlesst.github.com/notebook/vivo-listview.html</link><content:encoded><![CDATA[<p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system. </p>
 <p>To speed up the development of these SPARQL queries, my colleague and I put together a <a href="https://gist.github.com/lawlesst/5192700">Python script</a> to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called <a href="https://gist.github.com/lawlesst/5192700">generate_listview.py</a>, parses the VIVO XML based list view config files (<a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml">example</a>) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.  </p>
 <p>A script like this isn't necessary for developing custom list views but we have found it to be useful and makes us a bit more productive.  You can run these queries in the browser using the built-in SPARQL query interface.  However, the list views use a pattern of creating a new graph via SPARQL CONSTRUCT queries and then running a final SELECT query against the constructed graph, which is hard, if not impossible, to simulate in the browser.  This script will simulate that flow and allow you to see all the actions in one step as you run the query.  </p>
 <p>Since this script is not exactly the same as what VIVO does when you load a profile in your browser, you will likely encounter aspects of list views that it doesn't handle well.  For example, you won't be able to use ARQ functions in the final SELECT query, since it's executed with RDFLib rather than VIVO.  But overall this could be a convenient tool to have available.  We think it is.  </p>
