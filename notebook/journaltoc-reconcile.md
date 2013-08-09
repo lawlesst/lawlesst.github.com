@@ -2,7 +2,7 @@ title:An OpenRefine reconciliation service for academic journal data
 date:08-07-13
 ----
 
-Recently I've been working to link local data stored in [VIVO](http://vivoweb.org) as RDF with other sources on the Web.  The [RDF Refine extension](http://refine.deri.ie/docs) for [OpenRefine](http://openrefine.org/)[^refine] has been a useful tool in this work.  One way to make use of the RDF Refine extension is to query a [reconciliation service](https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API) to match local strings to entities from another source.
+Recently I've been working to link local data stored in [VIVO](http://vivoweb.org) as RDF with other sources on the Web.  The [RDF Refine extension](http://refine.deri.ie/docs) for [OpenRefine](http://openrefine.org/)[^refine] has been a useful tool in this work.  OpenRefine allows you to query a [reconciliation service](https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API) to match local strings to entities from another source and the RDF Extension allows for export as RDF.
 
 Some of the data that I'm trying to interlink involves the work of university researchers and the venues in which their research is published.  The [JournalTOCs](http://www.journaltocs.ac.uk/about.php) project manged at [Heriot-Watt University](http://www.hw.ac.uk/) is a good source of metadata about academic journals and articles.  This resource aggregates table of contents information from over 22,000 journals.  The JournalsTOC service also kindly offers an [API](http://www.journaltocs.ac.uk/develop.php) for querying both article and journal metadata from their dataset.
 
