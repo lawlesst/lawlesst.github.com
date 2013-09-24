@@ -93,6 +93,7 @@ QueryExecutionFactory = autoclass('com.hp.hpl.jena.query.QueryExecutionFactory')
 ResultSetFormatter = autoclass('com.hp.hpl.jena.query.ResultSetFormatter')
 String = autoclass('java.lang.String')
 
+
 storeDesc = StoreDesc(LayoutType.LayoutTripleNodesHash, DatabaseType.MySQL)
 conn = SDBConnection(DB_URL, DB_USER, DB_PASSWD)
 store = SDBFactory.connectStore(conn, storeDesc)
