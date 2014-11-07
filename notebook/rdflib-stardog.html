@@ -1,13 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Ted Lawless</title><link>http://lawlesst.github.io</link><description>Notes on projects.</description><lastBuildDate>Fri, 07 Nov 2014 01:06:23 GMT</lastBuildDate><generator>PyRSS2Gen-1.0.0</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Python and JSON-LD</title><link>http://lawlesst.github.io/notebook/python-jsonld.html</link><content:encoded><![CDATA[<p>I've published some <a href="https://github.com/lawlesst/vivo-sample-data">code</a> for mapping CSV data to RDF using Python and JSON-LD on <a href="https://github.com/lawlesst/vivo-sample-data">Github</a>.  The motivation for this work was:</p>
-<ol>
-<li>to provide sample data to help people get started with <a href="http://www.vivoweb.org/">VIVO</a>, the research profile system built on Semantic Web standards</li>
-<li>to learn more about <a href="http://www.w3.org/TR/json-ld/">JSON-LD</a> and explore it as a tool for assisting with the <a href="http://en.wikipedia.org/wiki/Extract,_transform,_load">Extract Transform Load (ETL)</a> type work that's required for projects like VIVO.</li>
-</ol>
-<p>Most people wanting to convert data to RDF will have access to relational data sources or tabular data exported as CSV or TSV files.  Using Python to read in a CSV source, convert it to a list of dictionaries using the standard library's <a href="https://docs.python.org/2/library/csv.html">CSV module</a> and then map it RDF using a <a href="http://www.w3.org/TR/json-ld/#the-context">JSON-LD context</a> can be really straightforward.  See the <a href="https://github.com/lawlesst/vivo-sample-data/blob/master/positions.py#L20">context and code</a> for creating academic appointments in VIVO as example.</p>
-<p>In a more real-world example, I've used a different <a href="https://github.com/Brown-University-Library/vivo-data-management/blob/master/vdm/context.py#L18">JSON-LD context</a> to convert JSON data from Pubmed and CrossRef APIs to a local publication ontology.  Here, too, JSON-LD provides a nice way to map from multiple, slightly different sources, to a common RDF model.</p>
-<p>There seems to be potential for a community working with RDF in a common ontology, like VIVO, to collaborate on developing common contexts for various data types and sharing and reusing them.  Members could use these contexts in a variety of tools and not be tied to a particular implementation (like Python) since the JSON can be read by nearly all programming languages.</p>
-<p>The <a href="https://github.com/RDFLib/">RDFLib</a> <a href="(https://github.com/RDFLib/rdflib-jsonld)">plugin</a> for JSON-LD parsing and serializing is still undergoing development and the spec only became final in January of this year, so these are early days.  But I look forward to learning more about the spec and implementing it in other tools.</p>]]></content:encoded><description></description><guid>http://lawlesst.github.io/notebook/python-jsonld.html</guid><pubDate>Sun, 03 Aug 2014 00:00:00 GMT</pubDate></item><item><title>Connecting Python's RDFLib and Stardog</title><link>http://lawlesst.github.io/notebook/rdflib-stardog.html</link><content:encoded><![CDATA[<h2 id="connecting-pythons-rdflib-and-stardog">Connecting Python's RDFLib and Stardog</h2>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+ <head>
+ <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <META name="Author" content="Ted Lawless">
+     <title>
+       Ted Lawless Connecting Python's RDFLib and Stardog
+     </title>
+	 <link rel="stylesheet" type="text/css" href="../media/style.css">
+   <link rel="stylesheet" href="../media/highlight-default.min.css">
+   <link rel="stylesheet" href="../media/tomorrow-night-eighties.css">
+   <script src="http://yandex.st/highlightjs/7.2/highlight.min.js"></script>
+   <script>hljs.initHighlightingOnLoad();</script>
+   <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-2790298-5']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+   </head>
+   <body>
+   <div id="header">
+        <h1><a href="../">Ted Lawless</a></h1> 
+   </div>
+   <div id="main">
+    <h3>Connecting Python's RDFLib and Stardog</h3>  
+    <pre>11-06-14</pre>
+    <h2 id="connecting-pythons-rdflib-and-stardog">Connecting Python's RDFLib and Stardog</h2>
 <p>For a couple of years I have been working with the Python <a href="https://github.com/RDFLib/rdflib">RDFLib</a> library for converting data from various formats to RDF.  This library serves this work well but it's sometimes difficult to track down a straightforward, working example of performing a particular operation or task in RDFLib.  I have also become interested in learning more about the commercial triple store offerings, which promise better performance and more features than the open source solutions.  A colleague has had good experiences with <a href="http://stardog.com/">Stardog</a>, a commercial semantic graph database (with a freely licensed community edition) from <a href="http://clarkparsia.com/">Clark &amp; Parsia</a>, so I thought I would investigate how to use RDFLib to load data in to Stardog and share my notes.</p>
 <p>A "SPARQLStore" and "SPARQLUpdateStore" have been included with Python's <a href="https://github.com/RDFLib/rdflib">RDFLib</a> since version 4.0.  These are designed to allow developers to use the RDFLib code as a client to any SPARQL endpoint.  Since Stardog <a href="http://docs.stardog.com/using/#sd-Querying">supports SPARQL 1.1</a>, developers should be able to connect to Stardog from RDFLib in the similar way they would to other triple stores like <a href="http://rdf4j.org/">Sesame</a> or <a href="http://jena.apache.org/documentation/serving_data/">Fuseki</a>.</p>
 <h3 id="setup-stardog">Setup Stardog</h3>
@@ -108,4 +133,21 @@
 </code></pre>
 
 <h3 id="summary">Summary</h3>
-<p>With a little setup, we can begin working with Stardog in RDFLib in a similar way that we work with RDFLib and other backends.  The sample code here is included in this <a href="https://gist.github.com/lawlesst/9996cf3050c019a8d5ee">Gist</a>.</p>]]></content:encoded><description></description><guid>http://lawlesst.github.io/notebook/rdflib-stardog.html</guid><pubDate>Thu, 06 Nov 2014 00:00:00 GMT</pubDate></item></channel></rss>
+<p>With a little setup, we can begin working with Stardog in RDFLib in a similar way that we work with RDFLib and other backends.  The sample code here is included in this <a href="https://gist.github.com/lawlesst/9996cf3050c019a8d5ee">Gist</a>.</p>
+   </div>
+   </body>
+ </html>
+<div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'tedlawlessnotebook'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>

@@ -1,6 +1,7 @@
 """
 Generate static HTML from md files in tree.
 """
+import codecs
 import datetime
 import fnmatch
 import glob
@@ -16,7 +17,7 @@ import PyRSS2Gen
 from PyRSS2Gen import RSSItem
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-BASE_URL = 'http://lawlesst.github.com'
+BASE_URL = 'http://lawlesst.github.io'
 template = open('template.html').read()
 
 
@@ -63,7 +64,7 @@ class MyRSSItem(RSSItem):
 
   def publish_extensions(self, handler):
     """
-    Could just put this in PyRSS2Gen since I've forked it anyway.  
+    Could just put this in PyRSS2Gen since I've forked it anyway.
     See content:encoded.
     https://developer.mozilla.org/en-US/docs/RSS/Article/Why_RSS_Content_Module_is_Popular_-_Including_HTML_Contents
     """
@@ -73,6 +74,12 @@ class MyRSSItem(RSSItem):
     handler.characters('<![CDATA[%s]]>' % content, skip=True)
     handler.endElement("content:encoded")
     #_element(handler, "content:encoded", content)
+
+
+def read_file(fname):
+    with codecs.open(fname, encoding='utf-8') as infile:
+        return infile.read()
+
 
 def build_content(txt):
   #build the markdown
@@ -97,11 +104,13 @@ for directory in src_dirs:
       match_start, match_end = match.span()
       title_field, title, date_field, post_date, delimiter = match.groups()
       title_marker = '%s%s' % (title_field, title)
-      post_date = datetime.datetime.strptime(post_date.strip(), "%m-%d-%y")   
+      post_date = datetime.datetime.strptime(post_date.strip(), "%m-%d-%y")
+      if post_date < datetime.datetime(2014, 1, 1):
+        continue
       str_post_date = datetime.datetime.strftime(post_date, "%m-%d-%y")
       #remove meta info
       txt = txt[match_end:]
-    else: 
+    else:
         field_label = ''
         title = ''
     #build the markdown
@@ -128,7 +137,7 @@ for directory in src_dirs:
 
     #write out to file.
     out_file = '%s/%s' % (directory, html_fname)
-    
+
     if (d == NOTEBOOK_DIR):
       #add disqus
       html += DISQUS
@@ -141,7 +150,7 @@ for directory in src_dirs:
         guid = link,
         description = '',
         pubDate = post_date,
-        content = content,
+        content = unicode(content),
 
       )
       feed.append(f)
@@ -153,11 +162,11 @@ for directory in src_dirs:
 rss = PyRSS2Gen.RSS2(
     title = "Ted Lawless",
     link = BASE_URL,
-    description = "Notes on projects.",
+    description = u"Notes on projects.",
     lastBuildDate = datetime.datetime.utcnow(),
     items = feed
     )
-with open('feed.rss', 'w') as feed_file:
+with open(u'feed.rss', 'w') as feed_file:
   rss.write_xml(feed_file)
 
 #Generate the index page

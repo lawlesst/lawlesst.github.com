@@ -1,6 +1,10 @@
-##Connecting RDFLib and Stardog
+title:Connecting Python's RDFLib and Stardog
+date:11-06-14
+----
 
-One of the triple stores he wasn't able to test was [Stardog](http://stardog.com/), a commercial semantic graph database (with a freely licensed community edition) from [Clark & Parsia](http://clarkparsia.com/).
+##Connecting Python's RDFLib and Stardog
+
+For a couple of years I have been working with the Python [RDFLib](https://github.com/RDFLib/rdflib) library for converting data from various formats to RDF.  This library serves this work well but it's sometimes difficult to track down a straightforward, working example of performing a particular operation or task in RDFLib.  I have also become interested in learning more about the commercial triple store offerings, which promise better performance and more features than the open source solutions.  A colleague has had good experiences with [Stardog](http://stardog.com/), a commercial semantic graph database (with a freely licensed community edition) from [Clark & Parsia](http://clarkparsia.com/), so I thought I would investigate how to use RDFLib to load data in to Stardog and share my notes.
 
 A "SPARQLStore" and "SPARQLUpdateStore" have been included with Python's [RDFLib](https://github.com/RDFLib/rdflib) since version 4.0.  These are designed to allow developers to use the RDFLib code as a client to any SPARQL endpoint.  Since Stardog [supports SPARQL 1.1](http://docs.stardog.com/using/#sd-Querying), developers should be able to connect to Stardog from RDFLib in the similar way they would to other triple stores like [Sesame](http://rdf4j.org/) or [Fuseki](http://jena.apache.org/documentation/serving_data/).
 
@@ -71,8 +75,6 @@ We can load our sample turtle file to an in-memory RDFLib graph.
 	#Serialize our named graph to make sure we got what we expect.
 	print g.serialize(format='turtle')
 ```
-
-#####Load the data into Stardog via SPARQL update from RDFLib
 Since our data is now loaded as an in memory Graph we can add it to Stardog with a SPARQL INSERT DATA operation.
 
 ```python
@@ -83,14 +85,14 @@ Since our data is now loaded as an in memory Graph we can add it to Stardog with
 
 #####Use the RDFLib API to inspect the data
 
-List all the Concepts in the Stardog that we just added.
+Using the RDFLib API, we can list all the Concepts in the Stardog that were just added.
 
 ```python
 	for subj in ng.subjects(predicate=RDF.type, object=SKOS.Concept):
 	    print 'Concept: ', subj
 ```
 
-Find concepts that are broader than others.
+And, we can find concepts that are broader than others.
 
 ```python
 	for ob in ng.objects(predicate=SKOS.broader):
@@ -127,7 +129,7 @@ The RDFLib API can also be used to add new assertions to Stardog.
 	ng.add((soccer, SKOS.altLabel, Literal('Football')))
 ```
 
-Read statements about soccer
+We can now Read statements about soccer using the RDFLib API, which issues the proper SPARQL query to Stardog in the background.
 
 ```python
 	for s, p, o in ng.triples((soccer, None, None)):
@@ -135,4 +137,4 @@ Read statements about soccer
 ```
 
 ###Summary
-With a little setup, we can begin working with Stardog in RDFLib in a similar way that we work with RDFLib and other backends.  Checkout this [Gist](https://gist.github.com/lawlesst/9996cf3050c019a8d5ee) for the complete code samples included here.
+With a little setup, we can begin working with Stardog in RDFLib in a similar way that we work with RDFLib and other backends.  The sample code here is included in this [Gist](https://gist.github.com/lawlesst/9996cf3050c019a8d5ee).
