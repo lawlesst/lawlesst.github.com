@@ -105,8 +105,6 @@ for directory in src_dirs:
       title_field, title, date_field, post_date, delimiter = match.groups()
       title_marker = '%s%s' % (title_field, title)
       post_date = datetime.datetime.strptime(post_date.strip(), "%m-%d-%y")
-      if post_date < datetime.datetime(2014, 1, 1):
-        continue
       str_post_date = datetime.datetime.strftime(post_date, "%m-%d-%y")
       #remove meta info
       txt = txt[match_end:]
@@ -144,16 +142,18 @@ for directory in src_dirs:
       posts.append((title, post_date, html_fname))
       #store notebook files for rss
       link = "%s/%s" % (BASE_URL, out_file)
-      f = MyRSSItem(
-        title = title,
-        link = link,
-        guid = link,
-        description = '',
-        pubDate = post_date,
-        content = unicode(content),
+      #Only add more recent items to feed.
+      if post_date > datetime.datetime(2014, 1, 1):
+          f = MyRSSItem(
+            title = title,
+            link = link,
+            guid = link,
+            description = '',
+            pubDate = post_date,
+            content = unicode(content),
 
-      )
-      feed.append(f)
+          )
+          feed.append(f)
 
     with open(out_file, 'w') as f:
       f.write(html)
