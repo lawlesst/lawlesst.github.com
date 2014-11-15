@@ -1,0 +1,1381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>A Pelican Blog</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2014-11-06T00:00:00+00:00</updated><entry><title>Connecting Python's RDFLib and Stardog</title><link href="/connecting-pythons-rdflib-and-stardog.html" rel="alternate"></link><updated>2014-11-06T00:00:00+00:00</updated><author><name></name></author><id>tag:,2014-11-06:connecting-pythons-rdflib-and-stardog.html</id><summary type="html">&lt;hr /&gt;
+&lt;h2&gt;Connecting Python's RDFLib and Stardog&lt;/h2&gt;
+&lt;p&gt;For a couple of years I have been working with the Python &lt;a href="https://github.com/RDFLib/rdflib"&gt;RDFLib&lt;/a&gt; library for converting data from various formats to RDF.  This library serves this work well but it's sometimes difficult to track down a straightforward, working example of performing a particular operation or task in RDFLib.  I have also become interested in learning more about the commercial triple store offerings, which promise better performance and more features than the open source solutions.  A colleague has had good experiences with &lt;a href="http://stardog.com/"&gt;Stardog&lt;/a&gt;, a commercial semantic graph database (with a freely licensed community edition) from &lt;a href="http://clarkparsia.com/"&gt;Clark &amp;amp; Parsia&lt;/a&gt;, so I thought I would investigate how to use RDFLib to load data in to Stardog and share my notes.&lt;/p&gt;
+&lt;p&gt;A "SPARQLStore" and "SPARQLUpdateStore" have been included with Python's &lt;a href="https://github.com/RDFLib/rdflib"&gt;RDFLib&lt;/a&gt; since version 4.0.  These are designed to allow developers to use the RDFLib code as a client to any SPARQL endpoint.  Since Stardog &lt;a href="http://docs.stardog.com/using/#sd-Querying"&gt;supports SPARQL 1.1&lt;/a&gt;, developers should be able to connect to Stardog from RDFLib in the similar way they would to other triple stores like &lt;a href="http://rdf4j.org/"&gt;Sesame&lt;/a&gt; or &lt;a href="http://jena.apache.org/documentation/serving_data/"&gt;Fuseki&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Setup Stardog&lt;/h3&gt;
+&lt;p&gt;You will need a working instance of Stardog.  Stardog is available under a community license for evaluation after going through a simple registration process.  If you haven't setup Stardog before, you might want to checkout Geir Grønmo's &lt;a href="https://github.com/grove/triplestores"&gt;triplestores&lt;/a&gt; repository where he has &lt;a href="https://www.vagrantup.com/"&gt;Vagrant&lt;/a&gt; provisioning scripts for various triple stores.  This is how I got up and running with Stardog.&lt;/p&gt;
+&lt;p&gt;Once Stardog is installed, start the Stardog server with security disabled.  This will allow the RDFLib code to connect without a username and password.  Obviously you will not want to run Stardog in this way in production but it is convenient for testing.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$./bin/stardog-admin server start --disable-security&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Next create a database called "demo" to store our data.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;$./bin/stardog-admin db create -n demo&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;At this point a SPARQL endpoint is available at ready for queries at &lt;code&gt;http://localhost:5820/demo/query&lt;/code&gt;.&lt;/p&gt;
+&lt;h3&gt;RDF&lt;/h3&gt;
+&lt;p&gt;For this example, we'll add three skos:Concepts to a &lt;a href="http://en.wikipedia.org/wiki/Named_graph"&gt;named graph&lt;/a&gt; in the Stardog store.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;@prefix&lt;/span&gt; &lt;span class="nt"&gt;rdf&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;www&lt;/span&gt;&lt;span class="nc"&gt;.w3.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;1999&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;02&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;22-rdf-syntax-ns&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="k"&gt;@prefix&lt;/span&gt; &lt;span class="nt"&gt;rdfs&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;www&lt;/span&gt;&lt;span class="nc"&gt;.w3.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;2000&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;01&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;rdf-schema&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="k"&gt;@prefix&lt;/span&gt; &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;www&lt;/span&gt;&lt;span class="nc"&gt;.w3.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;2004&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;02&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;core&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="k"&gt;@prefix&lt;/span&gt; &lt;span class="nt"&gt;xml&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;www&lt;/span&gt;&lt;span class="nc"&gt;.w3.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;XML&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;1998&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="k"&gt;@prefix&lt;/span&gt; &lt;span class="nt"&gt;xsd&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;www&lt;/span&gt;&lt;span class="nc"&gt;.w3.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;2001&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;XMLSchema&lt;/span&gt;&lt;span class="err"&gt;#&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;example&lt;/span&gt;&lt;span class="nc"&gt;.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;n1234&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="nd"&gt;:Concept&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="nd"&gt;:broader&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;example&lt;/span&gt;&lt;span class="nc"&gt;.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;b5678&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="nd"&gt;:preferredLabel&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Baseball&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;example&lt;/span&gt;&lt;span class="nc"&gt;.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;b5678&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="nd"&gt;:Concept&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="nd"&gt;:preferredLabel&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Sports&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nt"&gt;http&lt;/span&gt;&lt;span class="o"&gt;://&lt;/span&gt;&lt;span class="nt"&gt;example&lt;/span&gt;&lt;span class="nc"&gt;.org&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nt"&gt;n1000&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="nt"&gt;a&lt;/span&gt; &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="nd"&gt;:Concept&lt;/span&gt; &lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nt"&gt;skos&lt;/span&gt;&lt;span class="nd"&gt;:preferredLabel&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Soccer&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Code&lt;/h3&gt;
+&lt;p&gt;The complete example code here is available as a &lt;a href="https://gist.github.com/lawlesst/9996cf3050c019a8d5ee"&gt;Gist&lt;/a&gt;.&lt;/p&gt;
+&lt;h5&gt;Setting up the 'store'&lt;/h5&gt;
+&lt;p&gt;We need to initialize a &lt;a href="https://github.com/RDFLib/rdflib/blob/master/rdflib/plugins/stores/sparqlstore.py#L447"&gt;&lt;code&gt;SPARQLUpdateStore&lt;/code&gt;&lt;/a&gt; as well as a named graph where we will store our assertions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rdflib&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Graph&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Literal&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;URIRef&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rdflib.namespace&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;RDF&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SKOS&lt;/span&gt;
+    &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rdflib.plugins.stores&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;sparqlstore&lt;/span&gt;
+
+    &lt;span class="c"&gt;#Define the Stardog store&lt;/span&gt;
+    &lt;span class="n"&gt;endpoint&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://localhost:5820/demo/query&amp;#39;&lt;/span&gt;
+    &lt;span class="n"&gt;store&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sparqlstore&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SPARQLUpdateStore&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;store&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;endpoint&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;endpoint&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+    &lt;span class="c"&gt;#Identify a named graph where we will be adding our instances.&lt;/span&gt;
+    &lt;span class="n"&gt;default_graph&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;URIRef&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;http://example.org/default-graph&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;ng&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Graph&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;store&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;identifier&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;default_graph&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;Loading assertions from a file&lt;/h5&gt;
+&lt;p&gt;We can load our sample turtle file to an in-memory RDFLib graph.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Graph&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;./sample-concepts.ttl&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;turtle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c"&gt;#Serialize our named graph to make sure we got what we expect.&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;serialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;turtle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Since our data is now loaded as an in memory Graph we can add it to Stardog with a SPARQL INSERT DATA operation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;ng&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s"&gt;u&amp;#39;INSERT DATA { &lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt; }&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;serialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;nt&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;Use the RDFLib API to inspect the data&lt;/h5&gt;
+&lt;p&gt;Using the RDFLib API, we can list all the Concepts in the Stardog that were just added.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;subj&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;ng&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;subjects&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;predicate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;RDF&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;type&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;SKOS&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Concept&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Concept: &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subj&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And, we can find concepts that are broader than others.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;ob&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;ng&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;predicate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;SKOS&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;broader&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;Broader: &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ob&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;Use RDFLib to issue SPARQL read queries.&lt;/h5&gt;
+&lt;p&gt;RDFLib allows for binding a prefix to a namespace.  This makes our queries easier to read and write.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;store&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bind&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;skos&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SKOS&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A SELECT query to get all the &lt;code&gt;skos:preferredLabel&lt;/code&gt; for &lt;code&gt;skos:Concepts&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;rq&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;    SELECT ?s ?label&lt;/span&gt;
+&lt;span class="s"&gt;    WHERE {&lt;/span&gt;
+&lt;span class="s"&gt;        ?s a skos:Concept ;&lt;/span&gt;
+&lt;span class="s"&gt;           skos:preferredLabel ?label .&lt;/span&gt;
+&lt;span class="s"&gt;    }&lt;/span&gt;
+&lt;span class="s"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;l&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;ng&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rq&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;n3&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;n3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;Use RDFLib to add assertions.&lt;/h5&gt;
+&lt;p&gt;The RDFLib API can also be used to add new assertions to Stardog.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;soccer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;URIRef&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;http://example.org/n1000&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;ng&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;soccer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;SKOS&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;altLabel&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Literal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Football&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We can now Read statements about soccer using the RDFLib API, which issues the proper SPARQL query to Stardog in the background.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;ng&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;triples&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;soccer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;n3&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;n3&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;n3&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Summary&lt;/h3&gt;
+&lt;p&gt;With a little setup, we can begin working with Stardog in RDFLib in a similar way that we work with RDFLib and other backends.  The sample code here is included in this &lt;a href="https://gist.github.com/lawlesst/9996cf3050c019a8d5ee"&gt;Gist&lt;/a&gt;.&lt;/p&gt;</summary></entry><entry><title>Python and JSON-LD</title><link href="/python-and-json-ld.html" rel="alternate"></link><updated>2014-08-03T00:00:00+00:00</updated><author><name></name></author><id>tag:,2014-08-03:python-and-json-ld.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;I've published some &lt;a href="https://github.com/lawlesst/vivo-sample-data"&gt;code&lt;/a&gt; for mapping CSV data to RDF using Python and JSON-LD on &lt;a href="https://github.com/lawlesst/vivo-sample-data"&gt;Github&lt;/a&gt;.  The motivation for this work was:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;to provide sample data to help people get started with &lt;a href="http://www.vivoweb.org/"&gt;VIVO&lt;/a&gt;, the research profile system built on Semantic Web standards&lt;/li&gt;
+&lt;li&gt;to learn more about &lt;a href="http://www.w3.org/TR/json-ld/"&gt;JSON-LD&lt;/a&gt; and explore it as a tool for assisting with the &lt;a href="http://en.wikipedia.org/wiki/Extract,_transform,_load"&gt;Extract Transform Load (ETL)&lt;/a&gt; type work that's required for projects like VIVO.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Most people wanting to convert data to RDF will have access to relational data sources or tabular data exported as CSV or TSV files.  Using Python to read in a CSV source, convert it to a list of dictionaries using the standard library's &lt;a href="https://docs.python.org/2/library/csv.html"&gt;CSV module&lt;/a&gt; and then map it RDF using a &lt;a href="http://www.w3.org/TR/json-ld/#the-context"&gt;JSON-LD context&lt;/a&gt; can be really straightforward.  See the &lt;a href="https://github.com/lawlesst/vivo-sample-data/blob/master/positions.py#L20"&gt;context and code&lt;/a&gt; for creating academic appointments in VIVO as example.&lt;/p&gt;
+&lt;p&gt;In a more real-world example, I've used a different &lt;a href="https://github.com/Brown-University-Library/vivo-data-management/blob/master/vdm/context.py#L18"&gt;JSON-LD context&lt;/a&gt; to convert JSON data from Pubmed and CrossRef APIs to a local publication ontology.  Here, too, JSON-LD provides a nice way to map from multiple, slightly different sources, to a common RDF model.&lt;/p&gt;
+&lt;p&gt;There seems to be potential for a community working with RDF in a common ontology, like VIVO, to collaborate on developing common contexts for various data types and sharing and reusing them.  Members could use these contexts in a variety of tools and not be tied to a particular implementation (like Python) since the JSON can be read by nearly all programming languages.&lt;/p&gt;
+&lt;p&gt;The &lt;a href="https://github.com/RDFLib/"&gt;RDFLib&lt;/a&gt; &lt;a href="(https://github.com/RDFLib/rdflib-jsonld)"&gt;plugin&lt;/a&gt; for JSON-LD parsing and serializing is still undergoing development and the spec only became final in January of this year, so these are early days.  But I look forward to learning more about the spec and implementing it in other tools.&lt;/p&gt;</summary></entry><entry><title>An OpenRefine reconciliation service for academic journal data</title><link href="/an-openrefine-reconciliation-service-for-academic-journal-data.html" rel="alternate"></link><updated>2013-08-07T00:00:00+00:00</updated><author><name></name></author><id>tag:,2013-08-07:an-openrefine-reconciliation-service-for-academic-journal-data.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;Recently I've been working to link local data stored in &lt;a href="http://vivoweb.org"&gt;VIVO&lt;/a&gt; as RDF with other sources on the Web.  The &lt;a href="http://refine.deri.ie/docs"&gt;RDF Refine extension&lt;/a&gt; for &lt;a href="http://openrefine.org/"&gt;OpenRefine&lt;/a&gt;&lt;sup id="fnref:refine"&gt;&lt;a class="footnote-ref" href="#fn:refine" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; has been a useful tool in this work.  OpenRefine allows you to query a &lt;a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API"&gt;reconciliation service&lt;/a&gt; to match local strings to entities from another source and the RDF Extension allows for export as RDF.&lt;/p&gt;
+&lt;p&gt;Some of the data that I'm trying to interlink involves the work of university researchers and the venues in which their research is published.  The &lt;a href="http://www.journaltocs.ac.uk/about.php"&gt;JournalTOCs&lt;/a&gt; project manged at &lt;a href="http://www.hw.ac.uk/"&gt;Heriot-Watt University&lt;/a&gt; is a good source of metadata about academic journals and articles.  This resource aggregates table of contents information from over 22,000 journals.  The JournalsTOC service also kindly offers an &lt;a href="http://www.journaltocs.ac.uk/develop.php"&gt;API&lt;/a&gt; for querying both article and journal metadata from their dataset.&lt;/p&gt;
+&lt;p&gt;Using a &lt;a href="https://github.com/mikejs/reconcile-demo"&gt;demo reconciliation service&lt;/a&gt; developed by Michael Stephens as a model, I put together a basic reconciliation service for the JournalTOC data that queries the &lt;a href="http://www.journaltocs.ac.uk/develop.php"&gt;JournalTOC API&lt;/a&gt; and translates the response to the format that OpenRefine is expecting.  The &lt;a href="https://github.com/lawlesst/journaltocs-reconcile"&gt;code is available on Github&lt;/a&gt;.  This service can be run locally and OpenRefine will query it just fine.  I have tested this with local data and it looks like a good option if you are working with similar data or interested in this work.&lt;/p&gt;
+&lt;p&gt;The URIs returned for publications are not quite &lt;a href="http://www.w3.org/TR/cooluris/"&gt;cool&lt;/a&gt;.  They are modeled after the URIs for journals that CrossRef makes available in its &lt;a href="http://crosstech.crossref.org/2011/04/content_negotiation_for_crossr.html"&gt;RDF representation of DOIs&lt;/a&gt; domain, e.g http://id.crossref.org/issn/1059-9495, but can't yet be resolved to RDF representations.  I'm working out a better solution for this and will write about that when I have something to report.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:refine"&gt;
+&lt;p&gt;OpenRefine was Google Refine until recently.  The latest released version is &lt;a href="http://openrefine.org/"&gt;Google Refine 2.5&lt;/a&gt; and still carries the Google branding, which can be confusing.  A new release of Refine is being developed and that will be called OpenRefine.&amp;#160;&lt;a class="footnote-backref" href="#fnref:refine" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Solr Document Signatures</title><link href="/solr-document-signatures.html" rel="alternate"></link><updated>2013-03-29T00:00:00+00:00</updated><author><name></name></author><id>tag:,2013-03-29:solr-document-signatures.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;I previously &lt;a href="http://lawlesst.github.com/notebook/vivo-caching.html"&gt;wrote&lt;/a&gt; about working with Apache &lt;a href="http://httpd.apache.org/docs/2.2/caching.html"&gt;mod_cache&lt;/a&gt;, HTTP &lt;a href="http://en.wikipedia.org/wiki/HTTP_ETag"&gt;ETags&lt;/a&gt;, and &lt;a href="http://www.vivoweb.org/"&gt;VIVO&lt;/a&gt; to cache public pages.  After writing that post, I found that &lt;a href="http://wiki.apache.org/solr/Deduplication"&gt;Solr supports adding "signatures" to documents&lt;/a&gt; as a way to identify if a document is identical to another.  This &lt;a href="http://wiki.apache.org/solr/Deduplication"&gt;feature&lt;/a&gt; was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate &lt;a href="http://en.wikipedia.org/wiki/HTTP_ETag"&gt;ETags&lt;/a&gt; forwarded by clients.  &lt;/p&gt;
+&lt;p&gt;This feature is nicely documented on the Solr wiki under &lt;a href="http://wiki.apache.org/solr/Deduplication"&gt;Deduplication&lt;/a&gt;.  The exact changes I made are listed below.  For my application, using this built-in updateRequestProcessor eliminates the need to generate hashes as part of the indexing code or on the fly in cache validation logic.  &lt;/p&gt;
+&lt;h3&gt;Solr configuration&lt;/h3&gt;
+&lt;h4&gt;solrconfig.xml&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Add the update request processor to the UpdateRequest chain.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;updateRequestProcessorChain&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;etag&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+     &lt;span class="nt"&gt;&amp;lt;processor&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;solr.processor.SignatureUpdateProcessorFactory&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;bool&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;enabled&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;true&lt;span class="nt"&gt;&amp;lt;/bool&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;str&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;signatureField&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;etag&lt;span class="nt"&gt;&amp;lt;/str&amp;gt;&lt;/span&gt;
+       &lt;span class="c"&gt;&amp;lt;!-- For VIVO we don&amp;#39;t want to overwrite duplicates if we &lt;/span&gt;
+&lt;span class="c"&gt;       somehow come across one.&lt;/span&gt;
+&lt;span class="c"&gt;       --&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;bool&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;overwriteDupes&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;false&lt;span class="nt"&gt;&amp;lt;/bool&amp;gt;&lt;/span&gt;
+       &lt;span class="c"&gt;&amp;lt;!-- using the Lookup3Signature since the documentation says it is faster&lt;/span&gt;
+&lt;span class="c"&gt;       and we should not encounter actual duplicates in a VIVO Solr index since we&lt;/span&gt;
+&lt;span class="c"&gt;       are including the URI in the Solr document. --&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;str&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;signatureClass&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;solr.processor.Lookup3Signature&lt;span class="nt"&gt;&amp;lt;/str&amp;gt;&lt;/span&gt;
+     &lt;span class="nt"&gt;&amp;lt;/processor&amp;gt;&lt;/span&gt;
+     &lt;span class="nt"&gt;&amp;lt;processor&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;solr.LogUpdateProcessorFactory&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+     &lt;span class="nt"&gt;&amp;lt;processor&lt;/span&gt; &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;solr.RunUpdateProcessorFactory&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+   &lt;span class="nt"&gt;&amp;lt;/updateRequestProcessorChain&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Add the update chain to the update request handler so that it is called after each document is updated.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;  &lt;span class="nt"&gt;&amp;lt;requestHandler&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/update&amp;quot;&lt;/span&gt; 
+                  &lt;span class="na"&gt;class=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;solr.XmlUpdateRequestHandler&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;lst&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;defaults&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+         &lt;span class="nt"&gt;&amp;lt;str&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;update.processor&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;etag&lt;span class="nt"&gt;&amp;lt;/str&amp;gt;&lt;/span&gt;
+       &lt;span class="nt"&gt;&amp;lt;/lst&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/requestHandler&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;schema.xml&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Add the field to store the signature to the index.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;&amp;lt;!-- In this case we want to store it for retrieval by our web application &lt;/span&gt;
+&lt;span class="c"&gt;    so stored=true.  We won&amp;#39;t be searching on this field and won&amp;#39;t be using it&lt;/span&gt;
+&lt;span class="c"&gt;    to automatically overwrite duplicates so indexed=false. --&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;field&lt;/span&gt; &lt;span class="na"&gt;name=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;etag&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;type=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;string&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;stored=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;true&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;indexed=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;false&amp;quot;&lt;/span&gt; &lt;span class="na"&gt;multiValued=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;false&amp;quot;&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;After making these adjustments, restarting Solr and re-indexing your content, you should see a new field in the Solr documents called 'etag' and its content should be a hash of its contents.  &lt;/p&gt;
+&lt;p&gt;Solr also has &lt;a href="http://wiki.apache.org/solr/SolrAndHTTPCaches"&gt;built in support for ETags and caching in general&lt;/a&gt;, but I don't think this is quite what I want in this situation.  &lt;/p&gt;</summary></entry><entry><title>Caching VIVO profiles with ETags and mod_cache</title><link href="/caching-vivo-profiles-with-etags-and-mod_cache.html" rel="alternate"></link><updated>2013-03-25T00:00:00+00:00</updated><author><name></name></author><id>tag:,2013-03-25:caching-vivo-profiles-with-etags-and-mod_cache.html</id><summary type="html">&lt;hr /&gt;
+&lt;style&gt;.clean-gray{
+border:solid 1px #DEDEDE; 
+background:#EFEFEF;
+color:#222222;
+padding:.5em;
+}
+&lt;/style&gt;
+
+&lt;div class="clean-gray"&gt;Update - 3/29/13 - since writing this, I learned about Solr's built in support for generating signatures of document contents.  Taking advantage of this feature of Solr simplifies the servlet filter code described below and addresses one of the limitations of the caching system described below.  See the updated &lt;a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py"&gt;servlet filter code&lt;/a&gt; and the &lt;a href="http://lawlesst.github.com/notebook/solr-etags.html"&gt;Solr configuration&lt;/a&gt;.  The remaining steps described still apply.&lt;/div&gt;
+
+&lt;p&gt;This document describes a proof of concept for caching &lt;a href="http://www.vivoweb.org/"&gt;VIVO&lt;/a&gt; profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  &lt;/p&gt;
+&lt;h3&gt;The problem - page load time&lt;/h3&gt;
+&lt;p&gt;A recurring question in the &lt;a href="http://www.vivoweb.org/"&gt;VIVO&lt;/a&gt; implementation community is how sites can speed up the loading of profile pages.  As a VIVO implementation grows in size and tracks more and more scholarly activity, profile pages can be pulling in hundreds of relationships to render the page, which results in more data being retrieved from the underling &lt;a href="http://jena.apache.org/documentation/rdf/index.html"&gt;Jena&lt;/a&gt; &lt;a href="http://jena.apache.org/documentation/sdb/index.html"&gt;SDB store&lt;/a&gt; and longer page load times.  For example, a profile page for a faculty member with hundreds of publications, which isn't uncommon, can lead to multiple second page loads.  &lt;/p&gt;
+&lt;h3&gt;The approach - ETags plus mod_cache&lt;/h3&gt;
+&lt;p&gt;An &lt;a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479"&gt;email thread&lt;/a&gt; on the implementation mailing list in August of 2012 concluded that using &lt;a href="http://en.wikipedia.org/wiki/HTTP_ETag"&gt;HTTP ETags&lt;/a&gt; to cache public pages could be the best route.  &lt;/p&gt;
+&lt;p&gt;The caching system described below will consist of two main components:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;A simple servlet filter, called &lt;a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py"&gt;EtagFilter.py&lt;/a&gt;, that validates a client's ETag or generates a new ETag.  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apache &lt;a href="http://httpd.apache.org/docs/2.2/caching.html"&gt;mod_cache&lt;/a&gt; as a reverse-proxy.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This caching configuration will only be utilized for users that are not logged in.  Requests initiated by logged in users will be generated dynamically as normal.  &lt;/p&gt;
+&lt;h4&gt;Generating the ETag&lt;/h4&gt;
+&lt;p&gt;The &lt;a href="http://en.wikipedia.org/wiki/HTTP_ETag"&gt;ETag&lt;/a&gt; is generated by looking up the requested individual resource in the VIVO Solr index and creating a hash of the contents of specified fields.  This approach is laid out in the &lt;a href="http://sourceforge.net/mailarchive/message.php?msg_id=29749479"&gt;email thread&lt;/a&gt; discussing possible implementations of caching in VIVO.  This approach assumes that the Solr document for a given individual is the most up-to-date representation of the contents, which given VIVO's near real-time indexing of content changes this seems to be an OK assumption.  &lt;/p&gt;
+&lt;p&gt;The incoming request header is inspected for an "If-None-Match" field which contains the ETag for the version of the page that the client last requested.  If this ETag matches the ETag generated for the current state of the individual (e.g. no updates have been made since the client last fetched the page), then a HTTP response is immediately generated with a 304 Not Modified status code and the request is not processed further.  This tells the client to use the cached version of the page.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;doFilter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;chain&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="c"&gt;#Don&amp;#39;t generate etags for logged in users.  &lt;/span&gt;
+        &lt;span class="n"&gt;login_status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;session&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getValue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;loginStatus&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;login_status&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;login_status&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;isLoggedIn&lt;/span&gt;&lt;span class="p"&gt;()):&lt;/span&gt;
+            &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;User is logged in.  Caching disabled.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;url_string&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getRequestURL&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+            &lt;span class="n"&gt;individual&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_url_individual&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url_string&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;doc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_solr_doc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;individual&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;etag&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;make_etag&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;doc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;etag&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                &lt;span class="n"&gt;non_match&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getHeader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;If-None-Match&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="c"&gt;#If we have an incoming matching etag return 304.&lt;/span&gt;
+                &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;non_match&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;non_match&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;etag&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+                    &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Etag matched.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+                    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sendError&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;HttpservletResponse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SC_NOT_MODIFIED&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+                    &lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Etag did not match.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+                    &lt;span class="c"&gt;#Else set the new etag.&lt;/span&gt;
+                    &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setHeader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;ETag&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;etag&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;chain&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;doFilter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The full source for the &lt;a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py"&gt;EtagFilter.py&lt;/a&gt; and changes to the VIVO &lt;a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/web.xml#L84"&gt;web.xml&lt;/a&gt; are on Github.&lt;/p&gt;
+&lt;p&gt;Since modern browsers support ETags, the above servlet filter will provide caching on a client by client basis.  This means that if User A accesses a VIVO profile at 10am and then returns to view the profile at 12pm, the 12pm request will be served from the cache, provided the profile wasn't updated between 10 and 12.  This will be a nice benefit for regular users of the site but we can do better by using an HTTP accelerator, or reverse proxy.  &lt;/p&gt;
+&lt;h3&gt;Use mod_cache as a reverse proxy&lt;/h3&gt;
+&lt;p&gt;Apache &lt;a href="http://httpd.apache.org/docs/2.2/caching.html"&gt;mod_cache&lt;/a&gt; is an Apache module that stores on disk copies of content and provides methods for retrieving or expiring pages stored within it, serving as a built-in &lt;a href="http://en.wikipedia.org/wiki/Reverse_proxy"&gt;reverse proxy&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;By using mod_cache, the VIVO application is essentially serving one client (mod_cache) for non logged in users which increases the likelihood that a profile page will be available in the cache.  Building on our example above, if User A views a VIVO profile at 10am the profile is generated and stored in mod_cache.  When User B views the profile at 11am, mod_cache issues a conditional request with the ETag.  The servlet filter recognizes the conditional request, validates the ETag (assuming content hasn't updated) and issues the 304 Not Modified response which tells mod_cache to serve the cached copy of the profile.  This process, while rather wordy, happens much faster than generating a new profile since no SPARQL queries have to be generated against the SDB store.   &lt;/p&gt;
+&lt;p&gt;Below is a sample mod_cache configuration.  On a typical RedHat server this would be placed at /etc/httpd/conf.d/mod_cache.conf.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;IfModule&lt;/span&gt; &lt;span class="err"&gt;mod_cache.c&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+     CacheRoot /var/cache/apache2
+     CacheEnable disk /display
+     CacheEnable disk /individual
+     CacheIgnoreNoLastMod On
+     CacheDefaultExpire 5
+     CacheMaxExpire 5
+     CacheIgnoreHeaders Set-Cookie
+&lt;span class="nt"&gt;&amp;lt;/IfModule&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;A key point in this configuration is described in the &lt;a href="http://httpd.apache.org/docs/2.2/caching.html#overview"&gt;mod_cache documentation&lt;/a&gt;, "When content expires from the cache and is re-requested from the backend or content provider, rather than pass on the original request, Apache will use a conditional request instead."  If a page hasn't expired within mod_cache, the request will be served directly from the cache and not reach the VIVO application at all.  This might be desirable in implementations where data is updated at regular intervals.  But in implementations where self-editing of profiles will be supported, it will be necessary to frequently validate the ETag to make sure users are seeing the freshest copy of the data.  To have mod_cache generate conditional requests often, set the default expire and max expire values to something quite low - five seconds in the example above.  The page will still be served from the cache if the content hasn't changed (since the servlet filter will respond with a 304 Not Modified), but the conditional request will allow the servlet filter to verify the state of the profile before serving the cached copy. &lt;/p&gt;
+&lt;h3&gt;Summary and limitations&lt;/h3&gt;
+&lt;p&gt;In our non-public instances of VIVO, the above configuration and code do significantly improve page rendering times for VIVO profiles.  If a profile page is in the cache, the rendering time drops to the second range that users expect.  We plan to further test this filter with &lt;a href="http://jmeter.apache.org/"&gt;JMeter&lt;/a&gt; to see how it performs while serving concurrent requests.  &lt;/p&gt;
+&lt;p&gt;There are also several limitations to consider: &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;each page load will generate a (extra?) Solr request for each page load to validate and create the ETag.  &lt;/li&gt;
+&lt;li&gt;&lt;s&gt;each page load generates the ETag; it's not stored.  This could be addressed, as mentioned in the above email thread, by storing the ETag in the Solr document so that it could be retrieved each time rather than generated.&lt;/s&gt; This concern has been addressed by &lt;a href="http://lawlesst.github.com/notebook/solr-etags.html"&gt;configuring Solr&lt;/a&gt; to generate and store document signatures.   &lt;/li&gt;
+&lt;li&gt;no improvement to page load times for logged in users.  This may or may not be a problem depending on how the VIVO instance is used.  &lt;/li&gt;
+&lt;li&gt;the current servlet filter is written in Jython.  It would be best to write this in Java to not introduce another VIVO dependency.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Further resources&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://www.softslate.com/blog/2011/07/apache-modcache-in-real-world.html"&gt;Apache mod_cache in the Real World&lt;/a&gt; was helpful in understanding how mod_cache works.&lt;/li&gt;
+&lt;li&gt;The Jython &lt;a href="http://www.jython.org/jythonbook/en/1.0/SimpleWebApps.html"&gt;servlet&lt;/a&gt; and &lt;a href="http://www.jython.org/javadoc/org/python/util/PyFilter.html"&gt;PyFilter&lt;/a&gt; documentation.  &lt;/li&gt;
+&lt;li&gt;&lt;a href="http://start.sethanil.com/ot/10"&gt;Making Life Easier for a Programmer Servlets That Use Jython&lt;/a&gt; helps piece together the Jython documentation.  &lt;/li&gt;
+&lt;/ul&gt;</summary></entry><entry><title>A utility script for developing VIVO custom list views</title><link href="/a-utility-script-for-developing-vivo-custom-list-views.html" rel="alternate"></link><updated>2013-03-18T00:00:00+00:00</updated><author><name></name></author><id>tag:,2013-03-18:a-utility-script-for-developing-vivo-custom-list-views.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;As you continue with your &lt;a href="http://www.vivoweb.org/"&gt;VIVO&lt;/a&gt; implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to &lt;a href="https://wiki.duraspace.org/display/VIVO/FreeMarker"&gt;Freemarker&lt;/a&gt; templating system. &lt;/p&gt;
+&lt;p&gt;To speed up the development of these SPARQL queries, my colleague and I put together a &lt;a href="https://gist.github.com/lawlesst/5192700"&gt;Python script&lt;/a&gt; to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called &lt;a href="https://gist.github.com/lawlesst/5192700"&gt;generate_listview.py&lt;/a&gt;, parses the VIVO XML based list view config files (&lt;a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml"&gt;example&lt;/a&gt;) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.  &lt;/p&gt;
+&lt;p&gt;A script like this isn't necessary for developing custom list views but we have found it to be useful and makes us a bit more productive.  You can run these queries in the browser using the built-in SPARQL query interface.  However, the list views use a pattern of creating a new graph via SPARQL CONSTRUCT queries and then running a final SELECT query against the constructed graph, which is hard, if not impossible, to simulate in the browser.  This script will simulate that flow and allow you to see all the actions in one step as you run the query.  &lt;/p&gt;
+&lt;p&gt;Since this script is not exactly the same as what VIVO does when you load a profile in your browser, you will likely encounter aspects of list views that it doesn't handle well.  For example, you won't be able to use ARQ functions in the final SELECT query, since it's executed with RDFLib rather than VIVO.  But overall this could be a convenient tool to have available.  We think it is.  &lt;/p&gt;
+&lt;h4&gt;Getting started&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href="https://gist.github.com/lawlesst/5192700"&gt;Download the scripts&lt;/a&gt; and place them in a directory. &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Install required Python modules.  &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install git+git://github.com/RDFLib/rdflib-sparql.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install SPARQLWrapper
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install requests
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;Run the list view generator by passing it an existing list view config file.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python generate_listview.py /path/to/listViewConfig-awardOrHonor.xml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;View the output in the terminal.  Adjust the listViewConfig.xml file and rerun until it meets your needs.   &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Other resources&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The &lt;a href="https://github.com/vivo-project/VIVO/blob/develop/doc/list_view_configuration_guidelines.txt"&gt;list view documentation&lt;/a&gt; included with VIVO covers the list view process in more detail.  &lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;A &lt;a href="http://www.vivoweb.org/files/presentations/12ws3/Cooks_tour.pdf"&gt;presentationn&lt;/a&gt; from the 2012 VIVO conference details possible approaches to customizing VIVO.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</summary></entry><entry><title>Using Z39.50 to produce a Stack View.</title><link href="/using-z3950-to-produce-a-stack-view.html" rel="alternate"></link><updated>2013-02-08T00:00:00+00:00</updated><author><name></name></author><id>tag:,2013-02-08:using-z3950-to-produce-a-stack-view.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;The &lt;a href="http://librarylab.law.harvard.edu/"&gt;Harvard Library Innovation Lab&lt;/a&gt; has developed a library browsing tool called &lt;a href="http://librarylab.law.harvard.edu/blog/stack-view/"&gt;Stack View&lt;/a&gt;.  It provides a way to virtual browse through a collection of items from a library.&lt;/p&gt;
+&lt;p&gt;The examples on the Stack View website show how to pull data in from a variety of sources and example scripts are provided.  But many libraries might want to pull data in from their own catalog.  Additionally libraries might want to display the items in call number order so that the virtual Stack View approximates what a user would see if they were actually browsing the shelves in your library.&lt;/p&gt;
+&lt;p&gt;One way to get the data necessary for Stack View is via &lt;a href="http://en.wikipedia.org/wiki/Z39.50"&gt;Z39.50&lt;/a&gt;.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.&lt;/p&gt;
+&lt;!-- stackview.css to style the stack --&gt;
+
+&lt;p&gt;&lt;link rel="stylesheet" href="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.css" type="text/css"&gt;&lt;/p&gt;
+&lt;!-- stackview.js and all js dependencies --&gt;
+
+&lt;script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"&gt;&lt;/script&gt;
+
+&lt;script type="text/javascript" src="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.min.js"&gt;&lt;/script&gt;
+
+&lt;div id="stackview" title="Sample Stack View" style="margin: 2em; "&gt;&lt;/div&gt;
+
+&lt;script type="text/javascript"&gt;
+    var data = {
+  "start": "-1",
+  "num_found": 40,
+  "limit": 50,
+  "docs": [
+    {
+      "callnumber": "PS3521.E716 D6 1987",
+      "link": "http://library.brown.edu/find/Record/b3168718",
+      "measurement_page_numeric": 245,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 1,
+      "title": "Doctor Sax :Faust part three /",
+      "pub_date": "1987",
+      "id": "b3168718",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 E9",
+      "link": "http://library.brown.edu/find/Record/b1438756",
+      "measurement_page_numeric": 128,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "Excerpts from Visions of Cody.",
+      "pub_date": "1959",
+      "id": "b1438756",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 605,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "items": 2,
+      "title": "On the road /",
+      "callnumber": "PS3521.E716 O5 1979",
+      "link": "http://library.brown.edu/find/Record/b1102953",
+      "shelfrank": 50,
+      "measurement_height_numeric": 20,
+      "pub_date": "1979",
+      "id": "b1102953"
+    },
+    {
+      "callnumber": "PS3521.E716 O77x 2002",
+      "link": "http://library.brown.edu/find/Record/b3238455",
+      "measurement_page_numeric": 176,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 1,
+      "title": "Orpheus emerged /",
+      "pub_date": "2002",
+      "id": "b3238455",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 T6",
+      "link": "http://library.brown.edu/find/Record/b1438761",
+      "measurement_page_numeric": 499,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "The town &amp; the city.",
+      "pub_date": "1950",
+      "id": "b1438761",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 280,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "items": 1,
+      "title": "Vanity of Duluoz :an adventurous education, 1935-46 /",
+      "callnumber": "PS3521.E716 V3 1969",
+      "link": "http://library.brown.edu/find/Record/b1438770",
+      "shelfrank": 10,
+      "measurement_height_numeric": 21,
+      "pub_date": "1969",
+      "id": "b1438770"
+    },
+    {
+      "callnumber": "PS3521.E716 V3 1969",
+      "link": "http://library.brown.edu/find/Record/b1438770",
+      "measurement_page_numeric": 280,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 1,
+      "title": "Vanity of Duluoz :an adventurous education, 1935-46 /",
+      "pub_date": "1969",
+      "id": "b1438770",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 V48",
+      "link": "http://library.brown.edu/find/Record/b1438775",
+      "measurement_page_numeric": 398,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "Visions of Cody",
+      "pub_date": "1972",
+      "id": "b1438775",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 V5",
+      "link": "http://library.brown.edu/find/Record/b1438779",
+      "measurement_page_numeric": 151,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 2,
+      "title": "Visions of Gerard.",
+      "pub_date": "1963",
+      "id": "b1438779",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E716 Z72",
+      "link": "http://library.brown.edu/find/Record/b1438783",
+      "measurement_page_numeric": 419,
+      "creator": [
+        "Charters, Ann."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "Kerouac;a biography.",
+      "pub_date": "1973",
+      "id": "b1438783",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 60,
+      "creator": [
+        "Gifford, Barry, 1946-"
+      ],
+      "items": 1,
+      "title": "Kerouac's town /",
+      "callnumber": "PS3521.E716 Z756 1977",
+      "link": "http://library.brown.edu/find/Record/b1083350",
+      "shelfrank": 10,
+      "measurement_height_numeric": 18,
+      "pub_date": "1977",
+      "id": "b1083350"
+    },
+    {
+      "callnumber": "PS3521.E716 Z755",
+      "link": "http://library.brown.edu/find/Record/b1095175",
+      "measurement_page_numeric": 339,
+      "creator": [
+        "Gifford, Barry, 1946-"
+      ],
+      "measurement_height_numeric": 24,
+      "items": 4,
+      "title": "Jack's book :an oral biography of Jack Kerouac /",
+      "pub_date": "1978",
+      "id": "b1095175",
+      "shelfrank": 100
+    },
+    {
+      "callnumber": "PS3521.E716 Z756 1977",
+      "link": "http://library.brown.edu/find/Record/b1083350",
+      "measurement_page_numeric": 60,
+      "creator": [
+        "Gifford, Barry, 1946-"
+      ],
+      "measurement_height_numeric": 18,
+      "items": 1,
+      "title": "Kerouac's town /",
+      "pub_date": "1977",
+      "id": "b1083350",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 Z76",
+      "link": "http://library.brown.edu/find/Record/b1050253",
+      "measurement_page_numeric": 150,
+      "creator": [
+        "Hipkiss, Robert A., 1935-"
+      ],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "Jack Kerouac, prophet of the new romanticism :a critical study of the published works of Kerouac and a comparison of them to those of J. D. Salinger, James Purdy, John Knowles, and Ken Kesey /",
+      "pub_date": "1976",
+      "id": "b1050253",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 Z775",
+      "link": "http://library.brown.edu/find/Record/b1126318",
+      "measurement_page_numeric": 400,
+      "creator": [
+        "McNally, Dennis."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 2,
+      "title": "Desolate angel :Jack Kerouace, the Beat generation, and America /",
+      "pub_date": "1979",
+      "id": "b1126318",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "1-SIZE PS3521.E716 Z776x",
+      "link": "http://library.brown.edu/find/Record/b1296288",
+      "measurement_page_numeric": 250,
+      "creator": [],
+      "measurement_height_numeric": 28,
+      "items": 2,
+      "title": "Moody Street irregulars.",
+      "pub_date": "1978",
+      "id": "b1296288",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E718 H6",
+      "link": "http://library.brown.edu/find/Record/b1094786",
+      "measurement_page_numeric": 264,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "How I got to be perfect /",
+      "pub_date": "1978",
+      "id": "b1094786",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E718 M3",
+      "link": "http://library.brown.edu/find/Record/b1438789",
+      "measurement_page_numeric": 181,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 2,
+      "title": "Mary, Mary.",
+      "pub_date": "1963",
+      "id": "b1438789",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E718 P6",
+      "link": "http://library.brown.edu/find/Record/b1002686",
+      "measurement_page_numeric": 202,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 2,
+      "title": "Poor Richard;[a play]",
+      "pub_date": "1965",
+      "id": "b1002686",
+      "shelfrank": 50
+    },
+    {
+      "measurement_page_numeric": 168,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "items": 2,
+      "title": "The snake has all the lines.",
+      "callnumber": "PS3521.E718 S5",
+      "link": "http://library.brown.edu/find/Record/b1438792",
+      "shelfrank": 50,
+      "measurement_height_numeric": 22,
+      "pub_date": "1960",
+      "id": "b1438792"
+    },
+    {
+      "callnumber": "PS3521.E72 I3",
+      "link": "http://library.brown.edu/find/Record/b1438797",
+      "measurement_page_numeric": 292,
+      "creator": [
+        "Kerr, Sophie, 1880-1965."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "In for a penny",
+      "pub_date": "1931",
+      "id": "b1438797",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E72 S4",
+      "link": "http://library.brown.edu/find/Record/b1438800",
+      "measurement_page_numeric": 3,
+      "creator": [
+        "Kerr, Sophie, 1880-1965."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "The see-saw;a story of to-day,",
+      "pub_date": "1919",
+      "id": "b1438800",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 A6 1995",
+      "link": "http://library.brown.edu/find/Record/b2305716",
+      "measurement_page_numeric": 625,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 2,
+      "title": "The portable Jack Kerouac /",
+      "pub_date": "1995",
+      "id": "b2305716",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E735 A6x 1990",
+      "link": "http://library.brown.edu/find/Record/b2096271",
+      "measurement_page_numeric": 3,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 4,
+      "items": 4,
+      "title": "The Jack Kerouac collection",
+      "pub_date": "1990",
+      "id": "b2096271",
+      "shelfrank": 100
+    },
+    {
+      "callnumber": "PS3521.E735 A92 1999",
+      "link": "http://library.brown.edu/find/Record/b2988454",
+      "measurement_page_numeric": 249,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 23,
+      "items": 2,
+      "title": "Atop an Underwood :early stories and other writings /",
+      "pub_date": "1999",
+      "id": "b2988454",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E735 B55 1995",
+      "link": "http://library.brown.edu/find/Record/b2362786",
+      "measurement_page_numeric": 1,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 19,
+      "items": 2,
+      "title": "Book of blues /",
+      "pub_date": "1995",
+      "id": "b2362786",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E735 B667 2006",
+      "link": "http://library.brown.edu/find/Record/b4037830",
+      "measurement_page_numeric": 413,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 16,
+      "items": 1,
+      "title": "Book of sketches, 1952-57 /",
+      "pub_date": "2006",
+      "id": "b4037830",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 D48 1959",
+      "link": "http://library.brown.edu/find/Record/b2586148",
+      "measurement_page_numeric": 192,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 18,
+      "items": 3,
+      "title": "The Dharma bums /",
+      "pub_date": "1959",
+      "id": "b2586148",
+      "shelfrank": 70
+    },
+    {
+      "callnumber": "PS3521.E735 M34 1993",
+      "link": "http://library.brown.edu/find/Record/b3984953",
+      "measurement_page_numeric": 194,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "Maggie Cassidy /",
+      "pub_date": "1993",
+      "id": "b3984953",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 M435 1992",
+      "link": "http://library.brown.edu/find/Record/b2069765",
+      "measurement_page_numeric": 202,
+      "creator": [
+        "Jones, James T., 1948-"
+      ],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "A map of Mexico City blues :Jack Kerouac as poet /",
+      "pub_date": "1992",
+      "id": "b2069765",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5 2007",
+      "link": "http://library.brown.edu/find/Record/b4357673",
+      "measurement_page_numeric": 408,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "On the road :the original scroll /",
+      "pub_date": "2007",
+      "id": "b4357673",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5 2009",
+      "link": "http://library.brown.edu/find/Record/b6149606",
+      "measurement_page_numeric": 1,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "Getting inside Jack Kerouac's head /",
+      "pub_date": "2009",
+      "id": "b6149606",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5x 1957",
+      "link": "http://library.brown.edu/find/Record/b4040534",
+      "measurement_page_numeric": 254,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 18,
+      "items": 1,
+      "title": "On the road /",
+      "pub_date": "1957",
+      "id": "b4040534",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5x 1958",
+      "link": "http://library.brown.edu/find/Record/b2598586",
+      "measurement_page_numeric": 254,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 18,
+      "items": 1,
+      "title": "On the road /",
+      "pub_date": "1958",
+      "id": "b2598586",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "1-SIZE PS3521.E735 O5325 2007",
+      "link": "http://library.brown.edu/find/Record/b4758951",
+      "measurement_page_numeric": 207,
+      "creator": [
+        "Gewirtz, Isaac."
+      ],
+      "measurement_height_numeric": 29,
+      "items": 1,
+      "title": "Beatific souls :Jack Kerouac on the road /",
+      "pub_date": "2007",
+      "id": "b4758951",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O533 1999",
+      "link": "http://library.brown.edu/find/Record/b2982105",
+      "measurement_page_numeric": 137,
+      "creator": [
+        "Holton, Robert, 1950-"
+      ],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "On the road :Kerouac's ragged American journey /",
+      "pub_date": "1999",
+      "id": "b2982105",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 205,
+      "creator": [
+        "Leland, John, 1959-"
+      ],
+      "items": 1,
+      "title": "Why Kerouac matters :the lessons of On the road (they're not what you think) /",
+      "callnumber": "PS3521.E735 O5347 2007",
+      "link": "http://library.brown.edu/find/Record/b4181991",
+      "shelfrank": 10,
+      "measurement_height_numeric": 22,
+      "pub_date": "2007",
+      "id": "b4181991"
+    },
+    {
+      "callnumber": "PS3521.E735 O5347 2007",
+      "link": "http://library.brown.edu/find/Record/b4181991",
+      "measurement_page_numeric": 205,
+      "creator": [
+        "Leland, John, 1959-"
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "Why Kerouac matters :the lessons of On the road (they're not what you think) /",
+      "pub_date": "2007",
+      "id": "b4181991",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O537 1999",
+      "link": "http://library.brown.edu/find/Record/b2857341",
+      "measurement_page_numeric": 130,
+      "creator": [
+        "Swartz, Omar."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "The view from On the road :the rhetorical vision of Jack Kerouac /",
+      "pub_date": "1999",
+      "id": "b2857341",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O55 2009",
+      "link": "http://library.brown.edu/find/Record/b4671317",
+      "measurement_page_numeric": 214,
+      "creator": [],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "What's your road, man? :critical essays on Jack Kerouac's On the road /",
+      "pub_date": "2009",
+      "id": "b4671317",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "1951 K3966 J69s 1994",
+      "link": "http://library.brown.edu/find/Record/b2247678",
+      "measurement_page_numeric": 4,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 16,
+      "items": 3,
+      "title": "Scripture of the golden eternity /",
+      "pub_date": "1994",
+      "id": "b2247678",
+      "shelfrank": 70
+    }
+  ]
+};
+    $(function () {
+            $('#stackview').stackView(
+                {
+                "data" : data,
+                'books_per_page': "1",
+                'start': "30",
+                'ribbon': "Stackview -- On the road -- PS3521.E716 O5",
+                }
+            );
+    });
+&lt;/script&gt;
+
+&lt;h3&gt;Z39.50&lt;/h3&gt;
+&lt;p&gt;&lt;a href="http://en.wikipedia.org/wiki/Z39.50"&gt;Z39.50&lt;/a&gt; is a pre-Web protocol for search and retrieval.  The major advantage to using Z39.50 for data sources in examples like these is that it has been implemented widely (if varyingly) and most ILS systems provide servers both for querying internal data and allowing others to query the data in the system.  In the current library systems environment, it may be the only API to the underlying data.&lt;/p&gt;
+&lt;p&gt;For more information about the protocol and working with it I recommend the &lt;a href="http://www.indexdata.com/blog/2009/08/z3950-dummies"&gt;Z39.50 for Dummies&lt;/a&gt; series that &lt;a href="http://www.indexdata.com"&gt;IndexData&lt;/a&gt; put together in 2009.  You can also read some of the arguments for and against still using Z39.50 in the comment thread of this blog post on &lt;a href="http://dltj.org/article/z3950-for-dummies/"&gt;Disruptive Library Technology Jester&lt;/a&gt;.&lt;/p&gt;
+&lt;h3&gt;Z39.50 scan results&lt;/h3&gt;
+&lt;p&gt;Some Z39.50 implementations provide a facility for 'scanning' a collection by various indexes.  Scan results are like the &lt;a href="http://josiah.brown.edu/search~S7/t?SEARCH=on+the+road"&gt;title&lt;/a&gt;, &lt;a href="http://josiah.brown.edu/search/c?searchtype=c&amp;amp;searcharg=PS3521.E716"&gt;call number&lt;/a&gt;, and &lt;a href="http://josiah.brown.edu/search~S7/d?search=blizzards"&gt;subject&lt;/a&gt; browses seen in most 'classic' library catalogs.&lt;/p&gt;
+&lt;p&gt;The Library of Congress Z39.50 implementor agreement says that &lt;a href="http://www.loc.gov/z3950/agency/contributions/2.html"&gt;scan&lt;/a&gt;, "returns results that consist of terms with complementary data, representing rows from an ordered list. The results can be presented to an end user, enabling him or her to browse forward and optionally backwards.."&lt;/p&gt;
+&lt;p&gt;The examples below use the Python &lt;a href="https://github.com/asl2/PyZ3950"&gt;PyZ3950&lt;/a&gt; library.  You can install it with 'pip install Pyz3950'.  It's also helpful to use &lt;a href="https://github.com/edsu/pymarc/"&gt;pymarc&lt;/a&gt; to handle the returned MARC records.&lt;/p&gt;
+&lt;p&gt;The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.&lt;/p&gt;
+&lt;h3&gt;Call number scan.&lt;/h3&gt;
+&lt;p&gt;Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;PyZ3950&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;zoom&lt;/span&gt;
+
+&lt;span class="n"&gt;conn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;zoom&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Connection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;library.school.edu&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;210&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;databaseName&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;INNOPAC&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;call_number&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;PS3521.E716 O5 1979&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;@attr 1=16 &amp;quot;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;call_number&lt;/span&gt;
+&lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;zoom&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;PQF&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c"&gt;#Number of items returned.&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;numberOfEntries&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;11&lt;/span&gt;
+&lt;span class="c"&gt;#Position in the list of the item we are requesting.&lt;/span&gt;
+&lt;span class="n"&gt;response_position&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;responsePosition&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;response_position&lt;/span&gt;
+
+&lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scan&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;rec&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;display&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rec&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;display&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;response_position&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;----&amp;gt;  &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;display&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;display&lt;/span&gt;
+
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Running this search against the &lt;a href="http://library.brown.edu/"&gt;Brown University Library&lt;/a&gt; library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;        Ps 3521 E716 D4^   1 entry
+        Ps 3521 E716 D6^   1 entry
+        Ps 3521 E716 D6 1959^   1 entry
+        Ps 3521 E716 D6 1987^   1 entry
+        Ps 3521 E716 E9^   1 entry
+----&amp;gt;   Ps 3521 E716 O5 1979^   2 entries
+        Ps 3521 E716 O77 X 2002^   1 entry
+        Ps 3521 E716 T6^   1 entry
+        Ps 3521 E716 V3^   2 entries
+        Ps 3521 E716 V3 1969^   1 entry
+        Ps 3521 E716 V48^   1 entry
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Call number scan and fetching metadata&lt;/h3&gt;
+&lt;p&gt;Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with &lt;a href="https://github.com/edsu/pymarc/"&gt;pymarc&lt;/a&gt; and a Record object is created that allows us to convert the data into more friendly formats.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;PyZ3950&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;zoom&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pymarc&lt;/span&gt;
+
+&lt;span class="n"&gt;conn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;zoom&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Connection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;library.school.edu&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;210&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;databaseName&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;INNOPAC&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_record_by_call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;call&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Function to fetch a bib record by&lt;/span&gt;
+&lt;span class="sd"&gt;    call number.&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;@attr 1=16 &amp;quot;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;call&lt;/span&gt;
+    &lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;zoom&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;PQF&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;bib&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pymarc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Record&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;bib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;call_number&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;PS3521.E716 O5&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;params&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;@attr 1=16 &amp;quot;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;call_number&lt;/span&gt;
+&lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;zoom&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Query&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;PQF&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;params&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c"&gt;#Number of items returned.&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;numberOfEntries&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;
+&lt;span class="c"&gt;#Position in the list of the item we are requesting.&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;responsePosition&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;11&lt;/span&gt;
+
+&lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scan&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;rec&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c"&gt;#print rec&lt;/span&gt;
+    &lt;span class="n"&gt;display&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rec&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;display&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c"&gt;#Get the call number&lt;/span&gt;
+    &lt;span class="n"&gt;call&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rec&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;term&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="c"&gt;#Get the bibliographic record for this call number.&lt;/span&gt;
+    &lt;span class="n"&gt;bib&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_record_by_call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;call&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;bib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Web service to implement Stack View on your library website&lt;/h3&gt;
+&lt;p&gt;To fully integrate this into a website, you will need to run a basic web service that can lookup the call number for a given title, scan for nearby items, and then return the metadata for those items in a &lt;a href="http://librarylab.law.harvard.edu/projects/stackview/demo/documentation.html"&gt;Stack View compliant JSON format&lt;/a&gt;.  I have posted &lt;a href="https://gist.github.com/lawlesst/4722068"&gt;code&lt;/a&gt; for a simple Python and &lt;a href="http://flask.pocoo.org/"&gt;Flask&lt;/a&gt; app on &lt;a href="https://gist.github.com/lawlesst/4722068"&gt;Github&lt;/a&gt; that implements Stack View.  This code is in use on an internal website and seems to be working fine but hasn't been fully implemented yet.  So please use it as a reference rather than something that can be installed and used right away.&lt;/p&gt;</summary></entry><entry><title>Reading and writing RDF for VIVO with RDFAlchemy</title><link href="/reading-and-writing-rdf-for-vivo-with-rdfalchemy.html" rel="alternate"></link><updated>2013-01-02T00:00:00+00:00</updated><author><name></name></author><id>tag:,2013-01-02:reading-and-writing-rdf-for-vivo-with-rdfalchemy.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into &lt;a href="http://www.vivoweb.org/"&gt;VIVO&lt;/a&gt;, the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is &lt;a href="https://rdfalchemy.readthedocs.org/en/latest/"&gt;RDFAlchemy&lt;/a&gt;.  RDFAlchemy takes its lead from the Python SQL toolkit &lt;a href="http://www.sqlalchemy.org/"&gt;SQLAlchemy&lt;/a&gt;. It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.      &lt;/p&gt;
+&lt;p&gt;To demonstrate I have created a basic FacultyMember class definition that models RDF for loading information about faculty into VIVO.  For sample data I am using the &lt;a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.csv"&gt;people.csv&lt;/a&gt; file provided in the &lt;a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf"&gt;VIVO Data Ingest Guide&lt;/a&gt;.&lt;sup id="fnref:outdated"&gt;&lt;a class="footnote-ref" href="#fn:outdated" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;  Each RDFAlchemy class definition has an RDF type assignment to identify the &lt;a href="http://en.wikipedia.org/wiki/RDF_Schema#Classes"&gt;RDF Class&lt;/a&gt; that the object is linked to.  The remaining attributes, known as descriptors, are the specific &lt;a href="http://www.vivoweb.org/glossary/term/47"&gt;data or object properties&lt;/a&gt; of the object.  The right hand side of the descriptor assignment includes whether the property is a single or repeating value (all single here) and the specific RDF property and namespace.  This will become the predicate in the outputted triples.  If you have worked with &lt;a href="https://docs.djangoproject.com/en/dev/topics/db/models/"&gt;Django models&lt;/a&gt; or SQLAlchemy previously, this should seem quite familiar.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;FacultyMember&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;rdfSubject&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;rdf_type&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FacultyMember&lt;/span&gt;
+    &lt;span class="n"&gt;label&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;RDFS&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;firstname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foaf&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;firstName&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;middlename&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;middleName&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;lastname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;foaf&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lastName&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;work_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workEmail&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;phone&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workPhone&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;workFax&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;research_overview&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;researchOverview&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;preferred_title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;preferredTitle&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;moniker&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vitro&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;moniker&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;people_id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSingle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;peopleID&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Writing RDF&lt;/h3&gt;
+&lt;p&gt;Now that the FacultyMember class is defined we can write RDF that we can load into VIVO.  The incoming data is in a CSV file and looks like this.   &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;person_ID,name,first,last,middle,email,phone,fax,title
+3130,&amp;quot;Burks, Rosella &amp;quot;,Rosella,Burks,,BurksR@univ.edu,963.555.1253,963.777.4065,Professor 
+3297,&amp;quot;Avila, Damien &amp;quot;,Damien,Avila,,AvilaD@univ.edu,963.555.1352,963.777.7914,Professor 
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Next we open and loop through the CSV file pulling out the values from cells and assigning them to our FaculyMember objects.   &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#Create a graph&lt;/span&gt;
+&lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;rdfSubject&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;
+
+&lt;span class="c"&gt;#Open the sample VIVO people file.&lt;/span&gt;
+&lt;span class="n"&gt;csv_url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.csv&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;people_file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;urllib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urlopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;csv_url&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;csv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DictReader&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;people_file&lt;/span&gt;&lt;span class="p"&gt;)):&lt;/span&gt;
+    &lt;span class="c"&gt;#Create a URI for the person.&lt;/span&gt;
+    &lt;span class="n"&gt;person_uri&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;URIRef&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;faculty&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="c"&gt;#Instantiate a FacultyMember object using the URI created above. &lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;FacultyMember&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;person_uri&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;name&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;strip&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;people_id&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;person_ID&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;moniker&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;title&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;firstname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;first&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;middle_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;middle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;middle_name&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="bp"&gt;None&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;middle_name&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;middlename&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;middle&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;lastname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;last&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;work_email&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;email&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;phone&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;phone&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;fax&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;serialize&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;n3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The output of the script should look like the following.  This file could be loaded directly into VIVO using the "Add/remove RDF" tool from the administrative page.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;vivo&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;faculty8&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;FacultyMember&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;rdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Derek, Antoine Mccoy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;peopleID&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;2561&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;vitro&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;moniker&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Curator&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;middleName&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Mccoy&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;workEmail&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;DerekA@univ.edu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;workFax&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;963.777.5454&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;workPhone&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;963.555.2992&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;foaf&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;firstName&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Antoine&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;foaf&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;lastName&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Derek&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;vivo&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;faculty9&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;FacultyMember&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;rdfs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Hawkins, Callie&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;local&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;peopleID&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1625&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;vitro&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;moniker&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Professor&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;workEmail&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;HawkinsC@univ.edu&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;workFax&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;963.777.4949&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;core&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;workPhone&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;963.555.3350x6480&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;foaf&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;firstName&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Callie&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;foaf&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;lastName&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Hawkins&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Reading RDF&lt;/h3&gt;
+&lt;p&gt;The classes created for writing RDF with RDFAlchemy can also be helpful for extracting data from RDF.  For example, if you have exported a set of data from VIVO or retrieved it via a SPARQL query and now want to perform operations on it, the class definitions above will provide access to specific properties.  In the example below we load the &lt;a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3"&gt;people.n3&lt;/a&gt; file from the &lt;a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf"&gt;Data Ingest Guide&lt;/a&gt; and filter it to show only those people who have the moniker "Assistant Professor".  The FacultyMember class, and all RDF Alchemy rdfSubject classes, has a method 'filter_by' which takes a descriptor and a value for querying.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#Load the n3 file as a rdfSubject db.&lt;/span&gt;
+&lt;span class="n"&gt;people_n3&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.n3&amp;#39;&lt;/span&gt;
+&lt;span class="n"&gt;rdfSubject&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;people_n3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;n3&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c"&gt;#Filter by all of the assistant professors in the graph.&lt;/span&gt;
+&lt;span class="n"&gt;asst_professors&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;FacultyMember&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter_by&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;moniker&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Assistant Professor&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;=&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Assistant Professors&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;=&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;fac&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;asst_professors&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c"&gt;#Print full name, email, and url to vivo profile.&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="se"&gt;\t&lt;/span&gt;&lt;span class="si"&gt;%s&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;work_email&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fac&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;resUri&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toPython&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The output of this script should look like below.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;====================&lt;/span&gt;
+&lt;span class="n"&gt;Assistant&lt;/span&gt; &lt;span class="n"&gt;Professors&lt;/span&gt;
+&lt;span class="o"&gt;====================&lt;/span&gt;
+
+&lt;span class="n"&gt;Quentin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Sam&lt;/span&gt; &lt;span class="n"&gt;Hyde&lt;/span&gt;       &lt;span class="n"&gt;QuentinS&lt;/span&gt;&lt;span class="nd"&gt;@univ.edu&lt;/span&gt;       &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;vivo&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;faculty35&lt;/span&gt;
+&lt;span class="n"&gt;Mullins&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Kimberly&lt;/span&gt;       &lt;span class="n"&gt;MullinsK&lt;/span&gt;&lt;span class="nd"&gt;@univ.edu&lt;/span&gt;       &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;vivo&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;faculty14&lt;/span&gt;
+&lt;span class="n"&gt;Chuck&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Lloyd&lt;/span&gt; &lt;span class="n"&gt;Haney&lt;/span&gt;      &lt;span class="n"&gt;ChuckL&lt;/span&gt;&lt;span class="nd"&gt;@univ.edu&lt;/span&gt; &lt;span class="n"&gt;http&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;localhost&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;vivo&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;faculty15&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Another class method 'get_by' is also available for retrieving single class instances.    &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#Use get_by to retrieve a single faculty member&lt;/span&gt;
+&lt;span class="n"&gt;faculty&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;FacultyMember&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_by&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hr_id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;3958&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;faculty&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;label&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Wrap Up&lt;/h3&gt;
+&lt;p&gt;The code below includes the snippets above and can be downloaded and run for testing.  RDFAlchemy is &lt;a href="http://pypi.python.org/pypi/RDFAlchemy/"&gt;available on PyPi&lt;/a&gt; and also on &lt;a href="https://github.com/gjhiggins/RDFAlchemy"&gt;Github&lt;/a&gt;.  There are &lt;a href="https://github.com/gjhiggins/RDFAlchemy/tree/master/rdfalchemy/samples"&gt;other examples&lt;/a&gt; in the Github repository that could be helpful for getting started.  &lt;/p&gt;
+&lt;p&gt;For the VIVO implementation work I am doing, I am creating RDFAlchemy class definitions for other VIVO classes, like InformationResources, Events, Roles, Positions, etc.  If you are interested in those, please leave a note below. &lt;/p&gt;
+&lt;div style="width: 800px; margin: 1em; padding:1em; font-size:1em;"&gt;
+&lt;script src="https://gist.github.com/4429683.js"&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:outdated"&gt;
+&lt;p&gt;The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  &amp;#160;&lt;a class="footnote-backref" href="#fnref:outdated" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>A Python module for placing requests in ILLiad</title><link href="/a-python-module-for-placing-requests-in-illiad.html" rel="alternate"></link><updated>2012-12-31T00:00:00+00:00</updated><author><name></name></author><id>tag:,2012-12-31:a-python-module-for-placing-requests-in-illiad.html</id><summary type="html">&lt;hr /&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This post describes a &lt;a href="https://github.com/lawlesst/illiad-api"&gt;Python module&lt;/a&gt; for creating requests in &lt;a href="http://www.atlas-sys.com/illiad/"&gt;ILLiad&lt;/a&gt;, the interlibrary loan software used in libraries.  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Many libraries use &lt;a href="http://www.atlas-sys.com/illiad/"&gt;ILLiad&lt;/a&gt; as the software system for document delivery and interlibrary loan services.  As a developer working with this system, you might find a need to create ILLiad requests programmatically from another system.  This other system could be your library catalog or OpenURL resolver or just a standalone script that processes batches of requests.  However ILLiad doesn't support an API for creating requests.  In response to this, at &lt;a href="http://library.brown.edu"&gt;Brown University Libraries&lt;/a&gt; we have developed a Python module that serves as a programming interface to ILLiad.  The code for the module is &lt;a href="https://github.com/lawlesst/illiad-api"&gt;available on Github&lt;/a&gt; for downloading, forking, and inspection.  It relies on two Python libraries, &lt;a href="http://docs.python-requests.org/en/latest/"&gt;requests&lt;/a&gt; for creating HTTP requests and &lt;a href="http://packages.python.org/pyquery/"&gt;pyquery&lt;/a&gt;, which provides a nice syntax for parsing HTML documents.&lt;/p&gt;
+&lt;h3&gt;Request workflow&lt;/h3&gt;
+&lt;p&gt;This is the basic worfklow for the module:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;authenticate or verify the user in your external system.  &lt;/li&gt;
+&lt;li&gt;establish an ILLiad session on behalf of the user.  Retain the returned session cookie for further requests.&lt;/li&gt;
+&lt;li&gt;pass an OpenURL to ILLiad for the item the user is requesting.&lt;/li&gt;
+&lt;li&gt;parse the response, which is an HTML form with populated values from the OpenURL.  If you were doing this manually from the ILLiad user interface, this would be the pre-populated form that the user sees and either enhances with more information or clicks submit to process.  &lt;/li&gt;
+&lt;li&gt;post the values returned by the step above to the ILLiad server. &lt;/li&gt;
+&lt;li&gt;parse the response.  This response will contain either the transaction number for the request or an error message describing what when wrong.  &lt;/li&gt;
+&lt;li&gt;log the user out.    &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Example in code&lt;/h3&gt;
+&lt;p&gt;&lt;div style="width: 800px; margin: 1em; padding:1em;"&gt;
+&lt;script src="https://gist.github.com/4422229.js"&gt;&lt;/script&gt;
+&lt;/div&gt;&lt;/p&gt;
+&lt;h3&gt;How does the module work?&lt;/h3&gt;
+&lt;p&gt;ILLiad ships with a set of web forms that will respond to &lt;a href="http://en.wikipedia.org/wiki/OpenURL"&gt;OpenURL&lt;/a&gt; requests and pre-populate forms with the appropriate data.  The module will open ILLiad web pages on a user's behalf, parse the responses, and post values to the ILLiad server.&lt;/p&gt;
+&lt;p&gt;The module does rely on screen scraping the HTML returned by the ILLiad application but experience has shown that this method is quite stable and robust enough to be used in production systems.  Versions of this module have been in place at Brown for four years or more and have processed over 10,000 user requests during the last six months.  One of the common problems encountered when relying on screen scraping to provide functionality is that the HTML can change without notice.  In this case the ILLiad software is managed by the library so the chances of it changing without notice is small.  As an extra measure to protect against unforeseen HTML changes, we have place the HTML pages that are used with this module on a different web path than the user pages (something like http://illiad.school.edu/api-pages/) so that we can update the user pages without changing the markup that this module relies on.  &lt;/p&gt;
+&lt;p&gt;The module as implemented relies on the &lt;a href="https://prometheus.atlas-sys.com/display/illiad/RemoteAuth+Authentication"&gt;RemoteAuth&lt;/a&gt; in ILLiad.  This allows users to be authenticated via an HTTP header and can be used with systems like &lt;a href="http://en.wikipedia.org/wiki/Shibboleth"&gt;Shibboleth&lt;/a&gt; or &lt;a href="http://en.wikipedia.org/wiki/Central_Authentication_Service"&gt;CAS&lt;/a&gt;.  The module will pass the appropriate header for authentication and save the session cookie for further requests.  This eliminates the need to store the user's ILLiad credentials in a local database, which could be seen as a security risk.  If this is not a concern for your project, you could use a modified version of this module without enabling the RemoteAuth functionality.  Leave a comment below if you would like some help in getting started with that.  &lt;/p&gt;
+&lt;h3&gt;Example in video&lt;/h3&gt;
+&lt;p&gt;The screencast below shows an example of this module being integrated into the library's OpenURL resolver.  The user in this example authenticates with the campus Shibboleth system and places a request in ILLiad directly from the resolver interface.  There is no need to visit ILLiad to place the request.&lt;br /&gt;
+&lt;div style="width: 700px; margin: 1em; padding:1em;"&gt;
+&lt;iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"&gt;&lt;/iframe&gt;
+&lt;/div&gt;&lt;/p&gt;
+&lt;p&gt;If you are interested in learning more about this project or run into problems when getting started with the module, please leave a comment below.  &lt;/p&gt;</summary></entry><entry><title>Free text citations to library content</title><link href="/free-text-citations-to-library-content.html" rel="alternate"></link><updated>2012-10-17T00:00:00+00:00</updated><author><name></name></author><id>tag:,2012-10-17:free-text-citations-to-library-content.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;On October 11, &lt;a href="http://crossref.org/"&gt;CrossRef&lt;/a&gt; &lt;a href="http://labs.crossref.org/site/crossref_metadata_search.html"&gt;announced&lt;/a&gt; a new metadata search service and &lt;a href="http://search.labs.crossref.org/help/api"&gt;API&lt;/a&gt;.  Jonathan Rochkind has a nice &lt;a href="http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/"&gt;writeup&lt;/a&gt; on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: &lt;/p&gt;
+&lt;blockquote class="modern"&gt;
+    Looks like they also have an API for submitting a free-form citation, and getting back matches with DOI!  It’s sort of a ‘holy grail’ for me to provide a service where users can paste in a free-form citation, and get to our access/delivery options.
+&lt;/blockquote&gt;
+
+&lt;p&gt;I've been doing a lot of work with &lt;a href="./delivery.html"&gt;delivery&lt;/a&gt; services lately and also see the value in being able to match raw text citations to actual content the library has licensed.  So I took Jonathan's statement as a bit of a challenge and an opportunity to explore the CrossRef API.  &lt;/p&gt;
+&lt;h4&gt;Demo&lt;/h4&gt;
+&lt;p&gt;I put together a &lt;a href="http://sleepy-island-6218.herokuapp.com/"&gt;demo application&lt;/a&gt; that takes input from users, sends it to the CrossRef service, and, if a DOI is found, sends that DOI off to the &lt;a href="http://www.serialssolutions.com/en/services/360-link"&gt;360Link&lt;/a&gt; link resolver API to find a full text link in a library.  The screencast below shows two examples. &lt;/p&gt;
+&lt;iframe src="http://www.screenr.com/embed/itV8" width="650" height="396" frameborder="0"&gt;&lt;/iframe&gt;
+
+&lt;p&gt;The code for the demo is &lt;a href="https://github.com/lawlesst/citation-finder"&gt;available on Github&lt;/a&gt;.  The server side code is minimal and built with &lt;a href="http://flask.pocoo.org/"&gt;Flask&lt;/a&gt;, the Python microframework for building web applications.  On the client side, jQuery and jQuery templates pull in the data and render it to the user.  &lt;/p&gt;
+&lt;h4&gt;Recap &amp;amp; future directions&lt;/h4&gt;
+&lt;p&gt;The user interface and interaction could certainly stand for some improvement.  The citations that are resolvable are limited to what's in CrossRef's database, see their list of &lt;a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html"&gt;disclaimers&lt;/a&gt;.  But - this work indicates building a service like this for library users is feasible and will be increasingly more valuable as services like these develop.  &lt;/p&gt;
+&lt;p&gt;CrossRef apparently &lt;a href="http://labs.crossref.org/quick_and_dirty_api_guides/resolving_citations.html"&gt;doesn't parse&lt;/a&gt; the free text into a formatted citation but constructs a query based on the free text against their database.  For further development, it would be worthwhile to try a similar approach with the &lt;a href="http://api.summon.serialssolutions.com/"&gt;Summon API&lt;/a&gt; and see if it could be possible to build a similar service on top of that data, since it contains a larger set of publications and articles.  &lt;/p&gt;
+&lt;h4&gt;Examples&lt;/h4&gt;
+&lt;p&gt;If you are short on citations to try, here are a few I pulled from a &lt;a href="http://repository.library.brown.edu:8080/fedora/objects/bdr:160/datastreams/PDF/content"&gt;dissertation&lt;/a&gt;.  The third citation is to a working paper and doesn't resolve to a DOI via CrossRef so the interface offers a link to a search in Google Scholar, which does return a &lt;a href="http://neeo.univ-tlse1.fr/294/1/collard_dellas.pdf"&gt;PDF to the paper&lt;/a&gt;.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;Christiano, L. J., M. Eichenbaum, and C. L. Evans (2005): “Nominal Rigidities and the Dynamic Eﬀects of a Shock to Monetary Policy,” Journal of Political Economy, 113(1), 1—45.
+
+Clarida, R., J. Gali, and M. Gertler (1999): “The Science of Monetary Policy: A New Keynesian Perspective,” Journal of Economic Literature, 37(4), 1661—1707.
+
+Collard, F., and H. Dellas (2004): “The new Keynesian model with imperfect information and learning,” Working Paper, University of Toulouse.
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Another feature of the demo app to note is that you can append a library's Serials Solutions code to the URL and the demo will search holdings for that library.  For example, this link will search the &lt;a href="http://sleepy-island-6218.herokuapp.com/lg5jh7pa3n/"&gt;University of Victoria&lt;/a&gt; holdings.  John Durno of Victoria has an &lt;a href="http://journal.code4lib.org/articles/7308"&gt;article&lt;/a&gt; in the most recent Code4Lib journal on some of their work with the 360Link API and delivery services.    &lt;/p&gt;</summary></entry><entry><title>Using Python and Pyjnius to connect to Jena models</title><link href="/using-python-and-pyjnius-to-connect-to-jena-models.html" rel="alternate"></link><updated>2012-10-03T00:00:00+00:00</updated><author><name></name></author><id>tag:,2012-10-03:using-python-and-pyjnius-to-connect-to-jena-models.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;At &lt;a href="http://library.brown.edu/"&gt;work&lt;/a&gt;, I’m loading data into &lt;a href="http://vivoweb.org/"&gt;VIVO&lt;/a&gt;, an application built with the &lt;a href="http://jena.apache.org/"&gt;Jena Framework&lt;/a&gt;.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate &lt;a href="https://github.com/vivo-project/VIVO-Harvester"&gt;harvester&lt;/a&gt; project that has more utilities for getting data into the system.    &lt;/p&gt;
+&lt;p&gt;Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;generate a new, unique identifier to assign to new resources.  &lt;/li&gt;
+&lt;li&gt;find an existing resource in the model and return it's URI.  &lt;/li&gt;
+&lt;li&gt;load RDF created with processing scripts directly from those scripts. &lt;/li&gt;
+&lt;li&gt;delete RDF created with processing scripts.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A &lt;a href="http://news.ycombinator.com/item?id=4407624"&gt;recent post&lt;/a&gt; on Hacker News pointed me to a project called &lt;a href="http://pyjnius.readthedocs.org/en/latest/index.html"&gt;Pyjnius&lt;/a&gt;, which is "a Python library for accessing Java classes."  &lt;/p&gt;
+&lt;p&gt;For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using &lt;a href="http://rdflib.readthedocs.org/en/latest/index.html"&gt;RDFLib&lt;/a&gt;, but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  &lt;/p&gt;
+&lt;p&gt;I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case VIVO).  This &lt;a href="https://gist.github.com/3829194"&gt;Gist&lt;/a&gt; contains code that we are using in VIVO data loading scripts.  We are just beginning to explore the &lt;a href="https://github.com/vivo-project/VIVO-Harvester"&gt;VIVO harvester&lt;/a&gt; in detail and hope to take fuller advantage of it moving forward.&lt;/p&gt;
+&lt;p&gt;If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.  &lt;/p&gt;
+&lt;h3&gt;Example of connecting to an existing Jena database.&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;jnius&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;
+
+&lt;span class="c"&gt;#Load java classes&lt;/span&gt;
+&lt;span class="c"&gt;#Database setup&lt;/span&gt;
+&lt;span class="n"&gt;DBConnection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.db.DBConnection&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;LayoutType&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.sdb.store.LayoutType&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;DatabaseType&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.sdb.store.DatabaseType&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;SDBConnection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.sdb.sql.SDBConnection&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;SDBFactory&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.sdb.SDBFactory&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;StoreDesc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.sdb.StoreDesc&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;storeDesc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StoreDesc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LayoutType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;LayoutTripleNodesHash&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DatabaseType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;MySQL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SDBConnection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DB_URL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DB_USER&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DB_PASSWD&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;store&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SDBFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connectStore&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;storeDesc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;dataset&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SDBFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connectDataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;store&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dataset&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getNamedModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;http://vitro.mannlib.cornell.edu/default/vitro-kb-2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;namespaces&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listNameSpaces&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="n"&gt;namespaces&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hasNext&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;namespaces&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;next&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;store&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The output for a default VIVO install should look something like the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;http://vitro.mannlib.cornell.edu/ns/vitro/public#
+http://www.w3.org/1999/02/22-rdf-syntax-ns#
+http://purl.org/NET/c4dm/event.owl#
+http://purl.org/ontology/bibo/
+http://xmlns.com/foaf/0.1/
+http://www.w3.org/2002/07/owl#
+http://purl.org/dc/terms/
+http://vivoweb.org/ontology/core#
+http://vitro.mannlib.cornell.edu/ns/vitro/0.7#
+http://www.w3.org/2000/01/rdf-schema#
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Performing SPARQL queries&lt;/h4&gt;
+&lt;p&gt;This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;jnius&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;
+
+&lt;span class="n"&gt;QueryFactory&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.query.QueryFactory&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;QueryExecutionFactory&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.query.QueryExecutionFactory&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ResultSetFormatter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;com.hp.hpl.jena.query.ResultSetFormatter&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;String&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;autoclass&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;java.lang.String&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="n"&gt;storeDesc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StoreDesc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LayoutType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;LayoutTripleNodesHash&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DatabaseType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;MySQL&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SDBConnection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DB_URL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DB_USER&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;DB_PASSWD&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;store&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SDBFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connectStore&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;storeDesc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;dataset&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;SDBFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connectDataset&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;store&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;model&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;dataset&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getNamedModel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;http://vitro.mannlib.cornell.edu/default/vitro-kb-2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;PREFIX rdf:   &amp;lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&amp;gt;&lt;/span&gt;
+&lt;span class="s"&gt;PREFIX rdfs:  &amp;lt;http://www.w3.org/2000/01/rdf-schema#&amp;gt;&lt;/span&gt;
+&lt;span class="s"&gt;PREFIX owl:   &amp;lt;http://www.w3.org/2002/07/owl#&amp;gt;&lt;/span&gt;
+&lt;span class="s"&gt;SELECT ?thing ?label&lt;/span&gt;
+&lt;span class="s"&gt;WHERE&lt;/span&gt;
+&lt;span class="s"&gt;{&lt;/span&gt;
+&lt;span class="s"&gt;      ?thing rdf:type owl:Thing&lt;/span&gt;
+&lt;span class="s"&gt;      OPTIONAL { ?thing rdfs:label ?label } &lt;/span&gt;
+&lt;span class="s"&gt;}&lt;/span&gt;
+&lt;span class="s"&gt;LIMIT 20&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+
+&lt;span class="n"&gt;query&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;QueryFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;qset&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;QueryExecutionFactory&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;query&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;qexec&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;qset&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execSelect&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ResultSetFormatter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toList&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;qexec&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listIterator&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hasNext&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;next_result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;next&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;uri&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;next_result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;?thing&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toString&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;label&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;next_result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;?label&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toString&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;uri&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;
+
+&lt;span class="n"&gt;qset&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;store&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Pyjnius Installation&lt;/h4&gt;
+&lt;p&gt;The &lt;a href="http://pyjnius.readthedocs.org/en/latest/installation.html"&gt;installation instructions&lt;/a&gt; for Pyjnius are pretty straightforward.  I would recommend installing it with &lt;a href="http://pypi.python.org/pypi/virtualenv"&gt;virtualenv&lt;/a&gt;.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a &lt;a href="http://en.wikipedia.org/wiki/Java_Development_Kit"&gt;JDK&lt;/a&gt; installed. You will also want to make sure your &lt;a href="http://en.wikipedia.org/wiki/Classpath_(Java)"&gt;classpath&lt;/a&gt; is set if you want to use external libraries.  &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;vagrant@lucid32:~$ mkdir pyjnius-project
+vagrant@lucid32:~$ cd pyjnius-project/
+vagrant@lucid32:~/pyjnius-project$ virtualenv venv
+New python executable in venv/bin/python
+Installing setuptools............done.
+Installing pip...............done.
+(venv)vagrant@lucid32:~/pyjnius-project$ source venv/bin/activate
+vagrant@lucid32:~/pyjnius-project$ pip install cython
+Downloading/unpacking cython...
+Successfully installed cython
+Cleaning up...
+(venv)vagrant@lucid32:~/pyjnius-project$ git clone git://github.com/kivy/pyjnius.git
+Initialized empty Git repository in /home/vagrant/pyjnius-project/pyjnius/.git/
+...
+(venv)vagrant@lucid32:~/pyjnius-project$ cd pyjnius/
+(venv)vagrant@lucid32:~/pyjnius-project/pyjnius$ python setup.py install
+(venv)vagrant@lucid32:~/pyjnius-project/pyjnius$ cd ..
+(venv)vagrant@lucid32:~/pyjnius-project/pyjnius$ python
+Python 2.6.5 (r265:79063, Apr 16 2010, 13:09:56)
+[GCC 4.4.3] on linux2
+Type &amp;quot;help&amp;quot;, &amp;quot;copyright&amp;quot;, &amp;quot;credits&amp;quot; or &amp;quot;license&amp;quot; for more information.
+&amp;gt;&amp;gt;&amp;gt; from jnius import autoclass
+&amp;gt;&amp;gt;&amp;gt; Stack = autoclass(&amp;#39;java.util.Stack&amp;#39;)
+&amp;gt;&amp;gt;&amp;gt; stack = Stack()
+&amp;gt;&amp;gt;&amp;gt; stack.push(&amp;#39;hello&amp;#39;)
+&amp;#39;hello&amp;#39;
+&amp;gt;&amp;gt;&amp;gt; stack.push(&amp;#39;world&amp;#39;)
+&amp;#39;world&amp;#39;
+&amp;gt;&amp;gt;&amp;gt; stack.pop()
+&amp;#39;world&amp;#39;
+&amp;gt;&amp;gt;&amp;gt; stack.pop()
+&amp;#39;hello&amp;#39;
+&amp;gt;&amp;gt;&amp;gt; exit()
+&lt;/pre&gt;&lt;/div&gt;</summary></entry><entry><title>Focusing on Delivery</title><link href="/focusing-on-delivery.html" rel="alternate"></link><updated>2012-09-30T00:00:00+00:00</updated><author><name></name></author><id>tag:,2012-09-30:focusing-on-delivery.html</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;A &lt;a href="https://twitter.com/hochstenbach/status/251929102024597504"&gt;Twitter exchange&lt;/a&gt; between &lt;a href="https://twitter.com/intent/user?screen_name=hochstenbach"&gt;Patrick Hochstenbach&lt;/a&gt; and &lt;a href="https://twitter.com/rcallewaert"&gt;Rosemie Callewaert
+&lt;/a&gt; voiced the opinion that library "discovery systems should focus more on delivery".  I agree - completely - and would like to describe some of the work I've been a part of recently that focuses on delivery of library content. &lt;/p&gt;
+&lt;p&gt;At the Brown University Library, we have recently taken steps to improve the delivery of journal articles to library users.  We call the project easyArticle&lt;sup id="fnref:code"&gt;&lt;a class="footnote-ref" href="#fn:code" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;.  When a user clicks on the 'Findit @Brown' link in various databases (including Google Scholar) or clicks the access link in our &lt;a href="http://www.serialssolutions.com/en/services/summon/"&gt;Summon&lt;/a&gt; &lt;a href="http://library.brown.edu/find/Summon/Search?lookfor=learning+to+use+word+processors&amp;amp;type=AllFields&amp;amp;filter[]=holdingsOnly%3A%22false%22&amp;amp;view=list"&gt;front-end&lt;/a&gt;, she is routed through this system.  &lt;/p&gt;
+&lt;p&gt;In its most basic form, easyArticle is a front-end to the 360Link link resolver from Serials Solutions.  However it adds a fair amount of functionality beyond the typical link resolver.  The biggest addition to date is the automated submission of Interlibrary Loan and document delivery requests.  This along with the &lt;a href="http://library.brown.edu/its/software/easyborrow/"&gt;easyBorrow&lt;/a&gt; project at Brown, which focuses on obtaining copies of books, consist of our "delivery" services.  &lt;/p&gt;
+&lt;p&gt;This screencast demonstrates a search in Google Scholar that leads to the user requesting an article via Interlibrary Loan through this application&lt;sup id="fnref:code"&gt;&lt;a class="footnote-ref" href="#fn:code" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;.  Below the screencast is a list of user scenarios and how the easyArticle system is delivery the content to the user.  &lt;br /&gt;
+&lt;div style="width: 700px; margin: 1em; margin-left:auto; margin-right:auto; padding:1em;"&gt;
+&lt;iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"&gt;&lt;/iframe&gt;
+&lt;/div&gt;&lt;/p&gt;
+&lt;h3&gt;User scenarios for our easyArticle link resolver, or article delivery platform.&lt;/h3&gt;
+&lt;h4&gt;Library has a license to an electronic version of the article or knows of an open access electronic copy of the article.&lt;/h4&gt;
+&lt;p&gt;The user is &lt;a href="http://library.brown.edu/easyarticle/get/eaB/"&gt;presented with link&lt;/a&gt; to the electronic version, much like most link resolvers.  Although this page is served by a locally developed web application so we have complete control over its appearance and content.  &lt;/p&gt;
+&lt;h4&gt;Library holds the print version of the article.&lt;/h4&gt;
+&lt;p&gt;Students are presented with the location in the stacks of the item.  &lt;a href="http://library.brown.edu/easyarticle/get/eaC/"&gt;Example&lt;/a&gt;. This also uses a locally developed web service, called the &lt;a href="https://bitbucket.org/bul/book-locator"&gt;book locator&lt;/a&gt;, to give the user the exact floor and aisle location of the item.&lt;/p&gt;
+&lt;p&gt;Faculty can click a 'request' link that will create a document delivery request in Illiad.  Library staff will then retrieve the item from the stacks, scan it, and it will be delivered via the document delivery software. &lt;/p&gt;
+&lt;h4&gt;Library does not license an electronic copy of the article and does not hold a print copy of the article.&lt;/h4&gt;
+&lt;p&gt;Users are offered a request link.  If the user is not authenticated, the user is prompted to login via the campus Shibboleth system.  After clicking a confirmation button, the request is submitted to Illiad.  &lt;/p&gt;
+&lt;p&gt;The library is a member of the &lt;a href="http://rapid2.library.colostate.edu/Public/AboutRapid"&gt;RapidILL&lt;/a&gt; resource sharing network.  Requests that are available via this network are delivered to the users with 24 hours (Monday through Friday) of receipt.  If you aren't familiar with Rapid, there is more information in this &lt;a href="http://www.ilds2011.org/presentations/Delaney_RapidILL_ILDS2011_2011-09-19.pdf"&gt;presentation&lt;/a&gt;.  It's a great collaborative effort.  &lt;/p&gt;
+&lt;p&gt;Requests not available via Rapid are then processed through normal ILL procedures and documents are delivered directly via the Illiad software.  &lt;/p&gt;
+&lt;h4&gt;Something goes wrong.&lt;/h4&gt;
+&lt;p&gt;Unfortunately not all OpenURLs contain enough metadata or the holdings information in the knowledgebase isn't quite right and users can't get the article they are looking for.  In these instances, we offer users a simple problem report form that contains a link to the citation and their IP address that will help staff track down the problem.  This has led to speedier resolution of problems and a more centralized place to track problems and identify which platforms aren't working well with OpenURL.  &lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:code"&gt;
+&lt;p&gt;Many of the components of this application are &lt;a href="https://github.com/lawlesst"&gt;available on Github&lt;/a&gt; as separate Python modules.  I also &lt;a href="http://lawlesst.github.com/notebook/heroku360link.html"&gt;wrote previously&lt;/a&gt; about building a demo application on Heroku that provides the basic functionality of this application. &amp;#160;&lt;a class="footnote-backref" href="#fnref:code" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Django, Heroku, and the 360Link API</title><link href="/django-heroku-and-the-360link-api.html" rel="alternate"></link><updated>2012-09-11T00:00:00+00:00</updated><author><name></name></author><id>tag:,2012-09-11:django-heroku-and-the-360link-api.html</id><summary type="html">&lt;hr /&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This post describes a &lt;a href="http://damp-tor-3124.herokuapp.com/"&gt;demo application&lt;/a&gt; that serves as a front-end to the &lt;a href="http://www.serialssolutions.com/en/services/360-link"&gt;360Link OpenURL resolver&lt;/a&gt;
+from Serials Solutions.  The code is available on &lt;a href="https://github.com/lawlesst/dj360link"&gt;Github&lt;/a&gt; and the application is running on Heroku.    &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A recent &lt;a href="http://serials.infomotions.com/code4lib/archive/2012/201209/2516.html"&gt;thread&lt;/a&gt; on the Code4Lib mailing list discussed technical details of the &lt;a href="http://www.serialssolutions.com/en/services/360-link"&gt;360Link &lt;/a&gt; OpenURL resolver.  The technical details are interesting because the OpenURL resolver is often the last handoff from the library systems to the location on the web where users can actually get what they are looking for.  If something goes wrong, it's a frustating experience for everyone involved. &lt;/p&gt;
+&lt;p&gt;Over the last year, my colleagues and I at Brown University Library have developed a new front-end to 360Link using the &lt;a href="http://www.serialssolutions.com/en/services/360-search/xml-api"&gt;360Link API&lt;/a&gt;.  It's been serving OpenURL requests since February and, as of August, has completely replaced our use of the default 360Link interface.  The main objective of this project was to streamline the delivery of content found in various databases.  &lt;/p&gt;
+&lt;p&gt;Since 360Link is rather popular in academic libraries and other libaries might be interested in implementing their own front-end, I decided to put together a demo &lt;a href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt; application that uses the API to create a basic link resolver.    &lt;/p&gt;
+&lt;p&gt;Here are a few sample links.  You can also paste an OpenURL into the form on the &lt;a href="http://damp-tor-3124.herokuapp.com/"&gt;index page&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://damp-tor-3124.herokuapp.com/?doi=doi/10.2202/1542-0485.1188"&gt;Sample article lookup&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://damp-tor-3124.herokuapp.com/?pmid=22953657"&gt;Pubmed lookup&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://damp-tor-3124.herokuapp.com/?pmid=22953657&amp;amp;output=json"&gt;JSON(P) responses&lt;/a&gt; via content negotiation or adding output=json to the OpenURL. &lt;/li&gt;
+&lt;li&gt;&lt;a href="http://damp-tor-3124.herokuapp.com/dl2af5jf3e/?pmid=22953657"&gt;Another sample response&lt;/a&gt; but a customer code has been added to the url to switch to another library's API.  &lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;You can easily switch libraries by adding another library's Serials Solutions customer code to the URL - e.g Brown's default 360Link interface is at http://rl3tp7zf5x.search.serialssolutions.com/ so the customer code is "rl3tp7z5x".  While testing this, I noticed that some library's API requires authentictation but most seem to be open and testable.  &lt;/p&gt;
+&lt;p&gt;To run some real requests through this app, you could login to &lt;a href="http://www.mendeley.com/"&gt;Mendeley&lt;/a&gt; and set it as your resolver in the “Find this paper at” dropdown menu.   &lt;/p&gt;
+&lt;p&gt;The app is running on Heroku and the code is on &lt;a href="https://github.com/lawlesst/dj360link"&gt;Github&lt;/a&gt;.  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  So it takes less work to get started with the API than you might suspect.  &lt;/p&gt;
+&lt;p&gt;For more details about working with the API, Daniel Talsky did a nice job of &lt;a href="http://journal.code4lib.org/articles/108"&gt;explaining the API&lt;/a&gt; in Issue 4, 2008  of the Code4Lib Journal.    &lt;/p&gt;
+&lt;p&gt;At Brown we have seen some performance issues with the API, particularly with Pubmed ID lookups, but these issues are also present in the default interface too.  Overall it's been quite rewarding to have control over the link resolver interface and to dive in and add new features that make it easier for patrons to get to library content.  &lt;/p&gt;</summary></entry></feed>

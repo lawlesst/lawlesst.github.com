@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Using Z39.50 to produce a Stack View. - Ted Lawless</title>
+        <meta charset="utf-8" />
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="../theme/static/css/style.css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href="https://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+    </head>
+
+    <body id="index" class="archive">
+        <div class="container">
+            <div class="header">
+                <ul class="nav nav-pills pull-right">
+                    <li class=""><a href="..">Home</a></li>
+                    <li><a href="../archives.html">Archives</a></li>
+                </ul>
+                <h3 class="text-muted"><a href="..">Ted Lawless</a></h3>
+				<h2 class="text-muted"></h2>
+             </div>
+<section id="content" class="article content">
+  <header>
+    <h2 class="entry-title">
+      <a href="../notebook/using-z3950-to-produce-a-stack-view.html" rel="bookmark"
+         title="Permalink to Using Z39.50 to produce a Stack View.">Using Z39.50 to produce a Stack View.</a></h2>
+ 
+  </header>
+  
+     
+  <div class="entry-content">
+    <hr />
+<p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library browsing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library.</p>
+<p>The examples on the Stack View website show how to pull data in from a variety of sources and example scripts are provided.  But many libraries might want to pull data in from their own catalog.  Additionally libraries might want to display the items in call number order so that the virtual Stack View approximates what a user would see if they were actually browsing the shelves in your library.</p>
+<p>One way to get the data necessary for Stack View is via <a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a>.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.</p>
+<!-- stackview.css to style the stack -->
+
+<p><link rel="stylesheet" href="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.css" type="text/css"></p>
+<!-- stackview.js and all js dependencies -->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+
+<script type="text/javascript" src="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.min.js"></script>
+
+<div id="stackview" title="Sample Stack View" style="margin: 2em; "></div>
+
+<script type="text/javascript">
+    var data = {
+  "start": "-1",
+  "num_found": 40,
+  "limit": 50,
+  "docs": [
+    {
+      "callnumber": "PS3521.E716 D6 1987",
+      "link": "http://library.brown.edu/find/Record/b3168718",
+      "measurement_page_numeric": 245,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 1,
+      "title": "Doctor Sax :Faust part three /",
+      "pub_date": "1987",
+      "id": "b3168718",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 E9",
+      "link": "http://library.brown.edu/find/Record/b1438756",
+      "measurement_page_numeric": 128,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "Excerpts from Visions of Cody.",
+      "pub_date": "1959",
+      "id": "b1438756",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 605,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "items": 2,
+      "title": "On the road /",
+      "callnumber": "PS3521.E716 O5 1979",
+      "link": "http://library.brown.edu/find/Record/b1102953",
+      "shelfrank": 50,
+      "measurement_height_numeric": 20,
+      "pub_date": "1979",
+      "id": "b1102953"
+    },
+    {
+      "callnumber": "PS3521.E716 O77x 2002",
+      "link": "http://library.brown.edu/find/Record/b3238455",
+      "measurement_page_numeric": 176,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 1,
+      "title": "Orpheus emerged /",
+      "pub_date": "2002",
+      "id": "b3238455",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 T6",
+      "link": "http://library.brown.edu/find/Record/b1438761",
+      "measurement_page_numeric": 499,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "The town & the city.",
+      "pub_date": "1950",
+      "id": "b1438761",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 280,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "items": 1,
+      "title": "Vanity of Duluoz :an adventurous education, 1935-46 /",
+      "callnumber": "PS3521.E716 V3 1969",
+      "link": "http://library.brown.edu/find/Record/b1438770",
+      "shelfrank": 10,
+      "measurement_height_numeric": 21,
+      "pub_date": "1969",
+      "id": "b1438770"
+    },
+    {
+      "callnumber": "PS3521.E716 V3 1969",
+      "link": "http://library.brown.edu/find/Record/b1438770",
+      "measurement_page_numeric": 280,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 1,
+      "title": "Vanity of Duluoz :an adventurous education, 1935-46 /",
+      "pub_date": "1969",
+      "id": "b1438770",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 V48",
+      "link": "http://library.brown.edu/find/Record/b1438775",
+      "measurement_page_numeric": 398,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "Visions of Cody",
+      "pub_date": "1972",
+      "id": "b1438775",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 V5",
+      "link": "http://library.brown.edu/find/Record/b1438779",
+      "measurement_page_numeric": 151,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 2,
+      "title": "Visions of Gerard.",
+      "pub_date": "1963",
+      "id": "b1438779",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E716 Z72",
+      "link": "http://library.brown.edu/find/Record/b1438783",
+      "measurement_page_numeric": 419,
+      "creator": [
+        "Charters, Ann."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "Kerouac;a biography.",
+      "pub_date": "1973",
+      "id": "b1438783",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 60,
+      "creator": [
+        "Gifford, Barry, 1946-"
+      ],
+      "items": 1,
+      "title": "Kerouac's town /",
+      "callnumber": "PS3521.E716 Z756 1977",
+      "link": "http://library.brown.edu/find/Record/b1083350",
+      "shelfrank": 10,
+      "measurement_height_numeric": 18,
+      "pub_date": "1977",
+      "id": "b1083350"
+    },
+    {
+      "callnumber": "PS3521.E716 Z755",
+      "link": "http://library.brown.edu/find/Record/b1095175",
+      "measurement_page_numeric": 339,
+      "creator": [
+        "Gifford, Barry, 1946-"
+      ],
+      "measurement_height_numeric": 24,
+      "items": 4,
+      "title": "Jack's book :an oral biography of Jack Kerouac /",
+      "pub_date": "1978",
+      "id": "b1095175",
+      "shelfrank": 100
+    },
+    {
+      "callnumber": "PS3521.E716 Z756 1977",
+      "link": "http://library.brown.edu/find/Record/b1083350",
+      "measurement_page_numeric": 60,
+      "creator": [
+        "Gifford, Barry, 1946-"
+      ],
+      "measurement_height_numeric": 18,
+      "items": 1,
+      "title": "Kerouac's town /",
+      "pub_date": "1977",
+      "id": "b1083350",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 Z76",
+      "link": "http://library.brown.edu/find/Record/b1050253",
+      "measurement_page_numeric": 150,
+      "creator": [
+        "Hipkiss, Robert A., 1935-"
+      ],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "Jack Kerouac, prophet of the new romanticism :a critical study of the published works of Kerouac and a comparison of them to those of J. D. Salinger, James Purdy, John Knowles, and Ken Kesey /",
+      "pub_date": "1976",
+      "id": "b1050253",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E716 Z775",
+      "link": "http://library.brown.edu/find/Record/b1126318",
+      "measurement_page_numeric": 400,
+      "creator": [
+        "McNally, Dennis."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 2,
+      "title": "Desolate angel :Jack Kerouace, the Beat generation, and America /",
+      "pub_date": "1979",
+      "id": "b1126318",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "1-SIZE PS3521.E716 Z776x",
+      "link": "http://library.brown.edu/find/Record/b1296288",
+      "measurement_page_numeric": 250,
+      "creator": [],
+      "measurement_height_numeric": 28,
+      "items": 2,
+      "title": "Moody Street irregulars.",
+      "pub_date": "1978",
+      "id": "b1296288",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E718 H6",
+      "link": "http://library.brown.edu/find/Record/b1094786",
+      "measurement_page_numeric": 264,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "How I got to be perfect /",
+      "pub_date": "1978",
+      "id": "b1094786",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E718 M3",
+      "link": "http://library.brown.edu/find/Record/b1438789",
+      "measurement_page_numeric": 181,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 2,
+      "title": "Mary, Mary.",
+      "pub_date": "1963",
+      "id": "b1438789",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E718 P6",
+      "link": "http://library.brown.edu/find/Record/b1002686",
+      "measurement_page_numeric": 202,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "measurement_height_numeric": 22,
+      "items": 2,
+      "title": "Poor Richard;[a play]",
+      "pub_date": "1965",
+      "id": "b1002686",
+      "shelfrank": 50
+    },
+    {
+      "measurement_page_numeric": 168,
+      "creator": [
+        "Kerr, Jean."
+      ],
+      "items": 2,
+      "title": "The snake has all the lines.",
+      "callnumber": "PS3521.E718 S5",
+      "link": "http://library.brown.edu/find/Record/b1438792",
+      "shelfrank": 50,
+      "measurement_height_numeric": 22,
+      "pub_date": "1960",
+      "id": "b1438792"
+    },
+    {
+      "callnumber": "PS3521.E72 I3",
+      "link": "http://library.brown.edu/find/Record/b1438797",
+      "measurement_page_numeric": 292,
+      "creator": [
+        "Kerr, Sophie, 1880-1965."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "In for a penny",
+      "pub_date": "1931",
+      "id": "b1438797",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E72 S4",
+      "link": "http://library.brown.edu/find/Record/b1438800",
+      "measurement_page_numeric": 3,
+      "creator": [
+        "Kerr, Sophie, 1880-1965."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "The see-saw;a story of to-day,",
+      "pub_date": "1919",
+      "id": "b1438800",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 A6 1995",
+      "link": "http://library.brown.edu/find/Record/b2305716",
+      "measurement_page_numeric": 625,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 21,
+      "items": 2,
+      "title": "The portable Jack Kerouac /",
+      "pub_date": "1995",
+      "id": "b2305716",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E735 A6x 1990",
+      "link": "http://library.brown.edu/find/Record/b2096271",
+      "measurement_page_numeric": 3,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 4,
+      "items": 4,
+      "title": "The Jack Kerouac collection",
+      "pub_date": "1990",
+      "id": "b2096271",
+      "shelfrank": 100
+    },
+    {
+      "callnumber": "PS3521.E735 A92 1999",
+      "link": "http://library.brown.edu/find/Record/b2988454",
+      "measurement_page_numeric": 249,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 23,
+      "items": 2,
+      "title": "Atop an Underwood :early stories and other writings /",
+      "pub_date": "1999",
+      "id": "b2988454",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E735 B55 1995",
+      "link": "http://library.brown.edu/find/Record/b2362786",
+      "measurement_page_numeric": 1,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 19,
+      "items": 2,
+      "title": "Book of blues /",
+      "pub_date": "1995",
+      "id": "b2362786",
+      "shelfrank": 50
+    },
+    {
+      "callnumber": "PS3521.E735 B667 2006",
+      "link": "http://library.brown.edu/find/Record/b4037830",
+      "measurement_page_numeric": 413,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 16,
+      "items": 1,
+      "title": "Book of sketches, 1952-57 /",
+      "pub_date": "2006",
+      "id": "b4037830",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 D48 1959",
+      "link": "http://library.brown.edu/find/Record/b2586148",
+      "measurement_page_numeric": 192,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 18,
+      "items": 3,
+      "title": "The Dharma bums /",
+      "pub_date": "1959",
+      "id": "b2586148",
+      "shelfrank": 70
+    },
+    {
+      "callnumber": "PS3521.E735 M34 1993",
+      "link": "http://library.brown.edu/find/Record/b3984953",
+      "measurement_page_numeric": 194,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "Maggie Cassidy /",
+      "pub_date": "1993",
+      "id": "b3984953",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 M435 1992",
+      "link": "http://library.brown.edu/find/Record/b2069765",
+      "measurement_page_numeric": 202,
+      "creator": [
+        "Jones, James T., 1948-"
+      ],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "A map of Mexico City blues :Jack Kerouac as poet /",
+      "pub_date": "1992",
+      "id": "b2069765",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5 2007",
+      "link": "http://library.brown.edu/find/Record/b4357673",
+      "measurement_page_numeric": 408,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "On the road :the original scroll /",
+      "pub_date": "2007",
+      "id": "b4357673",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5 2009",
+      "link": "http://library.brown.edu/find/Record/b6149606",
+      "measurement_page_numeric": 1,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 20,
+      "items": 1,
+      "title": "Getting inside Jack Kerouac's head /",
+      "pub_date": "2009",
+      "id": "b6149606",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5x 1957",
+      "link": "http://library.brown.edu/find/Record/b4040534",
+      "measurement_page_numeric": 254,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 18,
+      "items": 1,
+      "title": "On the road /",
+      "pub_date": "1957",
+      "id": "b4040534",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O5x 1958",
+      "link": "http://library.brown.edu/find/Record/b2598586",
+      "measurement_page_numeric": 254,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 18,
+      "items": 1,
+      "title": "On the road /",
+      "pub_date": "1958",
+      "id": "b2598586",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "1-SIZE PS3521.E735 O5325 2007",
+      "link": "http://library.brown.edu/find/Record/b4758951",
+      "measurement_page_numeric": 207,
+      "creator": [
+        "Gewirtz, Isaac."
+      ],
+      "measurement_height_numeric": 29,
+      "items": 1,
+      "title": "Beatific souls :Jack Kerouac on the road /",
+      "pub_date": "2007",
+      "id": "b4758951",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O533 1999",
+      "link": "http://library.brown.edu/find/Record/b2982105",
+      "measurement_page_numeric": 137,
+      "creator": [
+        "Holton, Robert, 1950-"
+      ],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "On the road :Kerouac's ragged American journey /",
+      "pub_date": "1999",
+      "id": "b2982105",
+      "shelfrank": 10
+    },
+    {
+      "measurement_page_numeric": 205,
+      "creator": [
+        "Leland, John, 1959-"
+      ],
+      "items": 1,
+      "title": "Why Kerouac matters :the lessons of On the road (they're not what you think) /",
+      "callnumber": "PS3521.E735 O5347 2007",
+      "link": "http://library.brown.edu/find/Record/b4181991",
+      "shelfrank": 10,
+      "measurement_height_numeric": 22,
+      "pub_date": "2007",
+      "id": "b4181991"
+    },
+    {
+      "callnumber": "PS3521.E735 O5347 2007",
+      "link": "http://library.brown.edu/find/Record/b4181991",
+      "measurement_page_numeric": 205,
+      "creator": [
+        "Leland, John, 1959-"
+      ],
+      "measurement_height_numeric": 22,
+      "items": 1,
+      "title": "Why Kerouac matters :the lessons of On the road (they're not what you think) /",
+      "pub_date": "2007",
+      "id": "b4181991",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O537 1999",
+      "link": "http://library.brown.edu/find/Record/b2857341",
+      "measurement_page_numeric": 130,
+      "creator": [
+        "Swartz, Omar."
+      ],
+      "measurement_height_numeric": 24,
+      "items": 1,
+      "title": "The view from On the road :the rhetorical vision of Jack Kerouac /",
+      "pub_date": "1999",
+      "id": "b2857341",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "PS3521.E735 O55 2009",
+      "link": "http://library.brown.edu/find/Record/b4671317",
+      "measurement_page_numeric": 214,
+      "creator": [],
+      "measurement_height_numeric": 23,
+      "items": 1,
+      "title": "What's your road, man? :critical essays on Jack Kerouac's On the road /",
+      "pub_date": "2009",
+      "id": "b4671317",
+      "shelfrank": 10
+    },
+    {
+      "callnumber": "1951 K3966 J69s 1994",
+      "link": "http://library.brown.edu/find/Record/b2247678",
+      "measurement_page_numeric": 4,
+      "creator": [
+        "Kerouac, Jack, 1922-1969."
+      ],
+      "measurement_height_numeric": 16,
+      "items": 3,
+      "title": "Scripture of the golden eternity /",
+      "pub_date": "1994",
+      "id": "b2247678",
+      "shelfrank": 70
+    }
+  ]
+};
+    $(function () {
+            $('#stackview').stackView(
+                {
+                "data" : data,
+                'books_per_page': "1",
+                'start': "30",
+                'ribbon': "Stackview -- On the road -- PS3521.E716 O5",
+                }
+            );
+    });
+</script>
+
+<h3>Z39.50</h3>
+<p><a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a> is a pre-Web protocol for search and retrieval.  The major advantage to using Z39.50 for data sources in examples like these is that it has been implemented widely (if varyingly) and most ILS systems provide servers both for querying internal data and allowing others to query the data in the system.  In the current library systems environment, it may be the only API to the underlying data.</p>
+<p>For more information about the protocol and working with it I recommend the <a href="http://www.indexdata.com/blog/2009/08/z3950-dummies">Z39.50 for Dummies</a> series that <a href="http://www.indexdata.com">IndexData</a> put together in 2009.  You can also read some of the arguments for and against still using Z39.50 in the comment thread of this blog post on <a href="http://dltj.org/article/z3950-for-dummies/">Disruptive Library Technology Jester</a>.</p>
+<h3>Z39.50 scan results</h3>
+<p>Some Z39.50 implementations provide a facility for 'scanning' a collection by various indexes.  Scan results are like the <a href="http://josiah.brown.edu/search~S7/t?SEARCH=on+the+road">title</a>, <a href="http://josiah.brown.edu/search/c?searchtype=c&amp;searcharg=PS3521.E716">call number</a>, and <a href="http://josiah.brown.edu/search~S7/d?search=blizzards">subject</a> browses seen in most 'classic' library catalogs.</p>
+<p>The Library of Congress Z39.50 implementor agreement says that <a href="http://www.loc.gov/z3950/agency/contributions/2.html">scan</a>, "returns results that consist of terms with complementary data, representing rows from an ordered list. The results can be presented to an end user, enabling him or her to browse forward and optionally backwards.."</p>
+<p>The examples below use the Python <a href="https://github.com/asl2/PyZ3950">PyZ3950</a> library.  You can install it with 'pip install Pyz3950'.  It's also helpful to use <a href="https://github.com/edsu/pymarc/">pymarc</a> to handle the returned MARC records.</p>
+<p>The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.</p>
+<h3>Call number scan.</h3>
+<p>Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#39;INNOPAC&#39;</span>
+
+<span class="n">call_number</span> <span class="o">=</span> <span class="s">&quot;PS3521.E716 O5 1979&quot;</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="s">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">call_number</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+<span class="c">#Number of items returned.</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">numberOfEntries</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="c">#Position in the list of the item we are requesting.</span>
+<span class="n">response_position</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">responsePosition</span> <span class="o">=</span> <span class="n">response_position</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">rec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="n">display</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;display&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">response_position</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;----&gt;  &#39;</span><span class="p">,</span> <span class="n">display</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">display</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+
+<p>Running this search against the <a href="http://library.brown.edu/">Brown University Library</a> library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.</p>
+<div class="highlight"><pre>        Ps 3521 E716 D4^   1 entry
+        Ps 3521 E716 D6^   1 entry
+        Ps 3521 E716 D6 1959^   1 entry
+        Ps 3521 E716 D6 1987^   1 entry
+        Ps 3521 E716 E9^   1 entry
+----&gt;   Ps 3521 E716 O5 1979^   2 entries
+        Ps 3521 E716 O77 X 2002^   1 entry
+        Ps 3521 E716 T6^   1 entry
+        Ps 3521 E716 V3^   2 entries
+        Ps 3521 E716 V3 1969^   1 entry
+        Ps 3521 E716 V48^   1 entry
+</pre></div>
+
+
+<h3>Call number scan and fetching metadata</h3>
+<p>Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with <a href="https://github.com/edsu/pymarc/">pymarc</a> and a Record object is created that allows us to convert the data into more friendly formats.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
+<span class="kn">import</span> <span class="nn">pymarc</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#39;INNOPAC&#39;</span>
+
+<span class="k">def</span> <span class="nf">get_record_by_call</span><span class="p">(</span><span class="n">call</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to fetch a bib record by</span>
+<span class="sd">    call number.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="s">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">call</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">bib</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pymarc</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">bib</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">call_number</span> <span class="o">=</span> <span class="s">&quot;PS3521.E716 O5&quot;</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="s">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">call_number</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+<span class="c">#Number of items returned.</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">numberOfEntries</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="c">#Position in the list of the item we are requesting.</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">responsePosition</span> <span class="o">=</span> <span class="mi">11</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="c">#print rec</span>
+    <span class="n">display</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;display&#39;</span><span class="p">)</span>
+    <span class="c">#Get the call number</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;term&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c">#Get the bibliographic record for this call number.</span>
+    <span class="n">bib</span> <span class="o">=</span> <span class="n">get_record_by_call</span><span class="p">(</span><span class="n">call</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">bib</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+
+<h3>Web service to implement Stack View on your library website</h3>
+<p>To fully integrate this into a website, you will need to run a basic web service that can lookup the call number for a given title, scan for nearby items, and then return the metadata for those items in a <a href="http://librarylab.law.harvard.edu/projects/stackview/demo/documentation.html">Stack View compliant JSON format</a>.  I have posted <a href="https://gist.github.com/lawlesst/4722068">code</a> for a simple Python and <a href="http://flask.pocoo.org/">Flask</a> app on <a href="https://gist.github.com/lawlesst/4722068">Github</a> that implements Stack View.  This code is in use on an internal website and seems to be working fine but hasn't been fully implemented yet.  So please use it as a reference rather than something that can be installed and used right away.</p>
+  </div><!-- /.entry-content -->
+   <footer class="post-info text-muted">
+    Posted on <abbr class="published" title="2013-02-08T00:00:00-05:00">
+      Fri 08 February 2013
+    </abbr>
+    <address class="vcard author">
+      by <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
+    </address> in <a href="../category/notebook.html">notebook</a> Tagged   </footer><!-- /.post-info -->
+</section>
+            <footer id="contentinfo" class="footer">
+                    <nav class="pull-right bottom-nav">
+                        <a href="https://lawlesst.github.io/feed.rss">RSS</a>
+                    </nav>
+                    <address id="about" class="vcard body">
+                    &copy; <a href="..">Ted Lawless</a> Proudly powered by <a href="http://getpelican.com/">Pelican</a>
+                    </address><!-- /#about -->
+            </footer><!-- /#contentinfo -->
+        </div><!-- container -->
+    </body>
+</html>
