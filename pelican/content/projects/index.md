@@ -1,5 +1,5 @@
-title:Projects
-date:01-01-12
+Title:Projects
+Slug:projects
 ----
 [TOC]
 
