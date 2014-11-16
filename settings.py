@@ -19,22 +19,8 @@ TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
 
-PAGE_SAVE_AS = '{slug}/index.html'
 
-
-#Turn off tags
-TAGS_SAVE_AS = ''
-TAG_SAVE_AS = ''
-
-# Blogroll
-#LINKS = (('Pelican', 'http://getpelican.com/'),
-#         ('Python.org', 'http://python.org/'),
-#         ('Jinja2', 'http://jinja.pocoo.org/'),
-#         ('You can modify those links in your config file', '#'),)
-
-# Social widget
-#SOCIAL = (('You can add links in your config file', '#'),
-#          ('Another social link', '#'),)
+DEFAULT_DATE_FORMAT = ('%m/%d/%Y')
 
 TWITTER_USERNAME = 'tedlawless'
 
@@ -57,8 +43,16 @@ PAGE_SAVE_AS =  '{slug}/index.html'
 
 DISQUS_SITENAME = 'tedlawlessnotebook'
 GOOGLE_ANALYTICS = 'UA-2790298-5'
+SOCIAL = (
+	('github', 'http://github.com/lawlesst', 'Github'),
+	('twitter', 'http://twitter.com/tedlawless', 'Twitter'),
+	('stack-overflow', 'http://stackoverflow.com/users/758157/lawlesst', 'Stack Overflow')
+)
 
-MD_EXTENSIONS = (['toc'])
+#MD_EXTENSIONS = (['toc', 'footnotes'])
 
 PLUGIN_PATHS = ['./plugins']
 PLUGINS = ['extract_toc']
+
+
+LOAD_CONTENT_CACHE = False

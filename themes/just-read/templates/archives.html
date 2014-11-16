@@ -9,13 +9,8 @@
 
 {% block content %}
 <div role="main" class="content clearfix">
-<div id="jquerytabs" class="wrapper main">
-	<ul class="tabmenu clearfix">
-		<li><a href="#fecha">By date</a></li>
-		<li><a href="#etiqueta">By topic</a></li>
-	</ul>
-	
-	<div id="fecha">	
+
+	<h1>Archive</h1>	
 	{% for year, date_year in dates|groupby( 'date.year' )|sort(reverse=True) %}	
 		<h2>{{ year }}</h2>
 		<ol class="archive">
@@ -24,23 +19,9 @@
 			{% endfor %}
 		</ol>
 	{% endfor %}
-	</div>
-	
-	<div id="etiqueta">
-		<h2>Tags</h2>
-		<ul class="tag">
-		{% for tag in tag_cloud|sort %}
-		    <li class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a></li>
-		{% endfor %}
-		</ul>
-	</div>
+
 		
 </div>
-</div>
 
-<script>
-	$(function() {
-		$("#jquerytabs").tabs();
-	});
-</script>
+
 {% endblock %}

@@ -2,9 +2,7 @@ Title:Projects
 Slug:projects
 ----
 
-[TOC]
-
-### Brown University
+## Brown University
 #### Research profile manager
 Developed a web application for faculty to manage research profiles.  Leveraged modern JavaScript libraries and the Django web application framework to provide an easy-to-use interface that creates semantically rich data conforming the [VIVO](http://vivoweb.org) ontology.
 
@@ -42,7 +40,7 @@ Adapted a Modified and maintained a complex set of Perl scripts that modify meta
 ####Time-off Recording System
 Developed a Django application to allow staff and supervisors to manage vacation and sick time.  Built Javascript based timesheet that keeps a running total of staff.  Integrated external databases with organizational chart into local system to track and manage staff and supervisory relationships.  In coordination with Human Resources, developed business logic to handle university policies.
 
-### Columbia Law School
+## Columbia Law School
 #### Research Guides
 Evaluated and implemented new content management system for [library research guides](http://library.law.columbia.edu/guides An_Introduction_to_African_Legal_Resources).  Developed customized theme to match institutional web presence.  Developed workflow for converting existing documents to new system and trained student to convert the guides.  Installed development and live versions of CMS (Mediawiki).
 

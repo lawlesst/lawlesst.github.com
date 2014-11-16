@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Focusing on Delivery - Ted Lawless</title>	
+	<meta name="author" content="Ted Lawless">
+	
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
+	
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	
+	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
+	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1><a href="..">Ted Lawless</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Focusing on Delivery</h1>
+			<time datetime="2012-09-30T00:00:00-04:00" pubdate>09/30/2012</time> 
+			<hr />
+<p>A <a href="https://twitter.com/hochstenbach/status/251929102024597504">Twitter exchange</a> between <a href="https://twitter.com/intent/user?screen_name=hochstenbach">Patrick Hochstenbach</a> and <a href="https://twitter.com/rcallewaert">Rosemie Callewaert
+</a> voiced the opinion that library "discovery systems should focus more on delivery".  I agree - completely - and would like to describe some of the work I've been a part of recently that focuses on delivery of library content. </p>
+<p>At the Brown University Library, we have recently taken steps to improve the delivery of journal articles to library users.  We call the project easyArticle<sup id="fnref:code"><a class="footnote-ref" href="#fn:code" rel="footnote">1</a></sup>.  When a user clicks on the 'Findit @Brown' link in various databases (including Google Scholar) or clicks the access link in our <a href="http://www.serialssolutions.com/en/services/summon/">Summon</a> <a href="http://library.brown.edu/find/Summon/Search?lookfor=learning+to+use+word+processors&amp;type=AllFields&amp;filter[]=holdingsOnly%3A%22false%22&amp;view=list">front-end</a>, she is routed through this system.  </p>
+<p>In its most basic form, easyArticle is a front-end to the 360Link link resolver from Serials Solutions.  However it adds a fair amount of functionality beyond the typical link resolver.  The biggest addition to date is the automated submission of Interlibrary Loan and document delivery requests.  This along with the <a href="http://library.brown.edu/its/software/easyborrow/">easyBorrow</a> project at Brown, which focuses on obtaining copies of books, consist of our "delivery" services.  </p>
+<p>This screencast demonstrates a search in Google Scholar that leads to the user requesting an article via Interlibrary Loan through this application<sup id="fnref:code"><a class="footnote-ref" href="#fn:code" rel="footnote">1</a></sup>.  Below the screencast is a list of user scenarios and how the easyArticle system is delivery the content to the user.  <br />
+<div style="width: 700px; margin: 1em; margin-left:auto; margin-right:auto; padding:1em;">
+<iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"></iframe>
+</div></p>
+<h3>User scenarios for our easyArticle link resolver, or article delivery platform.</h3>
+<h4>Library has a license to an electronic version of the article or knows of an open access electronic copy of the article.</h4>
+<p>The user is <a href="http://library.brown.edu/easyarticle/get/eaB/">presented with link</a> to the electronic version, much like most link resolvers.  Although this page is served by a locally developed web application so we have complete control over its appearance and content.  </p>
+<h4>Library holds the print version of the article.</h4>
+<p>Students are presented with the location in the stacks of the item.  <a href="http://library.brown.edu/easyarticle/get/eaC/">Example</a>. This also uses a locally developed web service, called the <a href="https://bitbucket.org/bul/book-locator">book locator</a>, to give the user the exact floor and aisle location of the item.</p>
+<p>Faculty can click a 'request' link that will create a document delivery request in Illiad.  Library staff will then retrieve the item from the stacks, scan it, and it will be delivered via the document delivery software. </p>
+<h4>Library does not license an electronic copy of the article and does not hold a print copy of the article.</h4>
+<p>Users are offered a request link.  If the user is not authenticated, the user is prompted to login via the campus Shibboleth system.  After clicking a confirmation button, the request is submitted to Illiad.  </p>
+<p>The library is a member of the <a href="http://rapid2.library.colostate.edu/Public/AboutRapid">RapidILL</a> resource sharing network.  Requests that are available via this network are delivered to the users with 24 hours (Monday through Friday) of receipt.  If you aren't familiar with Rapid, there is more information in this <a href="http://www.ilds2011.org/presentations/Delaney_RapidILL_ILDS2011_2011-09-19.pdf">presentation</a>.  It's a great collaborative effort.  </p>
+<p>Requests not available via Rapid are then processed through normal ILL procedures and documents are delivered directly via the Illiad software.  </p>
+<h4>Something goes wrong.</h4>
+<p>Unfortunately not all OpenURLs contain enough metadata or the holdings information in the knowledgebase isn't quite right and users can't get the article they are looking for.  In these instances, we offer users a simple problem report form that contains a link to the citation and their IP address that will help staff track down the problem.  This has led to speedier resolution of problems and a more centralized place to track problems and identify which platforms aren't working well with OpenURL.  </p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:code">
+<p>Many of the components of this application are <a href="https://github.com/lawlesst">available on Github</a> as separate Python modules.  I also <a href="http://lawlesst.github.com/notebook/heroku360link.html">wrote previously</a> about building a demo application on Heroku that provides the basic functionality of this application. &#160;<a class="footnote-backref" href="#fnref:code" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+			
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="tedlawless" data-lang="en" data-size="large" data-related="tedlawless">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+						
+			<div class="comments">
+			<h2>Comments !</h2>
+			    <div id="disqus_thread"></div>
+			    <script type="text/javascript">
+			       var disqus_identifier = "notebook/delivery.html";
+			       (function() {
+			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
+			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+			      })();
+			    </script>
+			</div>
+			
+		</div>
+	
+	</article>	
+</div>
+	
+
+		
+<footer class="clearfix">
+<ul class="social">
+	<span class="me">Ted Lawless:</span>
+	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
+	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
+	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
+	</ul>
+</footer>
+	
+	<script>
+	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	  s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
+</body>
+</html>

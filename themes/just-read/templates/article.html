@@ -5,6 +5,7 @@
 	<article>
 		<div class="post wrapper">
 			<h1>{{ article.title }}</h1>
+			<time datetime="{{ article.date.isoformat() }}" pubdate>{{ article.locale_date }}</time> 
 			{{ article.content }}
 			
 			<a href="https://twitter.com/share" class="twitter-share-button" data-via="{{ TWITTER_USERNAME }}" data-lang="en" data-size="large" data-related="{{ TWITTER_USERNAME }}">Tweet</a>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>A utility script for developing VIVO custom list views - Ted Lawless</title>	
+	<meta name="author" content="Ted Lawless">
+	
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
+	
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	
+	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
+	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1><a href="..">Ted Lawless</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>A utility script for developing VIVO custom list views</h1>
+			<time datetime="2013-03-18T00:00:00-04:00" pubdate>03/18/2013</time> 
+			<hr />
+<p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system. </p>
+<p>To speed up the development of these SPARQL queries, my colleague and I put together a <a href="https://gist.github.com/lawlesst/5192700">Python script</a> to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called <a href="https://gist.github.com/lawlesst/5192700">generate_listview.py</a>, parses the VIVO XML based list view config files (<a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml">example</a>) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.  </p>
+<p>A script like this isn't necessary for developing custom list views but we have found it to be useful and makes us a bit more productive.  You can run these queries in the browser using the built-in SPARQL query interface.  However, the list views use a pattern of creating a new graph via SPARQL CONSTRUCT queries and then running a final SELECT query against the constructed graph, which is hard, if not impossible, to simulate in the browser.  This script will simulate that flow and allow you to see all the actions in one step as you run the query.  </p>
+<p>Since this script is not exactly the same as what VIVO does when you load a profile in your browser, you will likely encounter aspects of list views that it doesn't handle well.  For example, you won't be able to use ARQ functions in the final SELECT query, since it's executed with RDFLib rather than VIVO.  But overall this could be a convenient tool to have available.  We think it is.  </p>
+<h4>Getting started</h4>
+<ul>
+<li>
+<p><a href="https://gist.github.com/lawlesst/5192700">Download the scripts</a> and place them in a directory. </p>
+</li>
+<li>
+<p>Install required Python modules.  </p>
+</li>
+</ul>
+<div class="highlight"><pre><span class="nv">$ </span>pip install git+git://github.com/RDFLib/rdflib-sparql.git
+<span class="nv">$ </span>pip install SPARQLWrapper
+<span class="nv">$ </span>pip install requests
+</pre></div>
+
+
+<ul>
+<li>Run the list view generator by passing it an existing list view config file.</li>
+</ul>
+<div class="highlight"><pre><span class="nv">$ </span>python generate_listview.py /path/to/listViewConfig-awardOrHonor.xml
+</pre></div>
+
+
+<ul>
+<li>View the output in the terminal.  Adjust the listViewConfig.xml file and rerun until it meets your needs.   </li>
+</ul>
+<h4>Other resources</h4>
+<ul>
+<li>
+<p>The <a href="https://github.com/vivo-project/VIVO/blob/develop/doc/list_view_configuration_guidelines.txt">list view documentation</a> included with VIVO covers the list view process in more detail.  </p>
+</li>
+<li>
+<p>A <a href="http://www.vivoweb.org/files/presentations/12ws3/Cooks_tour.pdf">presentationn</a> from the 2012 VIVO conference details possible approaches to customizing VIVO.</p>
+</li>
+</ul>
+			
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="tedlawless" data-lang="en" data-size="large" data-related="tedlawless">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+						
+			<div class="comments">
+			<h2>Comments !</h2>
+			    <div id="disqus_thread"></div>
+			    <script type="text/javascript">
+			       var disqus_identifier = "notebook/vivo-listview.html";
+			       (function() {
+			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
+			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+			      })();
+			    </script>
+			</div>
+			
+		</div>
+	
+	</article>	
+</div>
+	
+
+		
+<footer class="clearfix">
+<ul class="social">
+	<span class="me">Ted Lawless:</span>
+	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
+	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
+	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
+	</ul>
+</footer>
+	
+	<script>
+	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	  s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
+</body>
+</html>

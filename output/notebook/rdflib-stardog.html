@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Connecting Python's RDFLib and Stardog - Ted Lawless</title>	
+	<meta name="author" content="Ted Lawless">
+	
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
+	
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	
+	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
+	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1><a href="..">Ted Lawless</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Connecting Python's RDFLib and Stardog</h1>
+			<time datetime="2014-11-06T00:00:00-05:00" pubdate>11/06/2014</time> 
+			<hr />
+<p>For a couple of years I have been working with the Python <a href="https://github.com/RDFLib/rdflib">RDFLib</a> library for converting data from various formats to RDF.  This library serves this work well but it's sometimes difficult to track down a straightforward, working example of performing a particular operation or task in RDFLib.  I have also become interested in learning more about the commercial triple store offerings, which promise better performance and more features than the open source solutions.  A colleague has had good experiences with <a href="http://stardog.com/">Stardog</a>, a commercial semantic graph database (with a freely licensed community edition) from <a href="http://clarkparsia.com/">Clark &amp; Parsia</a>, so I thought I would investigate how to use RDFLib to load data in to Stardog and share my notes.</p>
+<p>A "SPARQLStore" and "SPARQLUpdateStore" have been included with Python's <a href="https://github.com/RDFLib/rdflib">RDFLib</a> since version 4.0.  These are designed to allow developers to use the RDFLib code as a client to any SPARQL endpoint.  Since Stardog <a href="http://docs.stardog.com/using/#sd-Querying">supports SPARQL 1.1</a>, developers should be able to connect to Stardog from RDFLib in the similar way they would to other triple stores like <a href="http://rdf4j.org/">Sesame</a> or <a href="http://jena.apache.org/documentation/serving_data/">Fuseki</a>.</p>
+<h3>Setup Stardog</h3>
+<p>You will need a working instance of Stardog.  Stardog is available under a community license for evaluation after going through a simple registration process.  If you haven't setup Stardog before, you might want to checkout Geir Grønmo's <a href="https://github.com/grove/triplestores">triplestores</a> repository where he has <a href="https://www.vagrantup.com/">Vagrant</a> provisioning scripts for various triple stores.  This is how I got up and running with Stardog.</p>
+<p>Once Stardog is installed, start the Stardog server with security disabled.  This will allow the RDFLib code to connect without a username and password.  Obviously you will not want to run Stardog in this way in production but it is convenient for testing.</p>
+<p><code>$./bin/stardog-admin server start --disable-security</code></p>
+<p>Next create a database called "demo" to store our data.</p>
+<p><code>$./bin/stardog-admin db create -n demo</code></p>
+<p>At this point a SPARQL endpoint is available at ready for queries at <code>http://localhost:5820/demo/query</code>.</p>
+<h3>RDF</h3>
+<p>For this example, we'll add three skos:Concepts to a <a href="http://en.wikipedia.org/wiki/Named_graph">named graph</a> in the Stardog store.</p>
+<div class="highlight"><pre><span class="k">@prefix</span> <span class="nt">rdf</span><span class="o">:</span> <span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">www</span><span class="nc">.w3.org</span><span class="o">/</span><span class="nt">1999</span><span class="o">/</span><span class="nt">02</span><span class="o">/</span><span class="nt">22-rdf-syntax-ns</span><span class="err">#</span><span class="o">&gt;</span> <span class="o">.</span>
+<span class="k">@prefix</span> <span class="nt">rdfs</span><span class="o">:</span> <span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">www</span><span class="nc">.w3.org</span><span class="o">/</span><span class="nt">2000</span><span class="o">/</span><span class="nt">01</span><span class="o">/</span><span class="nt">rdf-schema</span><span class="err">#</span><span class="o">&gt;</span> <span class="o">.</span>
+<span class="k">@prefix</span> <span class="nt">skos</span><span class="o">:</span> <span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">www</span><span class="nc">.w3.org</span><span class="o">/</span><span class="nt">2004</span><span class="o">/</span><span class="nt">02</span><span class="o">/</span><span class="nt">skos</span><span class="o">/</span><span class="nt">core</span><span class="err">#</span><span class="o">&gt;</span> <span class="o">.</span>
+<span class="k">@prefix</span> <span class="nt">xml</span><span class="o">:</span> <span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">www</span><span class="nc">.w3.org</span><span class="o">/</span><span class="nt">XML</span><span class="o">/</span><span class="nt">1998</span><span class="o">/</span><span class="nt">namespace</span><span class="o">&gt;</span> <span class="o">.</span>
+<span class="k">@prefix</span> <span class="nt">xsd</span><span class="o">:</span> <span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">www</span><span class="nc">.w3.org</span><span class="o">/</span><span class="nt">2001</span><span class="o">/</span><span class="nt">XMLSchema</span><span class="err">#</span><span class="o">&gt;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">example</span><span class="nc">.org</span><span class="o">/</span><span class="nt">n1234</span><span class="o">&gt;</span> <span class="nt">a</span> <span class="nt">skos</span><span class="nd">:Concept</span> <span class="p">;</span>
+    <span class="nt">skos</span><span class="nd">:broader</span> <span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">example</span><span class="nc">.org</span><span class="o">/</span><span class="nt">b5678</span><span class="o">&gt;</span> <span class="p">;</span>
+    <span class="nt">skos</span><span class="nd">:preferredLabel</span> <span class="s2">&quot;Baseball&quot;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">example</span><span class="nc">.org</span><span class="o">/</span><span class="nt">b5678</span><span class="o">&gt;</span> <span class="nt">a</span> <span class="nt">skos</span><span class="nd">:Concept</span> <span class="p">;</span>
+    <span class="nt">skos</span><span class="nd">:preferredLabel</span> <span class="s2">&quot;Sports&quot;</span> <span class="o">.</span>
+
+<span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">example</span><span class="nc">.org</span><span class="o">/</span><span class="nt">n1000</span><span class="o">&gt;</span> <span class="nt">a</span> <span class="nt">skos</span><span class="nd">:Concept</span> <span class="p">;</span>
+    <span class="nt">skos</span><span class="nd">:preferredLabel</span> <span class="s2">&quot;Soccer&quot;</span> <span class="o">.</span>
+</pre></div>
+
+
+<h3>Code</h3>
+<p>The complete example code here is available as a <a href="https://gist.github.com/lawlesst/9996cf3050c019a8d5ee">Gist</a>.</p>
+<h5>Setting up the 'store'</h5>
+<p>We need to initialize a <a href="https://github.com/RDFLib/rdflib/blob/master/rdflib/plugins/stores/sparqlstore.py#L447"><code>SPARQLUpdateStore</code></a> as well as a named graph where we will store our assertions.</p>
+<div class="highlight"><pre>    <span class="kn">from</span> <span class="nn">rdflib</span> <span class="kn">import</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">URIRef</span>
+    <span class="kn">from</span> <span class="nn">rdflib.namespace</span> <span class="kn">import</span> <span class="n">RDF</span><span class="p">,</span> <span class="n">SKOS</span>
+    <span class="kn">from</span> <span class="nn">rdflib.plugins.stores</span> <span class="kn">import</span> <span class="n">sparqlstore</span>
+
+    <span class="c">#Define the Stardog store</span>
+    <span class="n">endpoint</span> <span class="o">=</span> <span class="s">&#39;http://localhost:5820/demo/query&#39;</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">sparqlstore</span><span class="o">.</span><span class="n">SPARQLUpdateStore</span><span class="p">()</span>
+    <span class="n">store</span><span class="o">.</span><span class="n">open</span><span class="p">((</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">))</span>
+
+    <span class="c">#Identify a named graph where we will be adding our instances.</span>
+    <span class="n">default_graph</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="s">&#39;http://example.org/default-graph&#39;</span><span class="p">)</span>
+    <span class="n">ng</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span><span class="n">store</span><span class="p">,</span> <span class="n">identifier</span><span class="o">=</span><span class="n">default_graph</span><span class="p">)</span>
+</pre></div>
+
+
+<h5>Loading assertions from a file</h5>
+<p>We can load our sample turtle file to an in-memory RDFLib graph.</p>
+<div class="highlight"><pre>    <span class="n">g</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s">&#39;./sample-concepts.ttl&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;turtle&#39;</span><span class="p">)</span>
+
+    <span class="c">#Serialize our named graph to make sure we got what we expect.</span>
+    <span class="k">print</span> <span class="n">g</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&#39;turtle&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Since our data is now loaded as an in memory Graph we can add it to Stardog with a SPARQL INSERT DATA operation.</p>
+<div class="highlight"><pre>    <span class="n">ng</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+    <span class="s">u&#39;INSERT DATA { </span><span class="si">%s</span><span class="s"> }&#39;</span> <span class="o">%</span> <span class="n">g</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&#39;nt&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+
+
+<h5>Use the RDFLib API to inspect the data</h5>
+<p>Using the RDFLib API, we can list all the Concepts in the Stardog that were just added.</p>
+<div class="highlight"><pre>    <span class="k">for</span> <span class="n">subj</span> <span class="ow">in</span> <span class="n">ng</span><span class="o">.</span><span class="n">subjects</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="n">RDF</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">object</span><span class="o">=</span><span class="n">SKOS</span><span class="o">.</span><span class="n">Concept</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;Concept: &#39;</span><span class="p">,</span> <span class="n">subj</span>
+</pre></div>
+
+
+<p>And, we can find concepts that are broader than others.</p>
+<div class="highlight"><pre>    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">ng</span><span class="o">.</span><span class="n">objects</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="n">SKOS</span><span class="o">.</span><span class="n">broader</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&#39;Broader: &#39;</span><span class="p">,</span> <span class="n">ob</span>
+</pre></div>
+
+
+<h5>Use RDFLib to issue SPARQL read queries.</h5>
+<p>RDFLib allows for binding a prefix to a namespace.  This makes our queries easier to read and write.</p>
+<div class="highlight"><pre>    <span class="n">store</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&#39;skos&#39;</span><span class="p">,</span> <span class="n">SKOS</span><span class="p">)</span>
+</pre></div>
+
+
+<p>A SELECT query to get all the <code>skos:preferredLabel</code> for <code>skos:Concepts</code>.</p>
+<div class="highlight"><pre>    <span class="n">rq</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">    SELECT ?s ?label</span>
+<span class="s">    WHERE {</span>
+<span class="s">        ?s a skos:Concept ;</span>
+<span class="s">           skos:preferredLabel ?label .</span>
+<span class="s">    }</span>
+<span class="s">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ng</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">rq</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">n3</span><span class="p">(),</span> <span class="n">l</span><span class="o">.</span><span class="n">n3</span><span class="p">()</span>
+</pre></div>
+
+
+<h5>Use RDFLib to add assertions.</h5>
+<p>The RDFLib API can also be used to add new assertions to Stardog.</p>
+<div class="highlight"><pre>    <span class="n">soccer</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="s">&#39;http://example.org/n1000&#39;</span><span class="p">)</span>
+    <span class="n">ng</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">soccer</span><span class="p">,</span> <span class="n">SKOS</span><span class="o">.</span><span class="n">altLabel</span><span class="p">,</span> <span class="n">Literal</span><span class="p">(</span><span class="s">&#39;Football&#39;</span><span class="p">)))</span>
+</pre></div>
+
+
+<p>We can now Read statements about soccer using the RDFLib API, which issues the proper SPARQL query to Stardog in the background.</p>
+<div class="highlight"><pre>    <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">ng</span><span class="o">.</span><span class="n">triples</span><span class="p">((</span><span class="n">soccer</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)):</span>
+        <span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">n3</span><span class="p">(),</span> <span class="n">p</span><span class="o">.</span><span class="n">n3</span><span class="p">(),</span> <span class="n">o</span><span class="o">.</span><span class="n">n3</span><span class="p">()</span>
+</pre></div>
+
+
+<h3>Summary</h3>
+<p>With a little setup, we can begin working with Stardog in RDFLib in a similar way that we work with RDFLib and other backends.  The sample code here is included in this <a href="https://gist.github.com/lawlesst/9996cf3050c019a8d5ee">Gist</a>.</p>
+			
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="tedlawless" data-lang="en" data-size="large" data-related="tedlawless">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+						
+			<div class="comments">
+			<h2>Comments !</h2>
+			    <div id="disqus_thread"></div>
+			    <script type="text/javascript">
+			       var disqus_identifier = "notebook/rdflib-stardog.html";
+			       (function() {
+			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
+			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+			      })();
+			    </script>
+			</div>
+			
+		</div>
+	
+	</article>	
+</div>
+	
+
+		
+<footer class="clearfix">
+<ul class="social">
+	<span class="me">Ted Lawless:</span>
+	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
+	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
+	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
+	</ul>
+</footer>
+	
+	<script>
+	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	  s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
+</body>
+</html>

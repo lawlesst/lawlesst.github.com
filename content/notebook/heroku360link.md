@@ -19,6 +19,7 @@ Here are a few sample links.  You can also paste an OpenURL into the form on the
  * [JSON(P) responses](http://damp-tor-3124.herokuapp.com/?pmid=22953657&output=json) via content negotiation or adding output=json to the OpenURL. 
  * [Another sample response](http://damp-tor-3124.herokuapp.com/dl2af5jf3e/?pmid=22953657) but a customer code has been added to the url to switch to another library's API.  
 
+
 You can easily switch libraries by adding another library's Serials Solutions customer code to the URL - e.g Brown's default 360Link interface is at http://rl3tp7zf5x.search.serialssolutions.com/ so the customer code is "rl3tp7z5x".  While testing this, I noticed that some library's API requires authentictation but most seem to be open and testable.  
 
 To run some real requests through this app, you could login to [Mendeley](http://www.mendeley.com/) and set it as your resolver in the “Find this paper at” dropdown menu.   

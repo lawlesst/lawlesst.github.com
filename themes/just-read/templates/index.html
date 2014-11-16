@@ -3,26 +3,20 @@
 
 {% block content %}
 <div role="main" class="content clearfix">
-{% for article in articles %}
-
-	{% if loop.index == 1 %}
-	<article class="wrapper main">
-		<h1><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h1>
-		{{ article.summary }} <a class="btn" href="{{ SITEURL }}/{{ article.url }}">read more →</a>
-	</article>
-
-	{% if loop.length  > 1 %}
+	<p id="me-intro">
+		I work with software in libraries.  I am interested in metadata, web application development and the Semantic Web.  If you would like to speak about any of these topics, please contact me by leaving a comment on one of the articles below or by sending an email to lawlesst at gmail dot com.
+	</p>
 	<div class="wrapper main">		
-		<h3>More posts</h3>
-		<ol class="archive">
-	{% endif %}
-	{% elif loop.index < 10 %}
-			<li class="clearfix"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags}}"><time datetime="{{ article.date.isoformat() }}" pubdate>{{ article.locale_date }}</time> {{ article.title }}</a></li>
-	{% endif %}
-	{% endfor %}
-		</ol>
-		
-		<p>See a complete list of articles in the  <a href="{{ SITEURL }}/archives.html">archive</a>.</p>
+		<h3>Articles </h3>
+			<ol class="archive">
+			{% for article in articles %}
+				{% if loop.index < 10 %}
+						<li class="clearfix"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags}}"><time datetime="{{ article.date.isoformat() }}" pubdate>{{ article.locale_date }}</time> {{ article.title }}</a></li>
+				{% endif %}
+			{% endfor %}
+			</ol>
+			
+			<p>See a complete list of articles in the  <a href="{{ SITEURL }}/archives.html">archive</a>.</p>
 	</div>
 </div>
 {% endblock content %}
