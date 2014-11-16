@@ -36,6 +36,8 @@ TAG_SAVE_AS = ''
 #SOCIAL = (('You can add links in your config file', '#'),
 #          ('Another social link', '#'),)
 
+TWITTER_USERNAME = 'tedlawless'
+
 DEFAULT_PAGINATION = False
 
 FEED_RSS = 'feed.rss'
@@ -52,6 +54,9 @@ ARTICLE_URL = 'notebook/{slug}.html'
 ARTICLE_SAVE_AS = 'notebook/{slug}.html'
 
 PAGE_SAVE_AS =  '{slug}/index.html'
+
+DISQUS_SITENAME = 'tedlawlessnotebook'
+GOOGLE_ANALYTICS = 'UA-2790298-5'
 
 MD_EXTENSIONS = (['toc'])
 
