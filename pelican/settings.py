@@ -40,7 +40,7 @@ DEFAULT_PAGINATION = False
 
 FEED_RSS = 'feed.rss'
 
-THEME = './themes/Just-Read'
+THEME = './themes/just-read'
 
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = True
