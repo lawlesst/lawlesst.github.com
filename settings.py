@@ -27,6 +27,9 @@ TWITTER_USERNAME = 'tedlawless'
 DEFAULT_PAGINATION = False
 
 FEED_RSS = 'feed.rss'
+FEED_USE_SUMMARY = True
+SUMMARY_MAX_LENGTH = 50
+FEED_MAX_ITEMS = 20
 
 THEME = './themes/just-read'
 
@@ -52,7 +55,7 @@ SOCIAL = (
 #MD_EXTENSIONS = (['toc', 'footnotes'])
 
 PLUGIN_PATHS = ['./plugins']
-PLUGINS = ['extract_toc']
+PLUGINS = ['extract_toc', 'feed_summary']
 
 
 LOAD_CONTENT_CACHE = False
