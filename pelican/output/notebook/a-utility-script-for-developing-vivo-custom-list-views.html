@@ -1,35 +1,38 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>A utility script for developing VIVO custom list views - Ted Lawless</title>
-        <meta charset="utf-8" />
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="../theme/static/css/style.css" rel="stylesheet" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link href="https://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
-    </head>
-
-    <body id="index" class="archive">
-        <div class="container">
-            <div class="header">
-                <ul class="nav nav-pills pull-right">
-                    <li class=""><a href="..">Home</a></li>
-                    <li><a href="../archives.html">Archives</a></li>
-                </ul>
-                <h3 class="text-muted"><a href="..">Ted Lawless</a></h3>
-				<h2 class="text-muted"></h2>
-             </div>
-<section id="content" class="article content">
-  <header>
-    <h2 class="entry-title">
-      <a href="../notebook/a-utility-script-for-developing-vivo-custom-list-views.html" rel="bookmark"
-         title="Permalink to A utility script for developing VIVO custom list views">A utility script for developing VIVO custom list views</a></h2>
- 
-  </header>
-  
-     
-  <div class="entry-content">
-    <hr />
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>A utility script for developing VIVO custom list views - Ted Lawless</title>	
+	<meta name="author" content="Ted Lawless">
+	
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
+	
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	
+	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
+	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1><a href="..">Ted Lawless</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>A utility script for developing VIVO custom list views</h1>
+			<hr />
 <p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system. </p>
 <p>To speed up the development of these SPARQL queries, my colleague and I put together a <a href="https://gist.github.com/lawlesst/5192700">Python script</a> to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called <a href="https://gist.github.com/lawlesst/5192700">generate_listview.py</a>, parses the VIVO XML based list view config files (<a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml">example</a>) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.  </p>
 <p>A script like this isn't necessary for developing custom list views but we have found it to be useful and makes us a bit more productive.  You can run these queries in the browser using the built-in SPARQL query interface.  However, the list views use a pattern of creating a new graph via SPARQL CONSTRUCT queries and then running a final SELECT query against the constructed graph, which is hard, if not impossible, to simulate in the browser.  This script will simulate that flow and allow you to see all the actions in one step as you run the query.  </p>
@@ -68,23 +71,44 @@
 <p>A <a href="http://www.vivoweb.org/files/presentations/12ws3/Cooks_tour.pdf">presentationn</a> from the 2012 VIVO conference details possible approaches to customizing VIVO.</p>
 </li>
 </ul>
-  </div><!-- /.entry-content -->
-   <footer class="post-info text-muted">
-    Posted on <abbr class="published" title="2013-03-18T00:00:00-04:00">
-      Mon 18 March 2013
-    </abbr>
-    <address class="vcard author">
-      by <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
-    </address> in <a href="../category/notebook.html">notebook</a> Tagged   </footer><!-- /.post-info -->
-</section>
-            <footer id="contentinfo" class="footer">
-                    <nav class="pull-right bottom-nav">
-                        <a href="https://lawlesst.github.io/feed.rss">RSS</a>
-                    </nav>
-                    <address id="about" class="vcard body">
-                    &copy; <a href="..">Ted Lawless</a> Proudly powered by <a href="http://getpelican.com/">Pelican</a>
-                    </address><!-- /#about -->
-            </footer><!-- /#contentinfo -->
-        </div><!-- container -->
-    </body>
+			
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+						
+			
+		</div>
+	
+<div class="meta wrapper">
+	<time datetime="2013-03-18T00:00:00-04:00" pubdate>Mon 18 March 2013</time>
+	<ul class="tag clearfix">
+		<li><a href="../category/notebook.html">notebook</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="../pages/projects.html">Projects</a></li>
+			<li><a href="../archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">© 2012 Ted Lawless<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+	
+	<script>
+	  var _gaq=[['_setAccount',''],['_trackPageview']];
+	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	  s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
+</body>
 </html>

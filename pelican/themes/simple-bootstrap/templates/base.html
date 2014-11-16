@@ -32,10 +32,13 @@
         <link href="{{ FEED_DOMAIN }}/{{ TAG_FEED_RSS|format(tag.slug) }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} Tags RSS Feed" />
         {% endif %}
         {% endblock head %}
+        <style>
+            .header {background-color: #2D2A62;}
+        </style>
     </head>
 
     <body id="index" class="archive">
-        <div class="container">
+        <div class="container-fluid">
             <div class="header">
                 <ul class="nav nav-pills pull-right">
                     <li class="{% block navclass %}{{ NAVCLASS }}{% endblock navclass %}"><a href="{{ SITEURL }}">Home</a></li>
@@ -47,14 +50,18 @@
                 <h3 class="text-muted"><a href="{{ SITEURL }}">{{ SITENAME }}</a></h3>
 				<h2 class="text-muted">{{ SITESUBTITLE }}</h2>
              </div>
+            <div class="row">
+            <div class="content col-md-9">
             {% block content %}
             {% endblock %}
+            </div>
+            </div>
             <footer id="contentinfo" class="footer">
                     <nav class="pull-right bottom-nav">
                         <a href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}">RSS</a>
                     </nav>
                     <address id="about" class="vcard body">
-                    &copy; <a href="{{SITEURL}}">{{SITENAME}}</a> Proudly powered by <a href="http://getpelican.com/">Pelican</a>
+                        <a href="{{SITEURL}}">{{SITENAME}}</a>
                     </address><!-- /#about -->
             </footer><!-- /#contentinfo -->
         </div><!-- container -->

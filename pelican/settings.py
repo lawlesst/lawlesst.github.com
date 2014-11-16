@@ -40,7 +40,7 @@ DEFAULT_PAGINATION = False
 
 FEED_RSS = 'feed.rss'
 
-THEME = './themes/simple-bootstrap'
+THEME = './themes/Just-Read'
 
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = True
@@ -50,3 +50,5 @@ DISPLAY_CATEGORIES_ON_MENU = False
 #ARTICLE_PATHS = ['notebook']
 ARTICLE_URL = 'notebook/{slug}.html'
 ARTICLE_SAVE_AS = 'notebook/{slug}.html'
+
+PAGE_SAVE_AS =  '{slug}/index.html'

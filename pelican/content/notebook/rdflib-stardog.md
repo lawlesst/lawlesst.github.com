@@ -1,8 +1,7 @@
-title:Connecting Python's RDFLib and Stardog
-date:11-06-14
+Title:Connecting Python's RDFLib and Stardog
+Date:11-06-14
+Slug:rdflib-stardog
 ----
-
-##Connecting Python's RDFLib and Stardog
 
 For a couple of years I have been working with the Python [RDFLib](https://github.com/RDFLib/rdflib) library for converting data from various formats to RDF.  This library serves this work well but it's sometimes difficult to track down a straightforward, working example of performing a particular operation or task in RDFLib.  I have also become interested in learning more about the commercial triple store offerings, which promise better performance and more features than the open source solutions.  A colleague has had good experiences with [Stardog](http://stardog.com/), a commercial semantic graph database (with a freely licensed community edition) from [Clark & Parsia](http://clarkparsia.com/), so I thought I would investigate how to use RDFLib to load data in to Stardog and share my notes.
 

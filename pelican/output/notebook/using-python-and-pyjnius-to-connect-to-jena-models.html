@@ -1,35 +1,38 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Using Python and Pyjnius to connect to Jena models - Ted Lawless</title>
-        <meta charset="utf-8" />
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="../theme/static/css/style.css" rel="stylesheet" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link href="https://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
-    </head>
-
-    <body id="index" class="archive">
-        <div class="container">
-            <div class="header">
-                <ul class="nav nav-pills pull-right">
-                    <li class=""><a href="..">Home</a></li>
-                    <li><a href="../archives.html">Archives</a></li>
-                </ul>
-                <h3 class="text-muted"><a href="..">Ted Lawless</a></h3>
-				<h2 class="text-muted"></h2>
-             </div>
-<section id="content" class="article content">
-  <header>
-    <h2 class="entry-title">
-      <a href="../notebook/using-python-and-pyjnius-to-connect-to-jena-models.html" rel="bookmark"
-         title="Permalink to Using Python and Pyjnius to connect to Jena models">Using Python and Pyjnius to connect to Jena models</a></h2>
- 
-  </header>
-  
-     
-  <div class="entry-content">
-    <hr />
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Using Python and Pyjnius to connect to Jena models - Ted Lawless</title>	
+	<meta name="author" content="Ted Lawless">
+	
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
+	
+	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	
+	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
+	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1><a href="..">Ted Lawless</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Using Python and Pyjnius to connect to Jena models</h1>
+			<hr />
 <p>At <a href="http://library.brown.edu/">work</a>, I’m loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.    </p>
 <p>Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:</p>
 <ul>
@@ -167,23 +170,44 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 &#39;hello&#39;
 &gt;&gt;&gt; exit()
 </pre></div>
-  </div><!-- /.entry-content -->
-   <footer class="post-info text-muted">
-    Posted on <abbr class="published" title="2012-10-03T00:00:00-04:00">
-      Wed 03 October 2012
-    </abbr>
-    <address class="vcard author">
-      by <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
-    </address> in <a href="../category/notebook.html">notebook</a> Tagged   </footer><!-- /.post-info -->
-</section>
-            <footer id="contentinfo" class="footer">
-                    <nav class="pull-right bottom-nav">
-                        <a href="https://lawlesst.github.io/feed.rss">RSS</a>
-                    </nav>
-                    <address id="about" class="vcard body">
-                    &copy; <a href="..">Ted Lawless</a> Proudly powered by <a href="http://getpelican.com/">Pelican</a>
-                    </address><!-- /#about -->
-            </footer><!-- /#contentinfo -->
-        </div><!-- container -->
-    </body>
+			
+			<a href="https://twitter.com/share" class="twitter-share-button" data-via="" data-lang="en" data-size="large" data-related="">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+						
+			
+		</div>
+	
+<div class="meta wrapper">
+	<time datetime="2012-10-03T00:00:00-04:00" pubdate>Wed 03 October 2012</time>
+	<ul class="tag clearfix">
+		<li><a href="../category/notebook.html">notebook</a></li>
+	</ul>
+</div>	</article>	
+</div>
+	
+		
+<footer class="clearfix">
+	<div class="wrapper pages">
+		<ul class="nav">
+			<li><a href="../pages/projects.html">Projects</a></li>
+			<li><a href="../archives.html">Archive</a></li>
+		</ul>
+	</div>
+	
+	<div class="copy wrapper">
+		<ul class="social">
+		</ul>
+	
+		<p role="contentinfo">© 2012 Ted Lawless<br>
+		Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">Pelican</a>.</p>
+	</div>
+</footer>
+	
+	<script>
+	  var _gaq=[['_setAccount',''],['_trackPageview']];
+	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	  s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
+</body>
 </html>
