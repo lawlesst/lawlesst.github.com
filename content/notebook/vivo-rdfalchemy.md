@@ -1,7 +1,6 @@
 Title: Reading and writing RDF for VIVO with RDFAlchemy
 Date:2013-01-02
 Slug:vivo-rdfalchemy
-Tag:python
 ----
 
 For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into [VIVO](http://www.vivoweb.org/), the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is [RDFAlchemy](https://rdfalchemy.readthedocs.org/en/latest/).  RDFAlchemy takes its lead from the Python SQL toolkit [SQLAlchemy](http://www.sqlalchemy.org/). It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.      
@@ -10,31 +9,33 @@ To demonstrate I have created a basic FacultyMember class definition that models
 
 [^outdated]:  The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  
 
-        :::python
-        class FacultyMember(rdfSubject):
-            rdf_type = core.FacultyMember
-            label = rdfSingle(RDFS.label)
-            firstname = rdfSingle(foaf.firstName)
-            middlename = rdfSingle(core.middleName)
-            lastname = rdfSingle(foaf.lastName)
-            work_email = rdfSingle(core.workEmail)
-            phone = rdfSingle(core.workPhone)
-            fax = rdfSingle(core.workFax)
-            research_overview = rdfSingle(core.researchOverview)
-            preferred_title = rdfSingle(core.preferredTitle)
-            moniker = rdfSingle(vitro.moniker)
-            people_id = rdfSingle(local.peopleID)
+~~~~{.python}
 
+class FacultyMember(rdfSubject):
+    rdf_type = core.FacultyMember
+    label = rdfSingle(RDFS.label)
+    firstname = rdfSingle(foaf.firstName)
+    middlename = rdfSingle(core.middleName)
+    lastname = rdfSingle(foaf.lastName)
+    work_email = rdfSingle(core.workEmail)
+    phone = rdfSingle(core.workPhone)
+    fax = rdfSingle(core.workFax)
+    research_overview = rdfSingle(core.researchOverview)
+    preferred_title = rdfSingle(core.preferredTitle)
+    moniker = rdfSingle(vitro.moniker)
+    people_id = rdfSingle(local.peopleID)
+
+~~~~
 
 ###Writing RDF
 
 Now that the FacultyMember class is defined we can write RDF that we can load into VIVO.  The incoming data is in a CSV file and looks like this.   
 
-```csv
-    person_ID,name,first,last,middle,email,phone,fax,title
-    3130,"Burks, Rosella ",Rosella,Burks,,BurksR@univ.edu,963.555.1253,963.777.4065,Professor 
-    3297,"Avila, Damien ",Damien,Avila,,AvilaD@univ.edu,963.555.1352,963.777.7914,Professor 
-```
+~~~~{.csv}
+person_ID,name,first,last,middle,email,phone,fax,title
+3130,"Burks, Rosella ",Rosella,Burks,,BurksR@univ.edu,963.555.1253,963.777.4065,Professor 
+3297,"Avila, Damien ",Damien,Avila,,AvilaD@univ.edu,963.555.1352,963.777.7914,Professor 
+~~~~
 
 Next we open and loop through the CSV file pulling out the values from cells and assigning them to our FaculyMember objects.   
 
@@ -141,6 +142,6 @@ The code below includes the snippets above and can be downloaded and run for tes
 
 For the VIVO implementation work I am doing, I am creating RDFAlchemy class definitions for other VIVO classes, like InformationResources, Events, Roles, Positions, etc.  If you are interested in those, please leave a note below. 
 
-<div style="width: 800px; margin: 1em; padding:1em; font-size:1em;">
+<div style="width: 90%;">
 <script src="https://gist.github.com/4429683.js"></script>
 </div>

@@ -9,7 +9,7 @@
 	<meta name="MobileOptimized" content="320">
 	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
 	
-	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 		
@@ -37,11 +37,27 @@
 			<hr />
 <p>For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into <a href="http://www.vivoweb.org/">VIVO</a>, the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is <a href="https://rdfalchemy.readthedocs.org/en/latest/">RDFAlchemy</a>.  RDFAlchemy takes its lead from the Python SQL toolkit <a href="http://www.sqlalchemy.org/">SQLAlchemy</a>. It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.      </p>
 <p>To demonstrate I have created a basic FacultyMember class definition that models RDF for loading information about faculty into VIVO.  For sample data I am using the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/people.csv">people.csv</a> file provided in the <a href="http://iweb.dl.sourceforge.net/project/vivo/Data%20Ingest/Data_Ingest_Guide.pdf">VIVO Data Ingest Guide</a>.<sup id="fnref:outdated"><a class="footnote-ref" href="#fn:outdated" rel="footnote">1</a></sup>  Each RDFAlchemy class definition has an RDF type assignment to identify the <a href="http://en.wikipedia.org/wiki/RDF_Schema#Classes">RDF Class</a> that the object is linked to.  The remaining attributes, known as descriptors, are the specific <a href="http://www.vivoweb.org/glossary/term/47">data or object properties</a> of the object.  The right hand side of the descriptor assignment includes whether the property is a single or repeating value (all single here) and the specific RDF property and namespace.  This will become the predicate in the outputted triples.  If you have worked with <a href="https://docs.djangoproject.com/en/dev/topics/db/models/">Django models</a> or SQLAlchemy previously, this should seem quite familiar.  </p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">FacultyMember</span><span class="p">(</span><span class="n">rdfSubject</span><span class="p">):</span>
+    <span class="n">rdf_type</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">FacultyMember</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">RDFS</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">firstname</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">foaf</span><span class="o">.</span><span class="n">firstName</span><span class="p">)</span>
+    <span class="n">middlename</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">middleName</span><span class="p">)</span>
+    <span class="n">lastname</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">foaf</span><span class="o">.</span><span class="n">lastName</span><span class="p">)</span>
+    <span class="n">work_email</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">workEmail</span><span class="p">)</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">workPhone</span><span class="p">)</span>
+    <span class="n">fax</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">workFax</span><span class="p">)</span>
+    <span class="n">research_overview</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">researchOverview</span><span class="p">)</span>
+    <span class="n">preferred_title</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">preferredTitle</span><span class="p">)</span>
+    <span class="n">moniker</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">vitro</span><span class="o">.</span><span class="n">moniker</span><span class="p">)</span>
+    <span class="n">people_id</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">local</span><span class="o">.</span><span class="n">peopleID</span><span class="p">)</span>
+</pre></div>
+
+
 <h3>Writing RDF</h3>
 <p>Now that the FacultyMember class is defined we can write RDF that we can load into VIVO.  The incoming data is in a CSV file and looks like this.   </p>
-<div class="highlight"><pre>    person_ID,name,first,last,middle,email,phone,fax,title
-    3130,&quot;Burks, Rosella &quot;,Rosella,Burks,,BurksR@univ.edu,963.555.1253,963.777.4065,Professor 
-    3297,&quot;Avila, Damien &quot;,Damien,Avila,,AvilaD@univ.edu,963.555.1352,963.777.7914,Professor 
+<div class="highlight"><pre>person_ID,name,first,last,middle,email,phone,fax,title
+3130,&quot;Burks, Rosella &quot;,Rosella,Burks,,BurksR@univ.edu,963.555.1253,963.777.4065,Professor 
+3297,&quot;Avila, Damien &quot;,Damien,Avila,,AvilaD@univ.edu,963.555.1352,963.777.7914,Professor 
 </pre></div>
 
 
@@ -135,7 +151,7 @@
 <h3>Wrap Up</h3>
 <p>The code below includes the snippets above and can be downloaded and run for testing.  RDFAlchemy is <a href="http://pypi.python.org/pypi/RDFAlchemy/">available on PyPi</a> and also on <a href="https://github.com/gjhiggins/RDFAlchemy">Github</a>.  There are <a href="https://github.com/gjhiggins/RDFAlchemy/tree/master/rdfalchemy/samples">other examples</a> in the Github repository that could be helpful for getting started.  </p>
 <p>For the VIVO implementation work I am doing, I am creating RDFAlchemy class definitions for other VIVO classes, like InformationResources, Events, Roles, Positions, etc.  If you are interested in those, please leave a note below. </p>
-<div style="width: 800px; margin: 1em; padding:1em; font-size:1em;">
+<div style="width: 90%;">
 <script src="https://gist.github.com/4429683.js"></script>
 </div>
 
@@ -143,31 +159,11 @@
 <hr />
 <ol>
 <li id="fn:outdated">
-<p>The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  </p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">FacultyMember</span><span class="p">(</span><span class="n">rdfSubject</span><span class="p">):</span>
-    <span class="n">rdf_type</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">FacultyMember</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">RDFS</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
-    <span class="n">firstname</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">foaf</span><span class="o">.</span><span class="n">firstName</span><span class="p">)</span>
-    <span class="n">middlename</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">middleName</span><span class="p">)</span>
-    <span class="n">lastname</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">foaf</span><span class="o">.</span><span class="n">lastName</span><span class="p">)</span>
-    <span class="n">work_email</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">workEmail</span><span class="p">)</span>
-    <span class="n">phone</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">workPhone</span><span class="p">)</span>
-    <span class="n">fax</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">workFax</span><span class="p">)</span>
-    <span class="n">research_overview</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">researchOverview</span><span class="p">)</span>
-    <span class="n">preferred_title</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">preferredTitle</span><span class="p">)</span>
-    <span class="n">moniker</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">vitro</span><span class="o">.</span><span class="n">moniker</span><span class="p">)</span>
-    <span class="n">people_id</span> <span class="o">=</span> <span class="n">rdfSingle</span><span class="p">(</span><span class="n">local</span><span class="o">.</span><span class="n">peopleID</span><span class="p">)</span>
-</pre></div>
-
-
-<p><a class="footnote-backref" href="#fnref:outdated" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>The Data Ingest Guide is written for the VIVO 1.1 release.  The ontology may have changed a bit so please verify before reusing this snippet.  I have retained the data properties from the guide for clarity.  &#160;<a class="footnote-backref" href="#fnref:outdated" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
 			
-			<a href="https://twitter.com/share" class="twitter-share-button" data-via="tedlawless" data-lang="en" data-size="large" data-related="tedlawless">Tweet</a>
-			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-						
 			<div class="comments">
 			<h2>Comments !</h2>
 			    <div id="disqus_thread"></div>
@@ -190,7 +186,7 @@
 		
 <footer class="clearfix">
 <ul class="social">
-	<span class="me">Ted Lawless:</span>
+	<span class="me"><a href="..">Ted Lawless</a>:</span>
 	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
 	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
 	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
