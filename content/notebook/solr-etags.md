@@ -1,5 +1,6 @@
-title:Solr Document Signatures
-date:03-29-13
+Title:Solr Document Signatures
+Date:03-29-13
+Slug:solr-etags
 ----
 
 I previously [wrote](http://lawlesst.github.com/notebook/vivo-caching.html) about working with Apache [mod_cache](http://httpd.apache.org/docs/2.2/caching.html), HTTP [ETags](http://en.wikipedia.org/wiki/HTTP_ETag), and [VIVO](http://www.vivoweb.org/) to cache public pages.  After writing that post, I found that [Solr supports adding "signatures" to documents](http://wiki.apache.org/solr/Deduplication) as a way to identify if a document is identical to another.  This [feature](http://wiki.apache.org/solr/Deduplication) was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate [ETags](http://en.wikipedia.org/wiki/HTTP_ETag) forwarded by clients.  

@@ -1,5 +1,6 @@
-title:Using Z39.50 to produce a Stack View.
-date:02-08-13
+Title:Using Z39.50 to produce a Stack View.
+Date:02-08-13
+Slug:z3950-scan
 ----
 
 The [Harvard Library Innovation Lab](http://librarylab.law.harvard.edu/) has developed a library browsing tool called [Stack View](http://librarylab.law.harvard.edu/blog/stack-view/).  It provides a way to virtual browse through a collection of items from a library.

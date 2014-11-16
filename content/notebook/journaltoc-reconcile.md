@@ -1,5 +1,6 @@
-title:An OpenRefine reconciliation service for academic journal data
-date:08-07-13
+Title:An OpenRefine reconciliation service for academic journal data
+Date:08-07-13
+Slug:journaltoc-reconcile
 ----
 
 Recently I've been working to link local data stored in [VIVO](http://vivoweb.org) as RDF with other sources on the Web.  The [RDF Refine extension](http://refine.deri.ie/docs) for [OpenRefine](http://openrefine.org/)[^refine] has been a useful tool in this work.  OpenRefine allows you to query a [reconciliation service](https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API) to match local strings to entities from another source and the RDF Extension allows for export as RDF.

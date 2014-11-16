@@ -1,5 +1,6 @@
-title:Caching VIVO profiles with ETags and mod_cache
-date:03-25-13
+Title:Caching VIVO profiles with ETags and mod_cache
+Date:03-25-13
+Slug:vivo-caching
 ----
 
 <style>.clean-gray{

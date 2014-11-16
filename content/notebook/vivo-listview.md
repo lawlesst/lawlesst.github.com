@@ -1,5 +1,6 @@
-title:A utility script for developing VIVO custom list views 
-date:03-18-13
+Title:A utility script for developing VIVO custom list views 
+Date:03-18-13
+Slug:vivo-listview
 ----
 
 As you continue with your [VIVO](http://www.vivoweb.org/) implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to [Freemarker](https://wiki.duraspace.org/display/VIVO/FreeMarker) templating system. 

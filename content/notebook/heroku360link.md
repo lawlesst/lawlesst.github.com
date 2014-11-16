@@ -1,5 +1,6 @@
-title:Django, Heroku, and the 360Link API
-date:09-11-12
+Title:Django, Heroku, and the 360Link API
+Date:09-11-12
+Slug:heroku360link
 ----
 
 > This post describes a [demo application](http://damp-tor-3124.herokuapp.com/) that serves as a front-end to the [360Link OpenURL resolver](http://www.serialssolutions.com/en/services/360-link)

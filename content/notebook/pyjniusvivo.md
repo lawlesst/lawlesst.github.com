@@ -1,5 +1,6 @@
-title:Using Python and Pyjnius to connect to Jena models
-date:10-03-12
+Title:Using Python and Pyjnius to connect to Jena models
+Date:10-03-12
+Slug:pyjniusvivo
 ----
 
 At [work](http://library.brown.edu/), I’m loading data into [VIVO](http://vivoweb.org/), an application built with the [Jena Framework](http://jena.apache.org/).  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.    
@@ -21,46 +22,46 @@ If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss
 
 ### Example of connecting to an existing Jena database.  
 
-~~~~{.python}
-from jnius import autoclass
+```python
+	from jnius import autoclass
 
-#Load java classes
-#Database setup
-DBConnection = autoclass('com.hp.hpl.jena.db.DBConnection')
-LayoutType = autoclass('com.hp.hpl.jena.sdb.store.LayoutType')
-DatabaseType = autoclass('com.hp.hpl.jena.sdb.store.DatabaseType')
-SDBConnection = autoclass('com.hp.hpl.jena.sdb.sql.SDBConnection')
-SDBFactory = autoclass('com.hp.hpl.jena.sdb.SDBFactory')
-StoreDesc = autoclass('com.hp.hpl.jena.sdb.StoreDesc')
+	#Load java classes
+	#Database setup
+	DBConnection = autoclass('com.hp.hpl.jena.db.DBConnection')
+	LayoutType = autoclass('com.hp.hpl.jena.sdb.store.LayoutType')
+	DatabaseType = autoclass('com.hp.hpl.jena.sdb.store.DatabaseType')
+	SDBConnection = autoclass('com.hp.hpl.jena.sdb.sql.SDBConnection')
+	SDBFactory = autoclass('com.hp.hpl.jena.sdb.SDBFactory')
+	StoreDesc = autoclass('com.hp.hpl.jena.sdb.StoreDesc')
 
-storeDesc = StoreDesc(LayoutType.LayoutTripleNodesHash, DatabaseType.MySQL)
-conn = SDBConnection(DB_URL, DB_USER, DB_PASSWD)
-store = SDBFactory.connectStore(conn, storeDesc)
-dataset = SDBFactory.connectDataset(store)
-model = dataset.getNamedModel('http://vitro.mannlib.cornell.edu/default/vitro-kb-2')
+	storeDesc = StoreDesc(LayoutType.LayoutTripleNodesHash, DatabaseType.MySQL)
+	conn = SDBConnection(DB_URL, DB_USER, DB_PASSWD)
+	store = SDBFactory.connectStore(conn, storeDesc)
+	dataset = SDBFactory.connectDataset(store)
+	model = dataset.getNamedModel('http://vitro.mannlib.cornell.edu/default/vitro-kb-2')
 
-namespaces = model.listNameSpaces()
-while namespaces.hasNext():
-    print namespaces.next()
+	namespaces = model.listNameSpaces()
+	while namespaces.hasNext():
+	    print namespaces.next()
 
-model.close()
-store.close()
-conn.close()
-~~~~
+	model.close()
+	store.close()
+	conn.close()
+```
 
 The output for a default VIVO install should look something like the following:
-~~~~
-http://vitro.mannlib.cornell.edu/ns/vitro/public#
-http://www.w3.org/1999/02/22-rdf-syntax-ns#
-http://purl.org/NET/c4dm/event.owl#
-http://purl.org/ontology/bibo/
-http://xmlns.com/foaf/0.1/
-http://www.w3.org/2002/07/owl#
-http://purl.org/dc/terms/
-http://vivoweb.org/ontology/core#
-http://vitro.mannlib.cornell.edu/ns/vitro/0.7#
-http://www.w3.org/2000/01/rdf-schema#
-~~~~
+
+
+	http://vitro.mannlib.cornell.edu/ns/vitro/public#
+	http://www.w3.org/1999/02/22-rdf-syntax-ns#
+	http://purl.org/NET/c4dm/event.owl#
+	http://purl.org/ontology/bibo/
+	http://xmlns.com/foaf/0.1/
+	http://www.w3.org/2002/07/owl#
+	http://purl.org/dc/terms/
+	http://vivoweb.org/ontology/core#
+	http://vitro.mannlib.cornell.edu/ns/vitro/0.7#
+	http://www.w3.org/2000/01/rdf-schema#
 
 #### Performing SPARQL queries
 This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.  

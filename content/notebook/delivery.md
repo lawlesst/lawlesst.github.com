@@ -1,5 +1,6 @@
-title:Focusing on Delivery
-date:09-30-12
+Title:Focusing on Delivery
+Date:09-30-12
+Slug:delivery
 ----
 
 A [Twitter exchange](https://twitter.com/hochstenbach/status/251929102024597504) between [Patrick Hochstenbach](https://twitter.com/intent/user?screen_name=hochstenbach) and [Rosemie Callewaert
