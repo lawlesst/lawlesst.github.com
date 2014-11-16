@@ -4,6 +4,11 @@
 <div role="main" class="content clearfix">	
 	<div class="post wrapper">
 		<h1>{{ page.title }}</h1>
+		{% if page.toc %}
+	    <nav class="toc">
+	    	{{ page.toc }}
+	    </nav>
+		{% endif %}
 		{{ page.content }}		
 	</div>
 </div>

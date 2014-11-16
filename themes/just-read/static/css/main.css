@@ -549,6 +549,9 @@ p,
 .main + .main {
   margin-top: 96px;
 }
+.main p {
+  width: 65%;
+}
 @media screen and (min-width: 45em) {
   header .wrapper {
     float: right;
@@ -971,3 +974,49 @@ p,
   color: #514986;
 }
 /* Literal.Number.Integer.Long */
+
+
+div.toc {
+  width: 50%;
+  padding: 1em;
+  margin:1em;
+  margin-left: 4em;
+  border: 1px solid #999999;
+}
+
+
+div.toc a:hover {
+  text-decoration: underline
+}
+
+div.toc ul {
+  width: 100%;
+}
+
+div.toc ul li {
+  margin:0;
+  padding:0;
+  line-height: 2em;
+  list-style-type: none;
+  list-style-image: none; 
+}
+
+div.toc ul li a {
+ color: #999999;
+ font-size: 14px;
+ font-weight: 700;
+}
+
+div.toc ul li ul li a {
+  text-decoration: none;
+  color: #404040;
+  font-weight: normal;
+  font-size: 1em;
+}
+
+
+div.toc ul li ul li {
+  margin-left: 2em;
+  width: 100%;
+}
+

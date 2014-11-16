@@ -52,3 +52,8 @@ ARTICLE_URL = 'notebook/{slug}.html'
 ARTICLE_SAVE_AS = 'notebook/{slug}.html'
 
 PAGE_SAVE_AS =  '{slug}/index.html'
+
+MD_EXTENSIONS = (['toc'])
+
+PLUGIN_PATHS = ['./plugins']
+PLUGINS = ['extract_toc']

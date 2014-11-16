@@ -1,6 +1,7 @@
 Title:Projects
 Slug:projects
 ----
+
 [TOC]
 
 ### Brown University
