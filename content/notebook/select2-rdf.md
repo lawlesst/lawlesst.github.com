@@ -30,7 +30,7 @@ The next step was to develop a way to embed RDF-like information in the page so 
 	<div id="profile" data-subject="ex:jsmith">
 	    <h5>John Smith - reseacher</h5>
 	    <label for="research-area">Research areas:</label>
-	    <input id="research-area" class="multi-tag" data-predicate="vivo:hasResearchArea"/>
+	    <input id="research-area" data-predicate="vivo:hasResearchArea"/>
 	</div>
 ```
 
