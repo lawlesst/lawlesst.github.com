@@ -1,7 +1,6 @@
 Title:Free text citations to library content
 Date:10-17-12
 Slug: citation-finder
-----
 
 On October 11, [CrossRef](http://crossref.org/) [announced](http://labs.crossref.org/site/crossref_metadata_search.html) a new metadata search service and [API](http://search.labs.crossref.org/help/api).  Jonathan Rochkind has a nice [writeup](http://bibwild.wordpress.com/2012/10/11/new-crossref-metadata-search-with-api/) on the possibilities of integrating such a service with library software.  Jonathan writes the following in reference to the "links" feature which will take an unstructured citation and attempt to resolve it to a DOI: 
 

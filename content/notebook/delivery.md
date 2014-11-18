@@ -1,7 +1,6 @@
 Title:Focusing on Delivery
 Date:09-30-12
 Slug:delivery
-----
 
 A [Twitter exchange](https://twitter.com/hochstenbach/status/251929102024597504) between [Patrick Hochstenbach](https://twitter.com/intent/user?screen_name=hochstenbach) and [Rosemie Callewaert
 ](https://twitter.com/rcallewaert) voiced the opinion that library "discovery systems should focus more on delivery".  I agree - completely - and would like to describe some of the work I've been a part of recently that focuses on delivery of library content. 

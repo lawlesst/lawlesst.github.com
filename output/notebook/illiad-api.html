@@ -35,8 +35,7 @@
 			<h1>A Python module for placing requests in ILLiad</h1>
 			<time datetime="2012-12-31T00:00:00-05:00" pubdate>12/31/2012</time> 
 			<hr/>
-			<hr />
-<blockquote>
+			<blockquote>
 <p>This post describes a <a href="https://github.com/lawlesst/illiad-api">Python module</a> for creating requests in <a href="http://www.atlas-sys.com/illiad/">ILLiad</a>, the interlibrary loan software used in libraries.  </p>
 </blockquote>
 <p>Many libraries use <a href="http://www.atlas-sys.com/illiad/">ILLiad</a> as the software system for document delivery and interlibrary loan services.  As a developer working with this system, you might find a need to create ILLiad requests programmatically from another system.  This other system could be your library catalog or OpenURL resolver or just a standalone script that processes batches of requests.  However ILLiad doesn't support an API for creating requests.  In response to this, at <a href="http://library.brown.edu">Brown University Libraries</a> we have developed a Python module that serves as a programming interface to ILLiad.  The code for the module is <a href="https://github.com/lawlesst/illiad-api">available on Github</a> for downloading, forking, and inspection.  It relies on two Python libraries, <a href="http://docs.python-requests.org/en/latest/">requests</a> for creating HTTP requests and <a href="http://packages.python.org/pyquery/">pyquery</a>, which provides a nice syntax for parsing HTML documents.</p>

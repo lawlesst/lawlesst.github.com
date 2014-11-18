@@ -1,7 +1,6 @@
 Title: A Python module for placing requests in ILLiad 
 Date:12-31-12
 Slug:illiad-api
-----
 
 > This post describes a [Python module](https://github.com/lawlesst/illiad-api) for creating requests in [ILLiad](http://www.atlas-sys.com/illiad/), the interlibrary loan software used in libraries.  
 

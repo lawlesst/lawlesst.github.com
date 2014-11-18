@@ -1,7 +1,6 @@
 Title: Reading and writing RDF for VIVO with RDFAlchemy
 Date:2013-01-02
 Slug:vivo-rdfalchemy
-----
 
 For the last few months I have been working on converting a diverse set of data about the university and its faculty into RDF for import into [VIVO](http://www.vivoweb.org/), the semantic web application.  The workflow generally consists of mapping the incoming data to the VIVO ontology(s) and then writing a Python script to create the RDF necessary for loading into VIVO.  One of the tools I have begun using is [RDFAlchemy](https://rdfalchemy.readthedocs.org/en/latest/).  RDFAlchemy takes its lead from the Python SQL toolkit [SQLAlchemy](http://www.sqlalchemy.org/). It allows for "a object type API access to an RDF Triplestore."  What this means in practice is that you can create a set of classes for reading and writing RDF for VIVO.  Once your classes are created they can be reused down the line for future RDF reading, writing, and SPARQL queries.      
 

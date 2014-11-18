@@ -1,7 +1,6 @@
 Title:Python and JSON-LD
 Date:08-03-14
 Slug:python-jsonld
-----
 
 I've published some [code](https://github.com/lawlesst/vivo-sample-data) for mapping CSV data to RDF using Python and JSON-LD on [Github](https://github.com/lawlesst/vivo-sample-data).  The motivation for this work was:
 
