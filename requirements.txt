@@ -1,2 +1,6 @@
-git+https://github.com/lawlesst/python-pyrss2gen.git
 markdown
+pelican
+#for toc
+beautifulsoup4
+git+https://github.com/davisp/ghp-import.git
+
