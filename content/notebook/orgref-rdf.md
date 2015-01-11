@@ -1,7 +1,7 @@
 Title: OrgRef data as RDF
 Date: 01-10-2015
 Slug: orgref-rdf
-Summary: Notes on mapping [OrgRef](http://www.orgref.org/web/download.htm) to DBPedia and RDF and publishing via [Linked Data Fragments](http://linkeddatafragments.org/) .
+Summary: Notes on mapping [OrgRef](http://www.orgref.org/web/download.htm) to DBPedia and publishing with [Linked Data Fragments](http://linkeddatafragments.org/) .
 
 This past fall, [Data Salon](http://www.datasalon.com/web/index.htm), a UK-based data services company, released an open dataset about academic and research organizations called [OrgRef](http://www.orgref.org/).  The data is [available as a CSV](http://www.orgref.org/web/download.htm) and contains basic information about over 30,000 organizations.
 
