@@ -10,7 +10,7 @@ This past fall, [Data Salon](http://www.datasalon.com/web/index.htm), a UK-based
 This announcement caught our attention at my place of work because we are compiling information about educational organizations in multiple systems, including a [VIVO](http://vivoweb.org) instance, and are looking for manageable ways to consume Linked Data that will enrich or augment our local systems.  Since the OrgRef data has been curated and focuses on a useful subset of data that we are interested in, it seemed to be a good candidate for investigation.  Due to it's size, it is also easier to work with than attempting to consume and process something like [VIAF](http://viaf.org/) or [DBPedia](http://dbpedia.org) itself.
 
 #Process
-We downloaded the OrgRef dataset as a CSV and used the ever helpful [csvkit](https://github.com/onyxfish/csvkit) tool to get handle on what data elements exist.
+We downloaded the OrgRef CSV dataset and used the ever helpful [csvkit](https://github.com/onyxfish/csvkit) tool to get handle on what data elements exist.
 
 ```
 
