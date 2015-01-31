@@ -1,14 +1,14 @@
 Title: Select2 for RDF editing interfaces
 Date: 11-16-2014
 Slug: select2-rdf
-Summary: A description and example of using [Select2](http://ivaynberg.github.io/select2/) to build an editing interface for RDF data.  Sample HTML and JavaScript are included that relate skos:Concepts from the [assignFAST](http://oclc.org/developer/develop/web-services/fast-api/assign-fast.en.html) webservice provided by [OCLC](http://www.oclc.org/data.en.html) to local researcher URIs.  
+Summary: A description and example of using [Select2](http://ivaynberg.github.io/select2/) to build an editing interface for RDF data.  Sample HTML and JavaScript is included that relates skos:Concepts from the [assignFAST](http://oclc.org/developer/develop/web-services/fast-api/assign-fast.en.html) webservice provided by [OCLC](http://www.oclc.org/data.en.html) to local researcher URIs.  
 
 ###Overview
 I've been working on a project that requires an end-user web interface that is both simple to use but also updates underlying RDF data about researchers and their activities.  When we started this project, we reviewed available libraries for building web based editing interfaces on top of RDF and found a fair number.  During our review, however, most of those we found fell short of meeting our requirements, mostly because few are being actively maintained or developed.  
 
-Knowing that their is a great deal of work being done with JavaScript frameworks and libraries, we looked outside the scope of RDF specific tools.  [Select2](http://ivaynberg.github.io/select2/) was quickly identified as tool we wanted to use.  Select2, as the project says somewhat humbly, "is a jQuery-based replacement for select boxes. It supports searching, remote data sets, and infinite scrolling of results."  The [examples page](http://ivaynberg.github.io/select2/) does a great job of showing the capabilities of the library and documenting its feature. 
+Knowing that there is a great deal of work being done with JavaScript frameworks and libraries, we looked outside the scope of RDF specific tools.  [Select2](http://ivaynberg.github.io/select2/) was quickly identified as tool we wanted to use.  Select2, as the project says somewhat humbly, "is a jQuery-based replacement for select boxes." It supports searching, remote data sets, and infinite scrolling of results."  The [examples page](http://ivaynberg.github.io/select2/) does a great job of showing the capabilities of the library and documenting its feature. 
 
-One of the primary editing functions we wanted to support with our web application was the ability for users to add relationships to concepts (e.g. topics or geographic areas studied) or people (collaborators).  Select2's tagging widget seemed like a good candidate because it provides a straightforward input element for users to begin typing tags and the library provides auto-completion to match existing terms.  Select2 also supports loading remote data via AJAX, which again suited us well because the RDF application we are using, [VIVO](http://vivoweb.org/) provides autocomplete web services as well.  The remote loading, via AJAX, also makes it possible to look up entities in external systems and pulling those into the user interface as suggested tags.
+One of the primary editing functions we wanted to support with our web application was the ability for users to add relationships to concepts (e.g. topics or geographic areas studied) or people (collaborators).  Select2's tagging widget seemed like a good candidate because it provides a straightforward input element for users to begin typing tags and the library provides autocompletion to match existing terms.  Select2 also supports loading remote data via AJAX, which again suited us well because the RDF application we are using, [VIVO](http://vivoweb.org/) provides autocomplete web services as well.  The remote loading, via AJAX, also makes it possible to look up entities in external systems and pull those into the user interface as suggested tags.
 
 
 ###Solution
@@ -22,9 +22,9 @@ After determining Select2 was a good solution to our user interface requirements
 ex:person123 vivo:hasResearchArea ex:concept456 .
 ```
 
-Since Select2 as a library focuses on the front-end editing interaction, it doesn't prescribe any backend for storing data created.  Adapting it to create the data we needed was a matter of reading the documentation and taking advantage of the rich options offered.  
+Since Select2 as a library focuses on the front-end editing interaction, it doesn't prescribe a backend for storing data created.  Adapting it to create the data we needed was a matter of reading the documentation and taking advantage of the rich options offered.  
 
-The next step was to develop a way to embed RDF-like information in the page so that we could create triples representing the data that users changed.  We considered several approaches to embedding this semantic information into the application but decided using [HTML5 data attributes](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes) were a simple a straightforward way.  See the snippet below.  The URI for the entity being updated 'ex:jsmith' is added as a data attribute to the containing div.  The Select2 input element has the data attribute for the predicate 'vivo:hasResearchArea' and the term resolved via autocomplete will become the object.  We are using a standard set of namespace prefixes so the embedded qnames - 'data:jsmith' - can be expanded to the full uri, e.g. http://example.org/individual/jsmith'.  
+The next step was to develop a way to embed RDF-like information in the page so that we could create triples representing the data that users changed.  We considered several approaches to embedding this semantic information into the application but decided using [HTML5 data attributes](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes) were a simple and straightforward way.  See the snippet below.  The URI for the entity being updated 'ex:jsmith' is added as a data attribute to the containing div.  The Select2 input element has the data attribute for the predicate 'vivo:hasResearchArea' and the term resolved via autocomplete will become the object.  We are using a standard set of namespace prefixes so the embedded qnames - 'data:jsmith' - can be expanded to the full uri, e.g. http://example.org/individual/jsmith'.  
 
 ```html
 	<div id="profile" data-subject="ex:jsmith">
@@ -34,7 +34,7 @@ The next step was to develop a way to embed RDF-like information in the page so 
 	</div>
 ```
 
-With the HTML data properties in place, we can then use Select2's support for remote data sources to pull in suggested tags (either a local webservice or third party API) and use the events generated by Select2 objects (tag added or tag removed) to create intermediate JavaScript data structures to represent triples.  When the change event is triggered, JavaScript reads the even and examines the HTML data attributes to assemble the triples.  For example:
+With the HTML data properties in place, we can then use Select2's support for remote data sources to pull in suggested tags (either a local webservice or third party API) and use the events generated by Select2 objects (tag added or tag removed) to create intermediate JavaScript data structures to represent triples.  When the change event is triggered, JavaScript reads the event and reads the HTML data attributes to assemble the triples.  For example:
 
 ```javascript
 {
@@ -45,7 +45,7 @@ With the HTML data properties in place, we can then use Select2's support for re
 
 ```
 
-This data is then posted as JSON to a local REST API that reads JSON data like above and the action (add or remove), converts the statements to the necessary RDF triples, and issues a SPARQL update query to change the data in the underlying store.  This data transformation is invisible to users because it happens in the background after selecting a tag.  The editing is also inline and not part of a form so users don't have to click a save button or confirm updates.  Again, we are focusing on ease of use and trying to mask as much of the underlying data as possible from the end user.  
+This data is then posted as JSON to a local REST API that reads JSON data like above and the action (add or remove), converts the statements to the necessary RDF triples, and issues a SPARQL update query to change the data in the underlying store.  This data transformation is invisible to users because it happens in the background after selecting a tag.  The editing is also inline and not part of a form so users don't have to click a save button or confirm updates.  Again, we are focusing on ease of use and trying to mask as much of the complexity of the underlying data as possible from the end user.  
 
 ###Demo
 I have created a [JSFiddle](http://jsfiddle.net/lawlesst/a00x2ess/) with a [complete example](http://jsfiddle.net/lawlesst/a00x2ess/) of this editing process.  In the example, the URIs for objects are skos:Concepts representing research topics and are pulled in real time from a web service from the [assignFAST](http://oclc.org/developer/develop/web-services/fast-api/assign-fast.en.html) webservice provided by [OCLC](http://www.oclc.org/data.en.html).
