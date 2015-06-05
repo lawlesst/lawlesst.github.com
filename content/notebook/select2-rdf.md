@@ -50,7 +50,7 @@ This data is then posted as JSON to a local REST API that reads JSON data like a
 ###Demo
 I have created a [JSFiddle](http://jsfiddle.net/lawlesst/a00x2ess/) with a [complete example](http://jsfiddle.net/lawlesst/a00x2ess/) of this editing process.  In the example, the URIs for objects are skos:Concepts representing research topics and are pulled in real time from a web service from the [assignFAST](http://oclc.org/developer/develop/web-services/fast-api/assign-fast.en.html) webservice provided by [OCLC](http://www.oclc.org/data.en.html).
 
-<iframe width="100%" height="300" src="https://jsfiddle.net/lawlesst/a00x2ess/embedded/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+<iframe width="100%" height="300" src="https://jsfiddle.net/lawlesst/a00x2ess/embedded/result" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 I have also posted a [sample Django application](https://github.com/lawlesst/triple-edit), based on our production system, that demonstrates this editing workflow and others.  It also has code for processing the posted JSON and updating the triple store via SPARQL.
 
