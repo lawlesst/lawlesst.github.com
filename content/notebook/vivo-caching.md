@@ -2,11 +2,16 @@ Title:Caching VIVO profiles with ETags and mod_cache
 Date:03-25-13
 Slug:vivo-caching
 
+>Update - Caching VIVO pages with ETags was made part of the VIVO/Vitro core code in
+release 1.6. This solution is no longer necessary and the methods described have been made part of the software. See the <a href="https://wiki.duraspace.org/display/VIVO/Use+HTTP+caching+to+improve+performance">project documentation</a> for information on how to set this up. Any questions can be sent to vivo-dev-all@lists.sourceforge.net.
+
+---
+
 >Update - 3/29/13 - since writing this, I learned about Solr's built in support for generating signatures of document contents.  Taking advantage of this feature of Solr simplifies the servlet filter code described below and addresses one of the limitations of the caching system described below.  See the updated <a href="https://github.com/Brown-University-Library/vivo/blob/etag/productMods/WEB-INF/pyfilter/EtagFilter.py">servlet filter code</a> and the <a href="http://lawlesst.github.com/notebook/solr-etags.html">Solr configuration</a>.  The remaining steps described still apply.
 
 This document describes a proof of concept for caching [VIVO](http://www.vivoweb.org/) profiles with ETags and mod_cache.  The use of mod_cache and ETags described here could be applied to other web applications.  
 
-### The problem - page load time  
+### The problem - page load time
 
 A recurring question in the [VIVO](http://www.vivoweb.org/) implementation community is how sites can speed up the loading of profile pages.  As a VIVO implementation grows in size and tracks more and more scholarly activity, profile pages can be pulling in hundreds of relationships to render the page, which results in more data being retrieved from the underling [Jena](http://jena.apache.org/documentation/rdf/index.html) [SDB store](http://jena.apache.org/documentation/sdb/index.html) and longer page load times.  For example, a profile page for a faculty member with hundreds of publications, which isn't uncommon, can lead to multiple second page loads.  
 
