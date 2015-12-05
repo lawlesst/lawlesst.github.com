@@ -571,7 +571,7 @@ p,
   header h1 {
     font-size: 2em;
   }
- 
+
   .meta, .pages {
     padding-left: 6.25%;
     width: 18.75%;
@@ -599,7 +599,7 @@ p,
   .post blockquote,
   .post ul,
   .post ol {
-    width: 60%;
+    width: 90%;
   }
 }
 @media screen and (min-width: 130em) {
@@ -921,7 +921,7 @@ div.toc ul li {
   padding:0;
   line-height: 2em;
   list-style-type: none;
-  list-style-image: none; 
+  list-style-image: none;
 }
 
 div.toc ul li a {
@@ -969,4 +969,13 @@ footer i {
 
 .social {
   text-align: center;
+}
+
+.message {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  color: #717171;
+  background-color: #f9f9f9;
+  font-weight: 400;
+  width: 65%;
 }
