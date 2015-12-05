@@ -3,7 +3,7 @@ Date:03-25-13
 Slug:vivo-caching
 
 >Update - Caching VIVO pages with ETags was made part of the VIVO/Vitro core code in
-release 1.6. This solution is no longer necessary and the methods described have been made part of the software. See the <a href="https://wiki.duraspace.org/display/VIVO/Use+HTTP+caching+to+improve+performance">project documentation</a> for information on how to set this up. Any questions can be sent to vivo-dev-all@lists.sourceforge.net.
+release 1.6. This solution is no longer necessary and the methods described here have been made part of the software. See the <a href="https://wiki.duraspace.org/display/VIVO/Use+HTTP+caching+to+improve+performance">project documentation</a> for information on how to set this up. Any questions can be sent to vivo-tech@googlegroups.com.
 
 ---
 
