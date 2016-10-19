@@ -5,10 +5,10 @@ Slug:projects
 ## Thomson Reuters
 
 ### Fred Hutchinson Cancer Research Center - Research Portal
-Serve as consultant and programmer for a [VIVO](http://vivoweb.org)-based research portal. Developed ETL code to transfer data from research management tools to the portal's RDF, based data model. Developed extensions to the Java web application to meet customer's needs. A fall 2016 rollout is expected. More project details are available from this [conference poster](https://figshare.com/articles/FHCRC-VivoConferencePoster-August2016_pdf/3645399)
+Consultant and programmer for a [VIVO](http://vivoweb.org) based research portal. Developed ETL code to transfer data from research management tools to the portal's RDF data model. Developed extensions to the Java web application and ontologies to meet customer's needs. A fall 2016 rollout is expected. More project details are available from this [conference poster](https://figshare.com/articles/FHCRC-VivoConferencePoster-August2016_pdf/3645399)
 
 ### Data enrichment with the University of Florida
-Worked as a consultant to develop a data processing routine to add existing identifiers to an existing set of publications. Utilized web services from a variety of providers. Developed code in consultation with the University of Florida team that was documented and handed off at completion of project for reuse. More details are available in this [conference presentation](https://figshare.com/articles/Publication_Data_Enrichment_at_the_University_of_Florida_with_the_Web_of_Science/3774444)
+Worked as a consultant to develop a data processing routine to add external identifiers to an existing dataset of research publications. Utilized web services from a variety of providers. Developed code in consultation with the University of Florida team that was documented and handed off at completion of project for reuse. More details are available in this [conference presentation](https://figshare.com/articles/Publication_Data_Enrichment_at_the_University_of_Florida_with_the_Web_of_Science/3774444)
 
 <hr/>
 
