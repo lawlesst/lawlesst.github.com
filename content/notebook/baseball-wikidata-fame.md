@@ -15,9 +15,9 @@ When the Pantheon team was assembling their data in 2012 - 2013 they considered 
 
 ### Querying for total Wikipedia pages
 
-With Wikidata's SPARQL support, we don't have to parse data dumps from Wikipedia and Freebase to do some initial, Pantheon-inspired analysis. We can write a single SPARQL query to find entities (players) and the number of Wikipedia language pages each have. 
+With Wikidata's SPARQL support, we don't have to parse data dumps from Wikipedia and Freebase to do some initial, Pantheon inspired exploration. We can write a single SPARQL query to find entities (players) and the number of Wikipedia language pages each have. 
 
-Here is the query, I used for this analysis. 
+Here is the query, I used for this exercise.
 
 ~~~
 SELECT ?player ?playerLabel ?brId (COUNT(DISTINCT(?sitelink)) as ?sites)
@@ -46,13 +46,14 @@ This top 10 list is filled with some of baseball's all time greats, including Ba
 
 I've also uploaded a [csv file](https://gist.github.com/lawlesst/bdbd2142c2ab667eae1be3b7a789f5da#file-top_250_by_pages-csv) containing players that have 9 or more Wikipedia language pages, which means they are in the top 250 players (or) when ranked by number of language pages.
 
-### Digging deeper with career WAR
+### Digging deeper 
 
 Now that we have a list of globally famous baseball players determined by the number of Wikipedia pages in various languages, we can dig a little deeper and try to understand if fame has anything to do with actual performance on the baseball field. 
 
+## Wins Above Replacement - WAR
 Baseball Reference, calculates a metric called [Wins Above Replacement (WAR)](http://www.baseball-reference.com/about/war_explained.shtml). Describing WAR in detail is beyond the scope of this post but, briefly, WAR is a metric that attempts to capture how much a player is better than the average, or a replacement, player. If a player has a WAR of 2 for a season, that means his team won 2 more games than they would have if they would have used a replacement player instead. WAR attempts to cover all facets of the game, hitting, fielding, and base running. In recent years, WAR has begun to receive more attention from baseball media since it tries to capture the complete value of a player rather than a single aspect, like batting average.
 
-WAR can also be a valuable way to rank players over the course of a career. Baseball Reference [publishes a list](http://www.baseball-reference.com/leaders/WAR_bat_career.shtml) of the top 1,000 players of all time based on career WAR. Here again, Babe Ruth tops the list here too. But, does WAR, or performance on the field, relate at all to global fame"? 
+WAR can also be a valuable way to rank players over the course of a career. Baseball Reference [publishes a list](http://www.baseball-reference.com/leaders/WAR_bat_career.shtml) of the top 1,000 players of all time based on career WAR. Here again, Babe Ruth tops the list here too. But, does WAR, or performance on the field, relate at all to global fame? 
 
 To investigate this question, I grabbed the [top 50 players](http://www.baseball-reference.com/leaders/WAR_bat_career.shtml) by career WAR from Baseball Reference. Since WAR is calculated differently for position players and pitchers, I've focused this exercise just on position players. 
 
@@ -70,8 +71,9 @@ At least a few things stand out in this list.
 
 * the list seems weighted towards players who have played during the last 10-15 years. We could use the Baseball Reference data to verify that.
 
+
+To pursue these basic comparisons further, and produce more meaningful results, I would want to take a look at the other data used by the Pantheon team, like Wikipedia page views, and the time period of the careers to develop a HPI-like metric for baseball players. We could also try to isolate by team, era, etc or investigate which languages are writing about baseball players and see if we can gleam any cultural insight from that.
+
 ## Conclusion
 
-Using Wikidata, SPARQL, and the methods from the Pantheon project, we can relatively quickly explore global fame for groups people we are interested in. Using identifiers stored in Wikidata, we were able to join information from the Wikidata knowledge base with an external, domain specific, set of data. 
-
-To pursue this further, and produce more meaningful results, I would want to take a look at the other data used by the Pantheon team, like Wikipedia page views, and the age of the people to develop a HPIish metric for baseball players. We could try to isolate by team, era, etc or investigate which languages are writing about baseball players and see if we can gleam any cultural insight from that. 
+The main takeaway for me is that using Wikidata and SPARQL, and the methods from the Pantheon project, we can relatively quickly explore global fame for groups people we are interested in. Using identifiers stored in Wikidata, we can join information from the Wikidata knowledge base with external, domain specific, sets of data that can allow us to dig deeper.
