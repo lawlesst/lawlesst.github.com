@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
+import os
 
 AUTHOR = u'Ted Lawless'
 SITENAME = u'Ted Lawless'
@@ -32,6 +33,7 @@ SUMMARY_MAX_LENGTH = 50
 FEED_MAX_ITEMS = 20
 
 THEME = './themes/just-read'
+#THEME = './themes/clean'
 
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = True
@@ -46,6 +48,8 @@ PAGE_SAVE_AS =  '{slug}/index.html'
 
 DISQUS_SITENAME = 'tedlawlessnotebook'
 GOOGLE_ANALYTICS = 'UA-2790298-5'
+#GOOGLE_ANALYTICS = 'NA'
+
 SOCIAL = (
 	('github', 'http://github.com/lawlesst', 'Github'),
 	('twitter', 'http://twitter.com/tedlawless', 'Twitter'),
@@ -55,7 +59,13 @@ SOCIAL = (
 #MD_EXTENSIONS = (['toc', 'footnotes'])
 
 PLUGIN_PATHS = ['./plugins']
-PLUGINS = ['extract_toc', 'feed_summary']
-
+PLUGINS = [
+'extract_toc',
+'feed_summary',
+'liquid_tags.notebook'
+]
 
 LOAD_CONTENT_CACHE = False
+
+NOTEBOOK_DIR = 'notebook'
+
