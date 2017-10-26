@@ -53,7 +53,8 @@ GOOGLE_ANALYTICS = 'UA-2790298-5'
 SOCIAL = (
 	('github', 'http://github.com/lawlesst', 'Github'),
 	('twitter', 'http://twitter.com/tedlawless', 'Twitter'),
-	('stack-overflow', 'http://stackoverflow.com/users/758157/lawlesst', 'Stack Overflow')
+	('stack-overflow', 'http://stackoverflow.com/users/758157/lawlesst', 'Stack Overflow'),
+    ('linkedin', 'https://www.linkedin.com/in/ted-lawless-bb30b65/', 'LinkedIn')
 )
 
 #MD_EXTENSIONS = (['toc', 'footnotes'])
@@ -67,5 +68,5 @@ PLUGINS = [
 
 LOAD_CONTENT_CACHE = False
 
-NOTEBOOK_DIR = 'notebook'
+NOTEBOOK_DIR = 'jupyter'
 
