@@ -831,3 +831,34 @@ pre {
 .lineno::-moz-selection {background-color: transparent;} /* Mozilla specific */
 .lineno::selection {background-color: transparent;} /* Other major browsers */
 /* Literal.Number.Integer.Long */
+
+
+div.cell { margin-bottom: 2em; }
+
+table.dataframe {
+  border: 1px solid black;
+  font-size: 13px;
+}
+
+table.dataframe {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.dataframe td, table.dataframe th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table.dataframe tr:nth-child(even){
+  background-color: #f2f2f2;}
+
+table.dataframe tr:hover {background-color: #ddd;}
+
+table.dataframe th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    font-weight: bold;
+
+}
