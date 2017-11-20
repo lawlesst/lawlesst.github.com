@@ -35,9 +35,9 @@ Some details on deploying Datasette for public querying.
 
 To deploy, I settled on using a small Digital Ocean droplet and am using Apache as a reverse proxy. Datasette is setup to be easily published with [Zeit Now](https://zeit.co/now) but the sqlite database of these three baseball files exceeded the size limit for the free tier with Now. I also tried Heroku but again ran into file size issues.
 
-I also ran into connection timeout issues with the [Sanic](https://github.com/channelcat/sanic) web framework Datasette uses, as described in this [pull request](https://github.com/channelcat/sanic/pull/939). This was more of an annoyance than a problem since clicking refresh in Chrome made the error disappear. Installing Sanic directly from Github with pip made this issue go away.
+One small issue, more an annoyance, with the underlying [Sanic](https://github.com/channelcat/sanic) web framework Datasette uses - a "connection timeout" error would be displayed in the browser if you used the app (query or browsing), did something else for 60 seconds and then returned to the page. The message went away if you clicked refresh in the browser This behavior is described in this [Sanic pull request](https://github.com/channelcat/sanic/pull/939) and a change has been merged into master. To work around this, I installed Sanic directly from Github with pip to get the latest version.
 
-Datasette is deployed wit the [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) option so you should be able to use this endpoint in client side demos.
+This instance of Datasette is also deployed with the [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) option so you should be able to use this endpoint in client side demos.
 
 Thanks for reading this far. Please add a comment with any feedback you have or any ways that you may extend this.
 
