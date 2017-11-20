@@ -59,7 +59,7 @@
 <p>The module does rely on screen scraping the HTML returned by the ILLiad application but experience has shown that this method is quite stable and robust enough to be used in production systems.  Versions of this module have been in place at Brown for four years or more and have processed over 10,000 user requests during the last six months.  One of the common problems encountered when relying on screen scraping to provide functionality is that the HTML can change without notice.  In this case the ILLiad software is managed by the library so the chances of it changing without notice is small.  As an extra measure to protect against unforeseen HTML changes, we have place the HTML pages that are used with this module on a different web path than the user pages (something like http://illiad.school.edu/api-pages/) so that we can update the user pages without changing the markup that this module relies on.  </p>
 <p>The module as implemented relies on the <a href="https://prometheus.atlas-sys.com/display/illiad/RemoteAuth+Authentication">RemoteAuth</a> in ILLiad.  This allows users to be authenticated via an HTTP header and can be used with systems like <a href="http://en.wikipedia.org/wiki/Shibboleth">Shibboleth</a> or <a href="http://en.wikipedia.org/wiki/Central_Authentication_Service">CAS</a>.  The module will pass the appropriate header for authentication and save the session cookie for further requests.  This eliminates the need to store the user's ILLiad credentials in a local database, which could be seen as a security risk.  If this is not a concern for your project, you could use a modified version of this module without enabling the RemoteAuth functionality.  Leave a comment below if you would like some help in getting started with that.  </p>
 <h3>Example in video</h3>
-<p>The screencast below shows an example of this module being integrated into the library's OpenURL resolver.  The user in this example authenticates with the campus Shibboleth system and places a request in ILLiad directly from the resolver interface.  There is no need to visit ILLiad to place the request.<br />
+<p>The screencast below shows an example of this module being integrated into the library's OpenURL resolver.  The user in this example authenticates with the campus Shibboleth system and places a request in ILLiad directly from the resolver interface.  There is no need to visit ILLiad to place the request.<br>
 <div style="width: 700px; margin: 1em; padding:1em;">
 <iframe src="http://www.screenr.com/embed/B1a8" width="650" height="396" frameborder="0"></iframe>
 </div></p>
@@ -91,6 +91,7 @@
 	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
 	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
 	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
+	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
 	</ul>
 </footer>
 	

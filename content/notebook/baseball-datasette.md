@@ -33,7 +33,7 @@ If you are interested in baseball history or statistics, I'm sure you can easily
 ### Deployment
 Some details on deploying Datasette for public querying.
 
-To deploy, I settled on using a small Digital Ocean droplet and am using Apache as a reverse proxy. Dastasette is setup to be easily published with Zeit Now](https://zeit.co/now) but the sqlite database of these three baseball files exceeded the size limit for the free tier with Now. I also tried Heroku but again ran into file size issues.
+To deploy, I settled on using a small Digital Ocean droplet and am using Apache as a reverse proxy. Datasette is setup to be easily published with [Zeit Now](https://zeit.co/now) but the sqlite database of these three baseball files exceeded the size limit for the free tier with Now. I also tried Heroku but again ran into file size issues.
 
 I also ran into connection timeout issues with the [Sanic](https://github.com/channelcat/sanic) web framework Datasette uses, as described in this [pull request](https://github.com/channelcat/sanic/pull/939). This was more of an annoyance than a problem since clicking refresh in Chrome made the error disappear. Installing Sanic directly from Github with pip made this issue go away.
 

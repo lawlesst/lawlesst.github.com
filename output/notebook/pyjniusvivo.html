@@ -48,22 +48,22 @@
 <p>I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case VIVO).  This <a href="https://gist.github.com/3829194">Gist</a> contains code that we are using in VIVO data loading scripts.  We are just beginning to explore the <a href="https://github.com/vivo-project/VIVO-Harvester">VIVO harvester</a> in detail and hope to take fuller advantage of it moving forward.</p>
 <p>If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.  </p>
 <h3>Example of connecting to an existing Jena database.</h3>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">jnius</span> <span class="kn">import</span> <span class="n">autoclass</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jnius</span> <span class="kn">import</span> <span class="n">autoclass</span>
 
-<span class="c">#Load java classes</span>
-<span class="c">#Database setup</span>
-<span class="n">DBConnection</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.db.DBConnection&#39;</span><span class="p">)</span>
-<span class="n">LayoutType</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.sdb.store.LayoutType&#39;</span><span class="p">)</span>
-<span class="n">DatabaseType</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.sdb.store.DatabaseType&#39;</span><span class="p">)</span>
-<span class="n">SDBConnection</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.sdb.sql.SDBConnection&#39;</span><span class="p">)</span>
-<span class="n">SDBFactory</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.sdb.SDBFactory&#39;</span><span class="p">)</span>
-<span class="n">StoreDesc</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.sdb.StoreDesc&#39;</span><span class="p">)</span>
+<span class="c1">#Load java classes</span>
+<span class="c1">#Database setup</span>
+<span class="n">DBConnection</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.db.DBConnection&#39;</span><span class="p">)</span>
+<span class="n">LayoutType</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.sdb.store.LayoutType&#39;</span><span class="p">)</span>
+<span class="n">DatabaseType</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.sdb.store.DatabaseType&#39;</span><span class="p">)</span>
+<span class="n">SDBConnection</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.sdb.sql.SDBConnection&#39;</span><span class="p">)</span>
+<span class="n">SDBFactory</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.sdb.SDBFactory&#39;</span><span class="p">)</span>
+<span class="n">StoreDesc</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.sdb.StoreDesc&#39;</span><span class="p">)</span>
 
 <span class="n">storeDesc</span> <span class="o">=</span> <span class="n">StoreDesc</span><span class="p">(</span><span class="n">LayoutType</span><span class="o">.</span><span class="n">LayoutTripleNodesHash</span><span class="p">,</span> <span class="n">DatabaseType</span><span class="o">.</span><span class="n">MySQL</span><span class="p">)</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">SDBConnection</span><span class="p">(</span><span class="n">DB_URL</span><span class="p">,</span> <span class="n">DB_USER</span><span class="p">,</span> <span class="n">DB_PASSWD</span><span class="p">)</span>
 <span class="n">store</span> <span class="o">=</span> <span class="n">SDBFactory</span><span class="o">.</span><span class="n">connectStore</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">storeDesc</span><span class="p">)</span>
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">SDBFactory</span><span class="o">.</span><span class="n">connectDataset</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getNamedModel</span><span class="p">(</span><span class="s">&#39;http://vitro.mannlib.cornell.edu/default/vitro-kb-2&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getNamedModel</span><span class="p">(</span><span class="s1">&#39;http://vitro.mannlib.cornell.edu/default/vitro-kb-2&#39;</span><span class="p">)</span>
 
 <span class="n">namespaces</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">listNameSpaces</span><span class="p">()</span>
 <span class="k">while</span> <span class="n">namespaces</span><span class="o">.</span><span class="n">hasNext</span><span class="p">():</span>
@@ -76,7 +76,7 @@
 
 
 <p>The output for a default VIVO install should look something like the following:</p>
-<div class="highlight"><pre>http://vitro.mannlib.cornell.edu/ns/vitro/public#
+<div class="highlight"><pre><span></span>http://vitro.mannlib.cornell.edu/ns/vitro/public#
 http://www.w3.org/1999/02/22-rdf-syntax-ns#
 http://purl.org/NET/c4dm/event.owl#
 http://purl.org/ontology/bibo/
@@ -91,32 +91,32 @@ http://www.w3.org/2000/01/rdf-schema#
 
 <h4>Performing SPARQL queries</h4>
 <p>This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.  </p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">jnius</span> <span class="kn">import</span> <span class="n">autoclass</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">jnius</span> <span class="kn">import</span> <span class="n">autoclass</span>
 
-<span class="n">QueryFactory</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.query.QueryFactory&#39;</span><span class="p">)</span>
-<span class="n">QueryExecutionFactory</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.query.QueryExecutionFactory&#39;</span><span class="p">)</span>
-<span class="n">ResultSetFormatter</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;com.hp.hpl.jena.query.ResultSetFormatter&#39;</span><span class="p">)</span>
-<span class="n">String</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s">&#39;java.lang.String&#39;</span><span class="p">)</span>
+<span class="n">QueryFactory</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.query.QueryFactory&#39;</span><span class="p">)</span>
+<span class="n">QueryExecutionFactory</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.query.QueryExecutionFactory&#39;</span><span class="p">)</span>
+<span class="n">ResultSetFormatter</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;com.hp.hpl.jena.query.ResultSetFormatter&#39;</span><span class="p">)</span>
+<span class="n">String</span> <span class="o">=</span> <span class="n">autoclass</span><span class="p">(</span><span class="s1">&#39;java.lang.String&#39;</span><span class="p">)</span>
 
 
 <span class="n">storeDesc</span> <span class="o">=</span> <span class="n">StoreDesc</span><span class="p">(</span><span class="n">LayoutType</span><span class="o">.</span><span class="n">LayoutTripleNodesHash</span><span class="p">,</span> <span class="n">DatabaseType</span><span class="o">.</span><span class="n">MySQL</span><span class="p">)</span>
 <span class="n">conn</span> <span class="o">=</span> <span class="n">SDBConnection</span><span class="p">(</span><span class="n">DB_URL</span><span class="p">,</span> <span class="n">DB_USER</span><span class="p">,</span> <span class="n">DB_PASSWD</span><span class="p">)</span>
 <span class="n">store</span> <span class="o">=</span> <span class="n">SDBFactory</span><span class="o">.</span><span class="n">connectStore</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">storeDesc</span><span class="p">)</span>
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">SDBFactory</span><span class="o">.</span><span class="n">connectDataset</span><span class="p">(</span><span class="n">store</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getNamedModel</span><span class="p">(</span><span class="s">&#39;http://vitro.mannlib.cornell.edu/default/vitro-kb-2&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">getNamedModel</span><span class="p">(</span><span class="s1">&#39;http://vitro.mannlib.cornell.edu/default/vitro-kb-2&#39;</span><span class="p">)</span>
 
-<span class="n">query</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
-<span class="s">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span>
-<span class="s">PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
-<span class="s">PREFIX owl:   &lt;http://www.w3.org/2002/07/owl#&gt;</span>
-<span class="s">SELECT ?thing ?label</span>
-<span class="s">WHERE</span>
-<span class="s">{</span>
-<span class="s">      ?thing rdf:type owl:Thing</span>
-<span class="s">      OPTIONAL { ?thing rdfs:label ?label } </span>
-<span class="s">}</span>
-<span class="s">LIMIT 20</span>
-<span class="s">&quot;&quot;&quot;</span>
+<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">PREFIX rdf:   &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span>
+<span class="s2">PREFIX rdfs:  &lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span>
+<span class="s2">PREFIX owl:   &lt;http://www.w3.org/2002/07/owl#&gt;</span>
+<span class="s2">SELECT ?thing ?label</span>
+<span class="s2">WHERE</span>
+<span class="s2">{</span>
+<span class="s2">      ?thing rdf:type owl:Thing</span>
+<span class="s2">      OPTIONAL { ?thing rdfs:label ?label } </span>
+<span class="s2">}</span>
+<span class="s2">LIMIT 20</span>
+<span class="s2">&quot;&quot;&quot;</span>
 
 <span class="n">query</span> <span class="o">=</span> <span class="n">QueryFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
 <span class="n">qset</span> <span class="o">=</span> <span class="n">QueryExecutionFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
@@ -125,8 +125,8 @@ http://www.w3.org/2000/01/rdf-schema#
 
 <span class="k">while</span> <span class="n">results</span><span class="o">.</span><span class="n">hasNext</span><span class="p">():</span>
     <span class="n">next_result</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
-    <span class="n">uri</span> <span class="o">=</span> <span class="n">next_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;?thing&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">next_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;?label&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
+    <span class="n">uri</span> <span class="o">=</span> <span class="n">next_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;?thing&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">next_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;?label&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
     <span class="k">print</span> <span class="n">uri</span><span class="p">,</span> <span class="n">label</span>
 
 <span class="n">qset</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -138,7 +138,7 @@ http://www.w3.org/2000/01/rdf-schema#
 
 <h4>Pyjnius Installation</h4>
 <p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it with <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.  </p>
-<div class="highlight"><pre>vagrant@lucid32:~$ mkdir pyjnius-project
+<div class="highlight"><pre><span></span>vagrant@lucid32:~$ mkdir pyjnius-project
 vagrant@lucid32:~$ cd pyjnius-project/
 vagrant@lucid32:~/pyjnius-project$ virtualenv venv
 New python executable in venv/bin/python
@@ -199,6 +199,7 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
 	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
 	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
+	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
 	</ul>
 </footer>
 	

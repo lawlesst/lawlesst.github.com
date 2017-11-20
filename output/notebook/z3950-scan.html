@@ -649,37 +649,37 @@
 <p>The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.</p>
 <h3>Call number scan.</h3>
 <p>Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
 
-<span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#39;INNOPAC&#39;</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s1">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">databaseName</span> <span class="o">=</span> <span class="s1">&#39;INNOPAC&#39;</span>
 
-<span class="n">call_number</span> <span class="o">=</span> <span class="s">&quot;PS3521.E716 O5 1979&quot;</span>
+<span class="n">call_number</span> <span class="o">=</span> <span class="s2">&quot;PS3521.E716 O5 1979&quot;</span>
 
-<span class="n">params</span> <span class="o">=</span> <span class="s">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">call_number</span>
-<span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="s1">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">call_number</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s1">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 
-<span class="c">#Number of items returned.</span>
+<span class="c1">#Number of items returned.</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">numberOfEntries</span> <span class="o">=</span> <span class="mi">11</span>
-<span class="c">#Position in the list of the item we are requesting.</span>
+<span class="c1">#Position in the list of the item we are requesting.</span>
 <span class="n">response_position</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">responsePosition</span> <span class="o">=</span> <span class="n">response_position</span>
 
 <span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">rec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
-    <span class="n">display</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;display&#39;</span><span class="p">)</span>
+    <span class="n">display</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">response_position</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&#39;----&gt;  &#39;</span><span class="p">,</span> <span class="n">display</span>
+        <span class="k">print</span> <span class="s1">&#39;----&gt;  &#39;</span><span class="p">,</span> <span class="n">display</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">display</span>
+        <span class="k">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">display</span>
 
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 
 
 <p>Running this search against the <a href="http://library.brown.edu/">Brown University Library</a> library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.</p>
-<div class="highlight"><pre>        Ps 3521 E716 D4^   1 entry
+<div class="highlight"><pre><span></span>        Ps 3521 E716 D4^   1 entry
         Ps 3521 E716 D6^   1 entry
         Ps 3521 E716 D6 1959^   1 entry
         Ps 3521 E716 D6 1987^   1 entry
@@ -695,41 +695,41 @@
 
 <h3>Call number scan and fetching metadata</h3>
 <p>Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with <a href="https://github.com/edsu/pymarc/">pymarc</a> and a Record object is created that allows us to convert the data into more friendly formats.</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
 <span class="kn">import</span> <span class="nn">pymarc</span>
 
-<span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
-<span class="n">conn</span><span class="o">.</span><span class="n">databaseName</span> <span class="o">=</span> <span class="s">&#39;INNOPAC&#39;</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s1">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">databaseName</span> <span class="o">=</span> <span class="s1">&#39;INNOPAC&#39;</span>
 
 <span class="k">def</span> <span class="nf">get_record_by_call</span><span class="p">(</span><span class="n">call</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to fetch a bib record by</span>
 <span class="sd">    call number.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="s">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">call</span>
-    <span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="s1">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">call</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s1">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">bib</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pymarc</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">bib</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
-<span class="n">call_number</span> <span class="o">=</span> <span class="s">&quot;PS3521.E716 O5&quot;</span>
+<span class="n">call_number</span> <span class="o">=</span> <span class="s2">&quot;PS3521.E716 O5&quot;</span>
 
-<span class="n">params</span> <span class="o">=</span> <span class="s">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">call_number</span>
-<span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="s1">&#39;@attr 1=16 &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">call_number</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="s1">&#39;PQF&#39;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
 
-<span class="c">#Number of items returned.</span>
+<span class="c1">#Number of items returned.</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">numberOfEntries</span> <span class="o">=</span> <span class="mi">20</span>
-<span class="c">#Position in the list of the item we are requesting.</span>
+<span class="c1">#Position in the list of the item we are requesting.</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">responsePosition</span> <span class="o">=</span> <span class="mi">11</span>
 
 <span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="c">#print rec</span>
-    <span class="n">display</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;display&#39;</span><span class="p">)</span>
-    <span class="c">#Get the call number</span>
-    <span class="n">call</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;term&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c">#Get the bibliographic record for this call number.</span>
+    <span class="c1">#print rec</span>
+    <span class="n">display</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display&#39;</span><span class="p">)</span>
+    <span class="c1">#Get the call number</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;term&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1">#Get the bibliographic record for this call number.</span>
     <span class="n">bib</span> <span class="o">=</span> <span class="n">get_record_by_call</span><span class="p">(</span><span class="n">call</span><span class="p">)</span>
     <span class="k">print</span> <span class="n">bib</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
 
@@ -766,6 +766,7 @@
 	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
 	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
 	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
+	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
 	</ul>
 </footer>
 	

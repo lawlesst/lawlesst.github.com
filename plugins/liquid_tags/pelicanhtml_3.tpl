@@ -1,5 +1,7 @@
 {%- extends 'basic.tpl' -%}
 
+<h1>HERE</h1>
+
 {% block stream_stdout -%}
 <div class="output_subarea output_stream output_stdout output_text">
 <pre class="ipynb">
