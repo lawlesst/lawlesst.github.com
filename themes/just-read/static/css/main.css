@@ -862,3 +862,9 @@ table.dataframe th {
     font-weight: bold;
 
 }
+
+div.prompt {
+  display: inline;
+  font-size: small;
+}
+

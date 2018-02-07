@@ -12,6 +12,29 @@ This is a modified version of [code from Su Labs](https://github.com/SuLab/sparq
 
 {% notebook sparql_dataframe.ipynb %}
 
-With a few lines of code, we can connect data stored in SPARQL endpoints with pandas, the powerful Python data munging and analysis library.
-
-See the [Su Labs tutorial](https://github.com/SuLab/sparql_to_pandas/blob/master/SPARQL_pandas.ipynb) for more examples.
+'''
+with r as (
+  select reader_wikidata as wid, count(*) as n
+  from episodes 
+  group by reader_wikidata
+), w as (
+  select writer_wikidata as wid, count(*) as n
+  from episodes
+  group by writer_wikidata
+), wids as (
+select distinct wid
+from
+(
+select wid from r
+union
+select wid from w
+)
+)
+select distinct wids.wid, people.personLabel, strftime('%Y-%m-%d', birth) as yr, coalesce(r.n, 0) as reader, coalesce(w.n, 0) as writer, (coalesce(r.n, 0) + coalesce(w.n, 0)) as total_apperances
+from wids
+left join r using (wid)
+left join w using (wid)
+join people using (wid)
+where reader=1
+order by yr 
+'''

@@ -35,7 +35,10 @@
 			<h1>Using Python and Pyjnius to connect to Jena models</h1>
 			<time datetime="2012-10-03T00:00:00-04:00" pubdate>10/03/2012</time> 
 			<hr/>
-			<p>I’m loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.    </p>
+			<blockquote>
+<p>Note: This post is quite old. Code samples are unlikely to still work. Please use only as background/reference.</p>
+</blockquote>
+<p>I’m loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.    </p>
 <p>Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:</p>
 <ul>
 <li>generate a new, unique identifier to assign to new resources.  </li>

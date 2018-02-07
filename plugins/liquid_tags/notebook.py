@@ -347,7 +347,7 @@ def notebook(preprocessor, tag, markup):
         header += JS_INCLUDE
 
         with open('_nb_header.html', 'w') as f:
-            f.write(unicode(header))
+            f.write(header)
         notebook.header_saved = True
 
     # this will stash special characters so that they won't be transformed
