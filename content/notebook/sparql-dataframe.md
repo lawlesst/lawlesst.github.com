@@ -2,6 +2,8 @@ Title:SPARQL to Pandas Dataframes
 Date:10-26-17
 Slug:sparql-dataframe
 
+>Update: See this [Python module](https://github.com/lawlesst/sparql-dataframe) for converting SPARQL query results into Pandas dataframes.
+
 ## Using Pandas to explore data SPARQL
 
 [Pandas](http://pandas.pydata.org/) is a Python based power tool for munging and analyzing data. While working with data from SPARQL endpoints, you may prefer to explore and analyze it with pandas given its full feature set, strong documentation and large community of users.
