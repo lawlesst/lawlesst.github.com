@@ -2,6 +2,19 @@ Title:Projects
 Slug:projects
 ----
 
+## Rhode Island Innovative Policy Lab (RIIPL), Brown University
+
+### Data processing pipeline
+Maintain and extend a custom, Python, based data pipeline for processing and de-identifying research data. Map incoming data to local data model. Manage and extend value-added processes.
+
+### RI360 table
+Lead the design and implementation of an integrated dataset that links individual-level information across state government programs over a 20 year time span.
+
+### Software infrastructure
+Maintain cross-platform [software installation recipes](https://github.com/riipl-org/conda-recipes) for data analysis and management software used in lab. Apply protocols to ensure software sources are originating from trusted sources.
+
+<hr/>
+
 ## Thomson Reuters
 
 ### Fred Hutchinson Cancer Research Center - Research Portal
@@ -10,12 +23,15 @@ Consultant and programmer for a [VIVO](http://vivoweb.org) based research portal
 ### Data enrichment with the University of Florida
 Worked as a consultant to develop a data processing routine to add external identifiers to an existing dataset of research publications. Utilized web services from a variety of providers. Developed code in consultation with the University of Florida team that was documented and handed off at completion of project for reuse. More details are available in this [conference presentation](https://figshare.com/articles/Publication_Data_Enrichment_at_the_University_of_Florida_with_the_Web_of_Science/3774444)
 
+### Technical University of Denmark - VIVO RAP, Research Analytics Platform
+Consultant and programmer for the development and implementation of a [Research Analytics Platform](https://github.com/RAP-research-output-impact/rap-custom-vivo) built on the VIVO platform that utilizes data from the Web of Science with a focus on inter-organizational collaboration. Developed a Python based, [data pipeline](https://github.com/RAP-research-output-impact/rap-etl) to map data from the Web of Science to a customized version of the VIVO ontology. Also developed interactive collaboration reports that are displayed to end-user through the VIVO platform. MOre details are available from this [conference poster](https://figshare.com/articles/VIVO_RAP_poster_for_VIVO_conf_2017_pdf/5266435)
+
 <hr/>
 
 ## Brown University
 
 ### easySearch
-Leveraging the Ruby on Rails application [Blacklight](http://projectblacklight.org/) and [Apache Solr](http://lucene.apache.org/solr/) to develop a [library search and discovery application](https://search.library.brown.edu/) to serve as the main portal to library collections.  Using the [Traject](https://github.com/traject/traject) project to develop custom [indexing code](https://github.com/Brown-University-Library/bul-traject) to map source metadata to Apache Solr schema.  Working with committee of stakeholders to define requirements and development schedule.  Implementing additional Solr cores to facilitate query suggestion and "best bets" solutions to common queries.  Developing tools to harvest usage data to inform application design and development.
+Leveraged the Ruby on Rails application [Blacklight](http://projectblacklight.org/) and [Apache Solr](http://lucene.apache.org/solr/) to develop a [library search and discovery application](https://search.library.brown.edu/) that serves as the main portal to library collections.  Used the [Traject](https://github.com/traject/traject) project to develop custom [indexing code](https://github.com/Brown-University-Library/bul-traject) to map source metadata to Apache Solr schema.  Worked with committee of stakeholders to define requirements and development schedule.  Implemented additional Solr cores to facilitate query suggestion and "best bets" solutions to common queries.  Developed tools to harvest usage data to inform application design and development.
 
 ### Research profile manager
 
@@ -41,18 +57,18 @@ Ingested metadata and raw images for ancient Qur’anic manuscripts into the Bro
 
 Worked with library departmental managers to develop a staff database to track accessions and cataloging activity in the library collections.  Coded custom logic for parsing MARC records and tabulating various statistical counts.  Developed ILS export routines to update the statistical database daily.  Implemented charts and CSV downloads of data to assist staff with analysis.
 
-###Book locator
+### Book locator
 
 Rewrote an existing application that provides users with a [specific floor and aisle location](http://library.brown.edu/find/Record/b5863423) for a given item in the library.  Included a web service that supports client-side integration so that the service can be easily integrated into [other sites](http://library.brown.edu/easyarticle/borrow/get/BRj/).  This system includes an administrative interface that allows library staff to maintain the database of call number locations.  This project was presented at the Innovative Interfaces Users Group meeting and shared the [code](https://bitbucket.org/bul/book-locator/overview) publicly.
 
-###New Titles at the library
+### New Titles at the library
 
 Developed a Django-based, [Apache Solr](http://lucene.apache.org/solr/) powered facet [search application](http://library.brown.edu/titles) that highlights recent acquisitions in the library collections.  Modified and extended an open-source code base, [Kochief](http://code.google.com/p/kochief/).  Developed, in conjunction with technical services librarians, a customized MARC record parsing routine.  Implemented and adapted a [Library of Congress call number normalization](https://github.com/mjgiarlo/library-callnumber-lc) process that allows subject librarians to assign titles to university disciplines based off of the assigned call number.
 
 ### Repository ingestion and indexing processes
 Adapted, modified and maintained a complex set of Perl scripts that modify metadata and manipulate images for ingestion in to the library’s digital repository.
 
-###Time-off Recording System
+### Time-off Recording System
 Developed a Django application to allow staff and supervisors to manage vacation and sick time.  Built Javascript based timesheet that keeps a running total of staff.  Integrated external databases with organizational chart into local system to track and manage staff and supervisory relationships.  In coordination with Human Resources, developed business logic to handle university policies.
 
 <hr/>
