@@ -5,7 +5,7 @@ Slug:projects
 ## Rhode Island Innovative Policy Lab (RIIPL), Brown University
 
 ### Data processing pipeline
-Maintain and extend a custom, Python, based data pipeline for processing and de-identifying research data. Map incoming data to local data model. Manage and extend value-added processes.
+Maintain and extend a custom Python, based data pipeline for processing and de-identifying research data. Map incoming data to local data model. Manage and extend value-added processes. Developed and maintain codebooks to assist researchers with understanding data structures and contents.
 
 ### RI360 table
 Lead the design and implementation of an integrated dataset that links individual-level information across state government programs over a 20 year time span.
