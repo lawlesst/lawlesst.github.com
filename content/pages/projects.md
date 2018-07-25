@@ -1,11 +1,12 @@
 Title:Projects
 Slug:projects
 ----
+<hr/>
 
 ## Rhode Island Innovative Policy Lab (RIIPL), Brown University
 
 ### Data processing pipeline
-Maintain and extend a custom Python, based data pipeline for processing and de-identifying research data. Map incoming data to local data model. Manage and extend value-added processes. Develop and maintain codebooks to assist researchers with understanding data structures and contents. 
+Maintain and extend a custom Python, based data pipeline for processing and de-identifying research data. Map incoming data to local data model. Manage and extend value-added processes. Develop and maintain codebooks to assist researchers with understanding data structures and contents.
 
 A version of this software has been open sourced as a reusable Python library called [SIRAD, Secure Infrastructure for Research with Administrative Data](https://github.com/riipl-org/sirad). A paper is also under review that outlines the Lab's data infrastructure. A pre-print is available at [10.31219/osf.io/hdv3c](https://dx.doi.org/10.31219/osf.io/hdv3c).
 
