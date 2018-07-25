@@ -1,1 +1,0 @@
-I work with software in libraries.  I am interested in search and retrieval, general data wrangling, and the Semantic Web.  If you would like to speak about any of these topics, please contact me by leaving a comment on one of the articles below or by sending an email to lawlesst at gmail dot com.
