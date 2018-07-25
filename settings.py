@@ -47,8 +47,10 @@ ARTICLE_SAVE_AS = 'notebook/{slug}.html'
 PAGE_SAVE_AS =  '{slug}/index.html'
 
 DISQUS_SITENAME = 'tedlawlessnotebook'
-GOOGLE_ANALYTICS = 'UA-2790298-5'
-#GOOGLE_ANALYTICS = 'NA'
+if os.environ.get("DEV"):
+    GOOGLE_ANALYTICS = None
+else:
+    GOOGLE_ANALYTICS = 'UA-2790298-5'
 
 SOCIAL = (
 	('github', 'http://github.com/lawlesst', 'Github'),
