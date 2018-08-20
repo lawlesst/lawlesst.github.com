@@ -18,4 +18,4 @@ With a few lines of code, we can connect data stored in SPARQL endpoints with pa
 
 See the [Su Labs tutorial](https://github.com/SuLab/sparql_to_pandas/blob/master/SPARQL_pandas.ipynb) for more examples.
 
-You can also [download the examples](https://github.com/lawlesst/lawlesst.github.com/blob/pelican/content/jupyter/sparql_dataframe.ipynb)] from this post as a [Jupyter notebook](https://github.com/lawlesst/lawlesst.github.com/blob/pelican/content/jupyter/sparql_dataframe.ipynb).
+You can also [download the examples](https://github.com/lawlesst/lawlesst.github.com/blob/pelican/content/jupyter/sparql_dataframe.ipynb) from this post as a [Jupyter notebook](https://github.com/lawlesst/lawlesst.github.com/blob/pelican/content/jupyter/sparql_dataframe.ipynb).
