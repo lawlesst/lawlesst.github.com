@@ -2,9 +2,9 @@ Title:Exploring 10 years of the New Yorker Fiction Podcast with Wikidata
 Date:02-06-18
 Slug:nyer-fiction
 
->Note: The dta behind this datasette was updated on 7/24/18 to capture new episodes. The examples below might result in slightly different numbers.
+>Note: The data behind this datasette was updated on 7/24/18 to capture new episodes. The examples below might result in slightly different numbers.
 
-The [New Yorker Fiction Podcast](https://www.newyorker.com/podcast/fiction) recently celebrated its ten year anniversary. For those of you not familiar, this is a monthly podcast hosted by New Yorker fiction editor Deborah Treisman where a writer who has published a short story in the New Yorker selects a favorite story from the magazine's archive and reads and discusses it on the podcast with Treissman.[^1] 
+The [New Yorker Fiction Podcast](https://www.newyorker.com/podcast/fiction) recently celebrated its ten year anniversary. For those of you not familiar, this is a monthly podcast hosted by New Yorker fiction editor Deborah Treisman where a writer who has published a short story in the New Yorker selects a favorite story from the magazine's archive and reads and discusses it on the podcast with Treissman.[^1]
 
 I've been a regular listener to the podcast since it started in 2007 and thought it would be fun to look a little deeper at who has been invited to read and what authors they selected to read and discuss.
 
