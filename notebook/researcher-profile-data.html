@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="">	
+<head>
+	<meta charset="utf-8"/>
+	<title>Usable sample researcher profile data - Ted Lawless</title>	
+	<meta name="author" content="Ted Lawless">
+	
+	<meta name="HandheldFriendly" content="True">
+	<meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
+	
+	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+		
+	<!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	
+	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
+	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+</head>
+	
+<body>		
+	<header class="clearfix" role="banner">
+		<div class="wrapper">
+			<h1><a href="..">Ted Lawless</a></h1>
+		</div>
+	</header>
+	
+<div role="main" class="content clearfix">	
+	<article>
+		<div class="post wrapper">
+			<h1>Usable sample researcher profile data</h1>
+			<time datetime="2018-05-19T00:00:00-04:00" pubdate>05/19/2018</time> 
+			<hr/>
+			<p>I've published a small <a href="https://github.com/lawlesst/researcher-profile-data">set of web harvesting scripts</a> to fetch information about researchers and their activities from the <a href="https://irp.nih.gov/our-research/principal-investigators">NIH Intramural Research Program</a> website.</p>
+<p>On various projects I've been involved with, it has been difficult to acquire usable sample, or test data, about researchers and their activities. You either need access to a HR system and a research information system (for the activities) or create <a href="https://github.com/lawlesst/vivo-sample-data">mock data</a>. Mock, or fake data, doesn't work well when you want to start integrating information across systems or develop tools to find new publications. It's hard to build a publication harvesting tool without real author names and research interests.</p>
+<div class="center-wrapper">
+<div class="github-card" data-github="lawlesst/researcher-profile-data" data-width="400" data-height="" data-theme="default"></div>
+<script src="//cdn.jsdelivr.net/github-cards/latest/widget.js"></script>
+</div>
+
+<p>To that end, the <a href="https://github.com/lawlesst/researcher-profile-data">scripts</a> I've published crawl the <a href="https://irp.nih.gov/our-research/principal-investigators">NIH Intramural Research Program</a> website and pull out profile information for the thousand or so researchers that are members of the program, including a name, email, photo, short biography research interests, and the Pubmed IDs for selected publications.</p>
+<p>A second script harvests the organizational structure of the program. Both types of data are outputted to a simple JSON structure that then can be mapped to your destination system. Here is an example profile:</p>
+<div class="highlight"><pre><span></span>    {
+        &quot;url&quot;: &quot;https://irp.nih.gov/pi/veronica-alvarez&quot;,
+        &quot;name&quot;: &quot;Veronica Alicia Alvarez, Ph.D.&quot;,
+        &quot;label&quot;: &quot;Veronica Alicia Alvarez, Ph.D.&quot;,
+        &quot;first&quot;: &quot;Veronica&quot;,
+        &quot;last&quot;: &quot;Alvarez&quot;,
+        &quot;middle&quot;: &quot;Alicia&quot;,
+        &quot;honors&quot;: &quot;Ph.D.&quot;,
+        &quot;email&quot;: &quot;xxx@mail.nih.gov&quot;,
+        &quot;title&quot;: &quot;Senior Investigator&quot;,
+        &quot;position_title&quot;: &quot;Senior Investigator&quot;,
+        &quot;photo&quot;: &quot;https://irp.nih.gov/sites/default/files/pi/0013626077.jpg&quot;,
+        &quot;bio&quot;: &quot;Dr. Alvarez earned a Ph.D. degree in Neuroscience in 1997 from University of Buenos Aires, Argentina. She trained as a postdoctoral fellow with Dr. John Williams at the Vollum Institute, OHSU from 1998 to 2001 studying the firing properties of locus coerulues neurons and its modulation by opioids. She then trained with Dr. Bernardo Sabatini at Harvard Medical School from 2001-2007 where she studied mechanisms of functional and morphological plasticity at glutamatergic synapses using electrophysiology and two-photon imaging. In 2008, she established an independent research program at NIAAA where she is investigator and acting chief of the Section on Neuronal Structure.&quot;,
+        &quot;research_interests&quot;: [],
+        &quot;pmids&quot;: [
+            &quot;25547712&quot;,
+            &quot;21743470&quot;,
+            &quot;21289199&quot;,
+            &quot;26080439&quot;
+        ],
+        &quot;website&quot;: &quot;http://youtu.be/N9aFVrLVa7A&quot;
+    }
+</pre></div>
+
+
+<p>All of the outputted information is about real, working researchers and therefore can be used for integrating with other sources of data to populate a system you are either building or evaluating, e.g. <a href="http://vivoweb.org">VIVO</a>.</p>
+<p>Please leave a comment here or open an issue on the Github repo if you have questions or comments.</p>
+			
+			<div class="comments">
+			<h2>Comments !</h2>
+			    <div id="disqus_thread"></div>
+			    <script type="text/javascript">
+			       var disqus_identifier = "notebook/researcher-profile-data.html";
+			       (function() {
+			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
+			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+			      })();
+			    </script>
+			</div>
+			
+		</div>
+	
+	</article>	
+</div>
+	
+
+		
+<footer class="clearfix">
+<ul class="social">
+	<span class="me"><a href="..">Ted Lawless</a>:</span>
+	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
+	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
+	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
+	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+	</ul>
+</footer>
+	
+	<script>
+	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+	  s.parentNode.insertBefore(g,s)}(document,'script'));
+	</script>
+</body>
+</html>
