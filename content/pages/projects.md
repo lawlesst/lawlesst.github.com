@@ -3,6 +3,23 @@ Slug:projects
 ----
 <hr/>
 
+## JSTOR Labs
+Lead developer on a new text analytics platform. Responsible for all aspects of technical development from metadata schema design to front-end development. All technical are build using cloud platforms from Amazon Web Services.
+
+A pilot version of the tool is available at [https://tdm-pilot.org/](https://tdm-pilot.org/) and tutorial Jupyter Notebooks that leverage the platform are available at [https://github.com/ithaka/tdm-notebooks](https://github.com/ithaka/tdm-notebooks).
+
+Here's a brief list of the technologies being used to develop this platform.
+
+* AWS Lambda for backend webservices.
+* Elasticsearch full full-text search.
+* DynamoDB and S3 for data storage.
+* AWS SQS for job queing.
+* Vue for front-end development.
+* Jupyter Notebooks and BinderHub.
+* Kubernetes for BinderHub deployment.
+
+<hr/>
+
 ## Rhode Island Innovative Policy Lab (RIIPL), Brown University
 
 ### Data processing pipeline
@@ -15,6 +32,9 @@ Lead the design and implementation of an integrated dataset that links individua
 
 ### Software infrastructure
 Maintain cross-platform [software installation recipes](https://github.com/riipl-org/conda-recipes) for data analysis and management software used in lab. Apply protocols to ensure software sources are originating from trusted sources.
+
+### Rhode2College
+Developed backend web services to support the [Rhode2College](https://rhode2college.org/) initiative. These web services supported an application that allowed high school students to complete college-readiness milestones. This worked leverage Google Cloud.
 
 <hr/>
 
