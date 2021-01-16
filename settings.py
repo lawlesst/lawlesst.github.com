@@ -46,7 +46,7 @@ ARTICLE_SAVE_AS = 'notebook/{slug}.html'
 
 PAGE_SAVE_AS =  '{slug}/index.html'
 
-DISQUS_SITENAME = 'tedlawlessnotebook'
+#DISQUS_SITENAME = 'tedlawlessnotebook'
 if os.environ.get("DEV"):
     GOOGLE_ANALYTICS = None
 else:
