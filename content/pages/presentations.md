@@ -1,6 +1,6 @@
 Title:Presentations and workshops
 Slug:presentations
-----
+
 <hr/>
 
 "[Web of Science Data Integration](http://cns.iu.edu/docs/research/workshops/161114/161114-Lawless.pdf)". [Web of Science as a Research Dataset Workshop](http://cns.iu.edu/workshops/event/161114.html). November, 2016. Bloomington, IN.

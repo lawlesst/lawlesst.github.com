@@ -1,6 +1,6 @@
 Title:Projects
 Slug:projects
-----
+
 <hr/>
 
 ## JSTOR Labs

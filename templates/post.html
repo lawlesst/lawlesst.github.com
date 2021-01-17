@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h3>{{ title }}</h3>
+<h5>{{ date}}</h5>
+<div id="post-contents">
+  {{ text|safe }}
+</div>
+
+{% endblock %}

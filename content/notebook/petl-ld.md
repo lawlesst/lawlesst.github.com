@@ -28,7 +28,7 @@ The JSON-LD transformation utilizes the [rdflib-jsonld](https://github.com/RDFLi
 
 Here is an example:
 
-~~~
+```python
 import petl as etl
 import petlld
 
@@ -53,7 +53,7 @@ ctx = {
 
 # serialize the data as
 table2.tojsonld(ctx, indent=2)
-~~~
+```
 
 The JSON-LD output:
 
@@ -89,11 +89,11 @@ The JSON-LD output:
 
 If you would rather output an [RDFLib](https://github.com/RDFLib/rdflib) [Graph](https://rdflib.readthedocs.org/en/stable/intro_to_graphs.html) for serialization in another format, that is possible too.
 
-~~~python
+```python
 graph = table2.tograph(ctx)
 
 print graph.serialize(format='turtle')
-~~~
+```
 
 The [turtle](http://www.w3.org/TR/turtle/) output:
 

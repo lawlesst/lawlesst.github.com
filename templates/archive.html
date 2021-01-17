@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div id="recent-posts">
+  <h3>Posts</h3>
+  <ol>
+  {% for post in recent_posts %}
+      <li><a href="{{ url_for('post', slug=post.slug)}}">{{ post.title }}</a> - <date>{{ post.date }}</date></li>
+  {% endfor %}
+  <ol>
+</div>
+
+{% endblock %}
