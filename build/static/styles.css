@@ -42,6 +42,19 @@ date {
   margin-left: 1em;
 }
 
+footer {
+  margin-top: 2em;
+  font-size: smaller;
+  margin-left: 5%;
+}
+
+footer a {
+}
+
+footer a:visited {
+  color: black;
+}
+
 /*Code higlighting via: pygmentize -S default -f html -a .codehilite*/
 
 .codehilite .hll { background-color: #ffffcc }
