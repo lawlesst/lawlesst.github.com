@@ -37,22 +37,22 @@
 
 <p>For this example, we'll add three skos:Concepts to a <a href="http://en.wikipedia.org/wiki/Named_graph">named graph</a> in the Stardog store.</p>
 
-<pre><code>@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
-@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
-@prefix skos: &lt;http://www.w3.org/2004/02/skos/core#&gt; .
-@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .
-@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+<div class="codehilite"><pre><span></span><code><span class="w">    </span><span class="k">@prefix</span><span class="w"> </span><span class="nn">rdf:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="w">    </span><span class="k">@prefix</span><span class="w"> </span><span class="nn">rdfs:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="w">    </span><span class="k">@prefix</span><span class="w"> </span><span class="nn">skos:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/2004/02/skos/core#&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="w">    </span><span class="k">@prefix</span><span class="w"> </span><span class="nn">xml:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/XML/1998/namespace&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="w">    </span><span class="k">@prefix</span><span class="w"> </span><span class="nn">xsd:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
 
-&lt;http://example.org/n1234&gt; a skos:Concept ;
-    skos:broader &lt;http://example.org/b5678&gt; ;
-    skos:preferredLabel "Baseball" .
+<span class="w">    </span><span class="nv">&lt;http://example.org/n1234&gt;</span><span class="w"> </span><span class="kt">a</span><span class="w"> </span><span class="nn">skos:</span><span class="nt">Concept</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="nn">skos:</span><span class="nt">broader</span><span class="w"> </span><span class="nv">&lt;http://example.org/b5678&gt;</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="nn">skos:</span><span class="nt">preferredLabel</span><span class="w"> </span><span class="s">&quot;Baseball&quot;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
 
-&lt;http://example.org/b5678&gt; a skos:Concept ;
-    skos:preferredLabel "Sports" .
+<span class="w">    </span><span class="nv">&lt;http://example.org/b5678&gt;</span><span class="w"> </span><span class="kt">a</span><span class="w"> </span><span class="nn">skos:</span><span class="nt">Concept</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="nn">skos:</span><span class="nt">preferredLabel</span><span class="w"> </span><span class="s">&quot;Sports&quot;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
 
-&lt;http://example.org/n1000&gt; a skos:Concept ;
-    skos:preferredLabel "Soccer" .
-</code></pre>
+<span class="w">    </span><span class="nv">&lt;http://example.org/n1000&gt;</span><span class="w"> </span><span class="kt">a</span><span class="w"> </span><span class="nn">skos:</span><span class="nt">Concept</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="nn">skos:</span><span class="nt">preferredLabel</span><span class="w"> </span><span class="s">&quot;Soccer&quot;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+</code></pre></div>
 
 <h3>Code</h3>
 
