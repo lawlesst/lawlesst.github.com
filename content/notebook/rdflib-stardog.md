@@ -6,7 +6,7 @@ For a couple of years I have been working with the Python [RDFLib](https://githu
 
 A "SPARQLStore" and "SPARQLUpdateStore" have been included with Python's [RDFLib](https://github.com/RDFLib/rdflib) since version 4.0.  These are designed to allow developers to use the RDFLib code as a client to any SPARQL endpoint.  Since Stardog [supports SPARQL 1.1](http://docs.stardog.com/using/#sd-Querying), developers should be able to connect to Stardog from RDFLib in the similar way they would to other triple stores like [Sesame](http://rdf4j.org/) or [Fuseki](http://jena.apache.org/documentation/serving_data/).
 
-###Setup Stardog
+### Setup Stardog
 You will need a working instance of Stardog.  Stardog is available under a community license for evaluation after going through a simple registration process.  If you haven't setup Stardog before, you might want to checkout Geir Grønmo's [triplestores](https://github.com/grove/triplestores) repository where he has [Vagrant](https://www.vagrantup.com/) provisioning scripts for various triple stores.  This is how I got up and running with Stardog.
 
 Once Stardog is installed, start the Stardog server with security disabled.  This will allow the RDFLib code to connect without a username and password.  Obviously you will not want to run Stardog in this way in production but it is convenient for testing.
@@ -19,10 +19,11 @@ Next create a database called "demo" to store our data.
 
 At this point a SPARQL endpoint is available at ready for queries at `http://localhost:5820/demo/query`.
 
-###RDF
+### RDF
 
 For this example, we'll add three skos:Concepts to a [named graph](http://en.wikipedia.org/wiki/Named_graph) in the Stardog store.
 
+```turtle
 	@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 	@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 	@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
@@ -38,12 +39,13 @@ For this example, we'll add three skos:Concepts to a [named graph](http://en.wik
 
     <http://example.org/n1000> a skos:Concept ;
     	skos:preferredLabel "Soccer" .
+```
 
-###Code
+### Code
 The complete example code here is available as a [Gist](https://gist.github.com/lawlesst/9996cf3050c019a8d5ee).
 
 
-#####Setting up the 'store'
+##### Setting up the 'store'
 
 We need to initialize a [`SPARQLUpdateStore`](https://github.com/RDFLib/rdflib/blob/master/rdflib/plugins/stores/sparqlstore.py#L447) as well as a named graph where we will store our assertions.
 
@@ -81,7 +83,7 @@ Since our data is now loaded as an in memory Graph we can add it to Stardog with
 	)
 ```
 
-#####Use the RDFLib API to inspect the data
+##### Use the RDFLib API to inspect the data
 
 Using the RDFLib API, we can list all the Concepts in the Stardog that were just added.
 
@@ -97,7 +99,7 @@ And, we can find concepts that are broader than others.
 	    print 'Broader: ', ob
 ```
 
-#####Use RDFLib to issue SPARQL read queries.
+##### Use RDFLib to issue SPARQL read queries.
 
 RDFLib allows for binding a prefix to a namespace.  This makes our queries easier to read and write.
 
@@ -119,7 +121,7 @@ A SELECT query to get all the `skos:preferredLabel` for `skos:Concepts`.
 	    print s.n3(), l.n3()
 ```
 
-#####Use RDFLib to add assertions.
+##### Use RDFLib to add assertions.
 The RDFLib API can also be used to add new assertions to Stardog.
 
 ```python
@@ -134,5 +136,5 @@ We can now Read statements about soccer using the RDFLib API, which issues the p
 	    print s.n3(), p.n3(), o.n3()
 ```
 
-###Summary
+### Summary
 With a little setup, we can begin working with Stardog in RDFLib in a similar way that we work with RDFLib and other backends.  The sample code here is included in this [Gist](https://gist.github.com/lawlesst/9996cf3050c019a8d5ee).

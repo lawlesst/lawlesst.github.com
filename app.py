@@ -32,17 +32,14 @@ class HTMLFilter(HTMLParser):
         self.text += data
 
 
-def read_post(path, compile_html=True):
+def read_post(path):
     with open(path) as inf:
         title = next(inf).split(":")[1].strip()
         date = next(inf).split(":")[1].strip()
         slug = next(inf).split(":")[1].strip()
         md = inf.read()
 
-    if compile_html is True:
-        html = markdown2.markdown(md, extras=["footnotes", "fenced-code-blocks"])
-    else:
-        html = None
+    html = markdown2.markdown(md, extras=["footnotes", "fenced-code-blocks"])
     return {
         "title": title,
         "slug": slug,
@@ -52,10 +49,12 @@ def read_post(path, compile_html=True):
     }
 
 
-def index_posts(compile_html=False):
+def index_posts():
     p = []
-    for post in glob.glob(posts_dir + "/*.md"):
-        p.append(read_post(post, compile_html=compile_html))
+    for post in set(glob.glob(posts_dir + "/*.md")):
+        details = read_post(post)
+        if details not in p:
+            p.append(details)
     sorted_posts = sorted(p, key=lambda x: x["date_obj"], reverse=True)
     return sorted_posts
 
@@ -91,7 +90,7 @@ def page(slug):
 
 @app.route('/feed.rss')
 def rss():
-    posts = index_posts(compile_html=True)[:10]
+    posts = index_posts()[:10]
     rss_posts = []
     for p in posts:
         try:
