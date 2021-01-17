@@ -1,0 +1,43 @@
+body {
+  /*font-family: 'Droid Sans', sans-serif;*/
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#content {
+  width: 90%;
+  margin-left: auto;
+}
+
+header {
+}
+
+header h1 {
+  margin-left: 5%;
+}
+
+header h1 a {
+  text-decoration: none;
+}
+
+header h1 a:visited {
+  color: black;
+}
+
+blockquote {
+  background-color: #eee;
+  padding: .6em;
+}
+
+#recent-posts ol {
+  list-style-type: none;
+}
+
+#recent-posts ol li {
+  margin-bottom: .5em;
+}
+
+date {
+  font-size: smaller;
+  font-style: italic;
+  margin-left: 1em;
+}
