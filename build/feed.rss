@@ -7,7 +7,7 @@
     <link>http://lawlesst.github.io/</link>
     <atom:link href="http://lawlesst.github.io///feed.rss" rel="self" type="application/rss+xml" />
     <description>Work notebook</description>
-    <pubDate>Sun, 17 Jan 21 15:41:33 UTC</pubDate>
+    <pubDate>Sun, 17 Jan 21 15:44:29 EST</pubDate>
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
 
     
@@ -20,7 +20,7 @@ The total hosting cost on Google Cloud Run for 2020 for the baseballdb was $51.3
 Google does report that it is subtracting $49.28 in credits for the year but I don't expect those credits/promotions to expire anytime soon since my projected costs for 2021 is $59.
 
 This cost information is somewhat incomplete without knowing the number of queries served per month but it is a benchmark</description>
-       <pubDate>Sat, 16 Jan 21 00:00:00 UTC</pubDate>
+       <pubDate>Sat, 16 Jan 21 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/datasette-hosting.html</guid>
        <link>http://lawlesst.github.io/notebook/datasette-hosting.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -39,7 +39,7 @@ Once this is in place, you can query and update Neptune via SPARQL with RDFLib t
 Code
 
 If you are interested in working with Neptune using RDFLib, here's a "NeptuneStore" and "NeptuneUpdateStore" implementation that you can use.</description>
-       <pubDate>Fri, 15 Mar 19 00:00:00 UTC</pubDate>
+       <pubDate>Fri, 15 Mar 19 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/rdflib-neptune.html</guid>
        <link>http://lawlesst.github.io/notebook/rdflib-neptune.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -59,7 +59,7 @@ On various projects I've been involved with, it has been difficult to acquire us
 To that end, the scripts I've published crawl the NIH Intramural Research Program website and pull out profile information for the thousand or so researchers that are members of the program, including a name, email, photo, short biography research interests, and the Pubmed IDs for selected publications.
 
 A second script harvests the organizational structure of the program Both types of data are outputted to a simple JSON structure that then can be mapped to your destination system</description>
-       <pubDate>Sat, 19 May 18 00:00:00 UTC</pubDate>
+       <pubDate>Sat, 19 May 18 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/researcher-profile-data.html</guid>
        <link>http://lawlesst.github.io/notebook/researcher-profile-data.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -98,7 +98,7 @@ With the Wikidata ID, I'm able to retrieve many attributes each reader and write
 Publishing with Datasette
 
 I saved this harvested data to two CSV files - episodes.csv and people.csv - and then built a sqlite database to publish with Datasette using the built-in integration with Zeit Now</description>
-       <pubDate>Tue, 06 Feb 18 00:00:00 UTC</pubDate>
+       <pubDate>Tue, 06 Feb 18 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/nyer-fiction.html</guid>
        <link>http://lawlesst.github.io/notebook/nyer-fiction.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -121,7 +121,7 @@ The complete sqlite version of the Lahman database is 31 megabytes.
 Querying
 
 With the full database now loaded, there are many more interesting queries that can be run</description>
-       <pubDate>Sun, 03 Dec 17 00:00:00 UTC</pubDate>
+       <pubDate>Sun, 03 Dec 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/baseball-datasette-full.html</guid>
        <link>http://lawlesst.github.io/notebook/baseball-datasette-full.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -133,7 +133,7 @@ With the full database now loaded, there are many more interesting queries that 
 
 
 For those of us interested in open data, an exciting new tool was released this month It's by Simon Willison and called Datasette Datasette allows you to very quickly convert CSV files to a sqlite database and publish on the web with an API Head over to Simon's site for more details</description>
-       <pubDate>Mon, 20 Nov 17 00:00:00 UTC</pubDate>
+       <pubDate>Mon, 20 Nov 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/baseball-datasette.html</guid>
        <link>http://lawlesst.github.io/notebook/baseball-datasette.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -159,7 +159,7 @@ With a few lines of code, we can connect data stored in SPARQL endpoints with pa
 See the Su Labs tutorial for more examples.
 
 You can also download the examples from this post as a Jupyter notebook.</description>
-       <pubDate>Thu, 26 Oct 17 00:00:00 UTC</pubDate>
+       <pubDate>Thu, 26 Oct 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/sparql-dataframe.html</guid>
        <link>http://lawlesst.github.io/notebook/sparql-dataframe.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -171,7 +171,7 @@ You can also download the examples from this post as a Jupyter notebook.</descri
 
 
   Yu, A</description>
-       <pubDate>Tue, 18 Oct 16 00:00:00 UTC</pubDate>
+       <pubDate>Tue, 18 Oct 16 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/wikidata-baseball-fame.html</guid>
        <link>http://lawlesst.github.io/notebook/wikidata-baseball-fame.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -190,7 +190,7 @@ General purpose CSV to RDF tools, however, almost always require some advanced p
 ETL with Python
 
 One such ETL tool that I'm having good results with is petl, Python ETL</description>
-       <pubDate>Sat, 05 Dec 15 00:00:00 UTC</pubDate>
+       <pubDate>Sat, 05 Dec 15 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/petl-ld.html</guid>
        <link>http://lawlesst.github.io/notebook/petl-ld.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
@@ -216,7 +216,7 @@ We downloaded the OrgRef CSV dataset and used the ever helpful csvkit tool to ge
 $ csvstat --unique orgref.csv
   1 Name: 31149
   2</description>
-       <pubDate>Sat, 10 Jan 15 00:00:00 UTC</pubDate>
+       <pubDate>Sat, 10 Jan 15 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/orgref-rdf.html</guid>
        <link>http://lawlesst.github.io/notebook/orgref-rdf.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
