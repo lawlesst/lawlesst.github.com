@@ -1,83 +1,58 @@
-<!doctype html>
-<html lang="">	
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8"/>
-	<title>Connecting Python's RDFLib to AWS Neptune - Ted Lawless</title>	
-	<meta name="author" content="Ted Lawless">
-	
-	<meta name="HandheldFriendly" content="True">
-	<meta name="MobileOptimized" content="320">
-	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
-	
-	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		
-	<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	
-	
-	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
-	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+          <title>Ted Lawless - Connecting Python's RDFLib to AWS Neptune</title>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <link href="http://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+
+
+
+
+
 </head>
-	
-<body>		
-	<header class="clearfix" role="banner">
-		<div class="wrapper">
-			<h1><a href="..">Ted Lawless</a></h1>
-		</div>
-	</header>
-	
-<div role="main" class="content clearfix">	
-	<article>
-		<div class="post wrapper">
-			<h1>Connecting Python's RDFLib to AWS Neptune</h1>
-			<time datetime="2019-03-15T00:00:00-04:00" pubdate>03/15/2019</time> 
-			<hr/>
-			<p>I've <a href="http://lawlesst.github.io/notebook/rdflib-stardog.html">written previously</a> about using <a href="https://github.com/RDFLib/rdflib">Python's RDFLib</a> to connect to various triple stores. For a current project, I'm using <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a> as a triple store and the RDFLib <a href="https://rdflib.readthedocs.io/en/latest/apidocs/rdflib.plugins.stores.html#rdflib.plugins.stores.sparqlstore.SPARQLUpdateStore">SPARQLStore</a> implemenation did not work out of the box. I thought I would share my solution.</p>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">Ted Lawless</a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="../pages/presentations.html">Presentations and workshops</a></li>
+            <li><a href="../pages/projects.html">Projects</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="../notebook/rdflib-neptune.html" rel="bookmark"
+         title="Permalink to Connecting Python's RDFLib to AWS Neptune">Connecting Python's RDFLib to AWS Neptune</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2019-03-15T00:00:00-04:00">
+      03/15/2019
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
+    </address>
+    <div class="category">
+        Category: <a href="../category/notebook.html">notebook</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <p>I've <a href="http://lawlesst.github.io/notebook/rdflib-stardog.html">written previously</a> about using <a href="https://github.com/RDFLib/rdflib">Python's RDFLib</a> to connect to various triple stores. For a current project, I'm using <a href="https://aws.amazon.com/neptune/">Amazon Neptune</a> as a triple store and the RDFLib <a href="https://rdflib.readthedocs.io/en/latest/apidocs/rdflib.plugins.stores.html#rdflib.plugins.stores.sparqlstore.SPARQLUpdateStore">SPARQLStore</a> implemenation did not work out of the box. I thought I would share my solution.</p>
 <h3>The problem</h3>
 <p>Neptune returns ntriples by default and RDFLib, by default in version 4.2.2, is expecting CONSTRUCT queries to return RDF/XML. The solution is to override RDFLib's SPARQLStore to explictly request RDF/XML from Neptune via HTTP content negotiation.</p>
 <p>Once this is in place, you can query and update Neptune via SPARQL with RDFLib the same way that you would other triple stores.</p>
 <h3>Code</h3>
 <p>If you are interested in working with Neptune using RDFLib, here's a "NeptuneStore" and "NeptuneUpdateStore" implementation that you can use.</p>
 <script src="https://gist.github.com/lawlesst/091e0f4b0103320cfffa55dbe1757fb6.js"></script>
-			
-			<div class="comments">
-			<h2>Comments !</h2>
-			    <div id="disqus_thread"></div>
-			    <script type="text/javascript">
-			       var disqus_identifier = "notebook/rdflib-neptune.html";
-			       (function() {
-			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
-			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-			      })();
-			    </script>
-			</div>
-			
-		</div>
-	
-	</article>	
-</div>
-	
-
-		
-<footer class="clearfix">
-<ul class="social">
-	<span class="me"><a href="..">Ted Lawless</a>:</span>
-	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
-	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
-	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
-	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-	</ul>
-</footer>
-	
-	<script>
-	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
-	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	  s.parentNode.insertBefore(g,s)}(document,'script'));
-	</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
 </body>
 </html>

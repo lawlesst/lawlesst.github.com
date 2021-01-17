@@ -1,50 +1,51 @@
-<!doctype html>
-<html lang="">	
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8"/>
-	<title>Using Z39.50 to produce a Stack View. - Ted Lawless</title>	
-	<meta name="author" content="Ted Lawless">
-	
-	<meta name="HandheldFriendly" content="True">
-	<meta name="MobileOptimized" content="320">
-	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
-	
-	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		
-	<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	
-	
-	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
-	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+          <title>Ted Lawless - Using Z39.50 to produce a Stack View.</title>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <link href="http://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+
+
+
+
+
 </head>
-	
-<body>		
-	<header class="clearfix" role="banner">
-		<div class="wrapper">
-			<h1><a href="..">Ted Lawless</a></h1>
-		</div>
-	</header>
-	
-<div role="main" class="content clearfix">	
-	<article>
-		<div class="post wrapper">
-			<h1>Using Z39.50 to produce a Stack View.</h1>
-			<time datetime="2013-02-08T00:00:00-05:00" pubdate>02/08/2013</time> 
-			<hr/>
-			<p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library browsing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library.</p>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">Ted Lawless</a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="../pages/presentations.html">Presentations and workshops</a></li>
+            <li><a href="../pages/projects.html">Projects</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="../notebook/z3950-scan.html" rel="bookmark"
+         title="Permalink to Using Z39.50 to produce a Stack View.">Using Z39.50 to produce a Stack View.</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2013-02-08T00:00:00-05:00">
+      02/08/2013
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
+    </address>
+    <div class="category">
+        Category: <a href="../category/notebook.html">notebook</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library browsing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library.</p>
 <p>The examples on the Stack View website show how to pull data in from a variety of sources and example scripts are provided.  But many libraries might want to pull data in from their own catalog.  Additionally libraries might want to display the items in call number order so that the virtual Stack View approximates what a user would see if they were actually browsing the shelves in your library.</p>
 <p>One way to get the data necessary for Stack View is via <a href="http://en.wikipedia.org/wiki/Z39.50">Z39.50</a>.  Below is an example of a Stack View for "On the Road" by Jack Kerouac from the Brown University library catalog.</p>
 <!-- stackview.css to style the stack -->
-
 <p><link rel="stylesheet" href="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.css" type="text/css"></p>
 <!-- stackview.js and all js dependencies -->
-
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-
 <script type="text/javascript" src="http://librarylab.law.harvard.edu/stackview/demo/lib/jquery.stackview.min.js"></script>
 
 <div id="stackview" title="Sample Stack View" style="margin: 2em; "></div>
@@ -649,7 +650,7 @@
 <p>The code below has been tested only with an Innovative Interfaces Z39.50 server but it should work with minimal modification on any Z39.50 implementations that supports scan.</p>
 <h3>Call number scan.</h3>
 <p>Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
 
 <span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s1">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
 <span class="n">conn</span><span class="o">.</span><span class="n">databaseName</span> <span class="o">=</span> <span class="s1">&#39;INNOPAC&#39;</span>
@@ -670,32 +671,30 @@
 <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">rec</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
     <span class="n">display</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;display&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">response_position</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s1">&#39;----&gt;  &#39;</span><span class="p">,</span> <span class="n">display</span>
+        <span class="nb">print</span> <span class="s1">&#39;----&gt;  &#39;</span><span class="p">,</span> <span class="n">display</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">display</span>
+        <span class="nb">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">display</span>
 
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Running this search against the <a href="http://library.brown.edu/">Brown University Library</a> library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.</p>
-<div class="highlight"><pre><span></span>        Ps 3521 E716 D4^   1 entry
-        Ps 3521 E716 D6^   1 entry
-        Ps 3521 E716 D6 1959^   1 entry
-        Ps 3521 E716 D6 1987^   1 entry
-        Ps 3521 E716 E9^   1 entry
-----&gt;   Ps 3521 E716 O5 1979^   2 entries
-        Ps 3521 E716 O77 X 2002^   1 entry
-        Ps 3521 E716 T6^   1 entry
-        Ps 3521 E716 V3^   2 entries
-        Ps 3521 E716 V3 1969^   1 entry
-        Ps 3521 E716 V48^   1 entry
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">        Ps 3521 E716 D4^   1 entry</span>
+<span class="err">        Ps 3521 E716 D6^   1 entry</span>
+<span class="err">        Ps 3521 E716 D6 1959^   1 entry</span>
+<span class="err">        Ps 3521 E716 D6 1987^   1 entry</span>
+<span class="err">        Ps 3521 E716 E9^   1 entry</span>
+<span class="err">----&gt;   Ps 3521 E716 O5 1979^   2 entries</span>
+<span class="err">        Ps 3521 E716 O77 X 2002^   1 entry</span>
+<span class="err">        Ps 3521 E716 T6^   1 entry</span>
+<span class="err">        Ps 3521 E716 V3^   2 entries</span>
+<span class="err">        Ps 3521 E716 V3 1969^   1 entry</span>
+<span class="err">        Ps 3521 E716 V48^   1 entry</span>
+</code></pre></div>
 
 <h3>Call number scan and fetching metadata</h3>
 <p>Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with <a href="https://github.com/edsu/pymarc/">pymarc</a> and a Record object is created that allows us to convert the data into more friendly formats.</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">PyZ3950</span> <span class="kn">import</span> <span class="n">zoom</span>
 <span class="kn">import</span> <span class="nn">pymarc</span>
 
 <span class="n">conn</span> <span class="o">=</span> <span class="n">zoom</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="s1">&#39;library.school.edu&#39;</span><span class="p">,</span> <span class="mi">210</span><span class="p">)</span>
@@ -731,50 +730,20 @@
     <span class="n">call</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;term&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
     <span class="c1">#Get the bibliographic record for this call number.</span>
     <span class="n">bib</span> <span class="o">=</span> <span class="n">get_record_by_call</span><span class="p">(</span><span class="n">call</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">bib</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="n">bib</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
 
 <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <h3>Web service to implement Stack View on your library website</h3>
 <p>To fully integrate this into a website, you will need to run a basic web service that can lookup the call number for a given title, scan for nearby items, and then return the metadata for those items in a <a href="http://librarylab.law.harvard.edu/projects/stackview/demo/documentation.html">Stack View compliant JSON format</a>.  I have posted <a href="https://gist.github.com/lawlesst/4722068">code</a> for a simple Python and <a href="http://flask.pocoo.org/">Flask</a> app on <a href="https://gist.github.com/lawlesst/4722068">Github</a> that implements Stack View.  This code is in use on an internal website and seems to be working fine but hasn't been fully implemented yet.  So please use it as a reference rather than something that can be installed and used right away.</p>
-			
-			<div class="comments">
-			<h2>Comments !</h2>
-			    <div id="disqus_thread"></div>
-			    <script type="text/javascript">
-			       var disqus_identifier = "notebook/z3950-scan.html";
-			       (function() {
-			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
-			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-			      })();
-			    </script>
-			</div>
-			
-		</div>
-	
-	</article>	
-</div>
-	
-
-		
-<footer class="clearfix">
-<ul class="social">
-	<span class="me"><a href="..">Ted Lawless</a>:</span>
-	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
-	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
-	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
-	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-	</ul>
-</footer>
-	
-	<script>
-	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
-	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	  s.parentNode.insertBefore(g,s)}(document,'script'));
-	</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
 </body>
 </html>

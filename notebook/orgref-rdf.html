@@ -1,48 +1,52 @@
-<!doctype html>
-<html lang="">	
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8"/>
-	<title>OrgRef data as RDF - Ted Lawless</title>	
-	<meta name="author" content="Ted Lawless">
-	
-	<meta name="HandheldFriendly" content="True">
-	<meta name="MobileOptimized" content="320">
-	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
-	
-	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		
-	<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	
-	
-	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
-	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+          <title>Ted Lawless - OrgRef data as RDF</title>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <link href="http://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+
+
+
+
+
 </head>
-	
-<body>		
-	<header class="clearfix" role="banner">
-		<div class="wrapper">
-			<h1><a href="..">Ted Lawless</a></h1>
-		</div>
-	</header>
-	
-<div role="main" class="content clearfix">	
-	<article>
-		<div class="post wrapper">
-			<h1>OrgRef data as RDF</h1>
-			<time datetime="2015-01-10T00:00:00-05:00" pubdate>01/10/2015</time> 
-			<hr/>
-			<p>This past fall, <a href="http://www.datasalon.com/web/index.htm">Data Salon</a>, a UK-based data services company, released an open dataset about academic and research organizations called <a href="http://www.orgref.org/">OrgRef</a>.  The data is <a href="http://www.orgref.org/web/download.htm">available as a CSV</a> and contains basic information about over 30,000 organizations.</p>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">Ted Lawless</a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="../pages/presentations.html">Presentations and workshops</a></li>
+            <li><a href="../pages/projects.html">Projects</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="../notebook/orgref-rdf.html" rel="bookmark"
+         title="Permalink to OrgRef data as RDF">OrgRef data as RDF</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2015-01-10T00:00:00-05:00">
+      01/10/2015
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
+    </address>
+    <div class="category">
+        Category: <a href="../category/notebook.html">notebook</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <p>This past fall, <a href="http://www.datasalon.com/web/index.htm">Data Salon</a>, a UK-based data services company, released an open dataset about academic and research organizations called <a href="http://www.orgref.org/">OrgRef</a>.  The data is <a href="http://www.orgref.org/web/download.htm">available as a CSV</a> and contains basic information about over 30,000 organizations.</p>
 <blockquote>
 <p>OrgRef was created with publishers in mind, and so its main focus is on institutions involved with academic content: universities, colleges, schools, hospitals, government agencies and companies involved in research.</p>
 </blockquote>
 <p>This announcement caught our attention at my place of work because we are compiling information about educational organizations in multiple systems, including a <a href="http://vivoweb.org">VIVO</a> instance, and are looking for manageable ways to consume Linked Data that will enrich or augment our local systems.  Since the OrgRef data has been curated and focuses on a useful subset of data that we are interested in, it seemed to be a good candidate for investigation, even it isn't published as RDF.  Due to it's size, it is also easier to work with than attempting to consume and process something like <a href="http://viaf.org/">VIAF</a> or <a href="http://dbpedia.org">DBPedia</a> itself.</p>
 <h1>Process</h1>
 <p>We downloaded the OrgRef CSV dataset and used the ever helpful <a href="https://github.com/onyxfish/csvkit">csvkit</a> tool to get handle on what data elements exist.</p>
-<div class="highlight"><pre><span></span>$ csvstat --unique orgref.csv
+<div class="highlight"><pre><span></span><code>$ csvstat --unique orgref.csv
   <span class="m">1</span>. Name: <span class="m">31149</span>
   <span class="m">2</span>. Country: <span class="m">210</span>
   <span class="m">3</span>. State: <span class="m">51</span>
@@ -52,31 +56,28 @@
   <span class="m">7</span>. ISNI: <span class="m">5765</span>
   <span class="m">8</span>. Website: <span class="m">25910</span>
   <span class="m">9</span>. ID: <span class="m">31149</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>The <a href="http://www.orgref.org/web/help.htm">attributes</a> are will documented by OrgRef.  To highlight though, identifiers to other systems are included - Wikipedia Page ID (pageid), <a href="http://www.isni.org/">ISNI</a>, and <a href="http://viaf.org/">VIAF</a>.  These identifiers will be important for matching data from other systems or finding more LOD resources later.  There is also a link to official organizational home pages.  We've found that organizational home pages are surprisingly inconsistently available or not to an official page in other sources, so this is something from OrgRef that we would be interested in using right away.</p>
 <h2>OrgRef to DBPedia</h2>
 <p>Since we are working on a project that uses RDF as the data model, we wanted to convert this OrgRef data from CSV to RDF.  All the organizations in the dataset (as of the December 2014 download) have Wikipedia page IDs (pageid).  DBPedia also includes the pageid so we can lookup the DBPedia URI for each and use that in our RDF representation of the data.  Rather that sending 30,000 SPARQL queries to DBPedia, we <a href="http://wiki.dbpedia.org/Downloads2014#page-ids">downloaded</a> the DBPedia to pageid ntriples file from <a href="http://wiki.dbpedia.org/Downloads2014#page-ids">DBPedia</a> and wrote a <a href="https://github.com/lawlesst/vivo-sample-data/blob/master/orgref/orgref_to_dbpedia.py">script</a> to output another CSV with OrgRef ID and DBPedia URI pairs, like below.</p>
-<div class="highlight"><pre><span></span>orgref-id,uri
-1859,http://dbpedia.org/resource/Arizona_State_University
-2025,http://dbpedia.org/resource/Crandall_University
-2236,http://dbpedia.org/resource/Acadia_University
-3712,http://dbpedia.org/resource/Bell_Labs
-3768,http://dbpedia.org/resource/Bundestag
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">orgref-id,uri</span>
+<span class="err">1859,http://dbpedia.org/resource/Arizona_State_University</span>
+<span class="err">2025,http://dbpedia.org/resource/Crandall_University</span>
+<span class="err">2236,http://dbpedia.org/resource/Acadia_University</span>
+<span class="err">3712,http://dbpedia.org/resource/Bell_Labs</span>
+<span class="err">3768,http://dbpedia.org/resource/Bundestag</span>
+</code></pre></div>
 
 <h2>OrgRef as RDF</h2>
 <p>With a mapping of OrgRef IDs to DBPedia URIs we were able to create an RDF representation of each organization.  For an initial pass, we decided to only use name, pageid, ISNI, VIAF, and websites from OrgRef.  A script merged the original OrgRef CSV with our DBPedia URI to OrgRefID CSV and produced triples like the following for a single organization.</p>
-<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="nt">http</span><span class="o">://</span><span class="nt">dbpedia</span><span class="p">.</span><span class="nc">org</span><span class="o">/</span><span class="nt">resource</span><span class="o">/</span><span class="nt">Michigan_Technological_University</span><span class="o">&gt;</span> <span class="nt">a</span> <span class="nt">foaf</span><span class="p">:</span><span class="nd">Organization</span> <span class="o">;</span>
-    <span class="nt">rdfs</span><span class="p">:</span><span class="nd">label</span> <span class="s2">&quot;Michigan Technological University&quot;</span> <span class="o">;</span>
-    <span class="nt">dbpedia-owl</span><span class="p">:</span><span class="nd">isniId</span> <span class="s2">&quot;0000000106635937&quot;</span> <span class="o">;</span>
-    <span class="nt">dbpedia-owl</span><span class="p">:</span><span class="nd">viafId</span> <span class="s2">&quot;150627130&quot;</span> <span class="o">;</span>
-    <span class="nt">dbpedia-owl</span><span class="p">:</span><span class="nd">wikiPageID</span> <span class="s2">&quot;45893&quot;</span> <span class="o">;</span>
-    <span class="nt">schema</span><span class="p">:</span><span class="nd">url</span> <span class="s2">&quot;http://www.mtu.edu&quot;</span> <span class="o">.</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="err">&lt;http://dbpedia.org/resource/Michigan_Technological_University&gt; a foaf:Organization ;</span>
+<span class="err">    rdfs:label &quot;Michigan Technological University&quot; ;</span>
+<span class="err">    dbpedia-owl:isniId &quot;0000000106635937&quot; ;</span>
+<span class="err">    dbpedia-owl:viafId &quot;150627130&quot; ;</span>
+<span class="err">    dbpedia-owl:wikiPageID &quot;45893&quot; ;</span>
+<span class="err">    schema:url &quot;http://www.mtu.edu&quot; .</span>
+</code></pre></div>
 
 <p>The VIAF information is stored as both a string literal (to aid querying by the identifier later) and as an owl:sameAs relationship, since VIAF is published as Linked Data.  For ISNI, we are only storing the literal because, as of January 2015, isn't <a href="http://lists.w3.org/Archives/Public/public-lod/2014Jun/0049.html">available as Linked Data</a>.</p>
 <h2>Publishing for querying with Linked Data Fragments.</h2>
@@ -85,42 +86,13 @@
 <h2>Summary</h2>
 <p>To wrap up, we found a quality, curated, and targeted dataset available as CSV that we would like to integrate into our local projects that use RDF.  Using the identifiers in the CSV file, we were able to match it to Linked Data URIs from DBPedia and create an RDF representation of it.  We also published the RDF via <a href="http://linkeddatafragments.org/">Linked Data Fragments</a> for others to browse and query.</p>
 <p>Our interest in the OrgRef data doesn't stop here though.  We want to make use of it on our local applications, particularly a <a href="http://vivoweb.org">VIVO</a> instance.  I'll write more about that later.</p>
-			
-			<div class="comments">
-			<h2>Comments !</h2>
-			    <div id="disqus_thread"></div>
-			    <script type="text/javascript">
-			       var disqus_identifier = "notebook/orgref-rdf.html";
-			       (function() {
-			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
-			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-			      })();
-			    </script>
-			</div>
-			
-		</div>
-	
-	</article>	
-</div>
-	
-
-		
-<footer class="clearfix">
-<ul class="social">
-	<span class="me"><a href="..">Ted Lawless</a>:</span>
-	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
-	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
-	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
-	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-	</ul>
-</footer>
-	
-	<script>
-	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
-	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	  s.parentNode.insertBefore(g,s)}(document,'script'));
-	</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
 </body>
 </html>

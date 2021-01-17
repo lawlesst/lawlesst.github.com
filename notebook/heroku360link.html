@@ -1,41 +1,45 @@
-<!doctype html>
-<html lang="">	
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8"/>
-	<title>Django, Heroku, and the 360Link API - Ted Lawless</title>	
-	<meta name="author" content="Ted Lawless">
-	
-	<meta name="HandheldFriendly" content="True">
-	<meta name="MobileOptimized" content="320">
-	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
-	
-	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		
-	<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	
-	
-	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
-	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+          <title>Ted Lawless - Django, Heroku, and the 360Link API</title>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <link href="http://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+
+
+
+
+
 </head>
-	
-<body>		
-	<header class="clearfix" role="banner">
-		<div class="wrapper">
-			<h1><a href="..">Ted Lawless</a></h1>
-		</div>
-	</header>
-	
-<div role="main" class="content clearfix">	
-	<article>
-		<div class="post wrapper">
-			<h1>Django, Heroku, and the 360Link API</h1>
-			<time datetime="2012-09-11T00:00:00-04:00" pubdate>09/11/2012</time> 
-			<hr/>
-			<blockquote>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">Ted Lawless</a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="../pages/presentations.html">Presentations and workshops</a></li>
+            <li><a href="../pages/projects.html">Projects</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="../notebook/heroku360link.html" rel="bookmark"
+         title="Permalink to Django, Heroku, and the 360Link API">Django, Heroku, and the 360Link API</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2012-09-11T00:00:00-04:00">
+      09/11/2012
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
+    </address>
+    <div class="category">
+        Category: <a href="../category/notebook.html">notebook</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <blockquote>
 <p>This post describes a <a href="http://damp-tor-3124.herokuapp.com/">demo application</a> that serves as a front-end to the <a href="http://www.serialssolutions.com/en/services/360-link">360Link OpenURL resolver</a>
 from Serials Solutions.  The code is available on <a href="https://github.com/lawlesst/dj360link">Github</a> and the application is running on Heroku.    </p>
 </blockquote>
@@ -54,42 +58,13 @@ from Serials Solutions.  The code is available on <a href="https://github.com/la
 <p>The app is running on Heroku and the code is on <a href="https://github.com/lawlesst/dj360link">Github</a>.  As far as I know, any library that subscribes to 360Link also has access to the API, so you could checkout this code, make a few tweaks, and have it running for your library pretty quickly.  If you take a look, you'll notice that it's a couple of URL routes and a few dozen lines of controller (view in Django) code.  So it takes less work to get started with the API than you might suspect.  </p>
 <p>For more details about working with the API, Daniel Talsky did a nice job of <a href="http://journal.code4lib.org/articles/108">explaining the API</a> in Issue 4, 2008  of the Code4Lib Journal.    </p>
 <p>At Brown we have seen some performance issues with the API, particularly with Pubmed ID lookups, but these issues are also present in the default interface too.  Overall it's been quite rewarding to have control over the link resolver interface and to dive in and add new features that make it easier for patrons to get to library content.  </p>
-			
-			<div class="comments">
-			<h2>Comments !</h2>
-			    <div id="disqus_thread"></div>
-			    <script type="text/javascript">
-			       var disqus_identifier = "notebook/heroku360link.html";
-			       (function() {
-			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
-			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-			      })();
-			    </script>
-			</div>
-			
-		</div>
-	
-	</article>	
-</div>
-	
-
-		
-<footer class="clearfix">
-<ul class="social">
-	<span class="me"><a href="..">Ted Lawless</a>:</span>
-	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
-	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
-	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
-	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-	</ul>
-</footer>
-	
-	<script>
-	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
-	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	  s.parentNode.insertBefore(g,s)}(document,'script'));
-	</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
 </body>
 </html>

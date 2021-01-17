@@ -1,41 +1,45 @@
-<!doctype html>
-<html lang="">	
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta charset="utf-8"/>
-	<title>Using Pelican for a Gitub personal page - Ted Lawless</title>	
-	<meta name="author" content="Ted Lawless">
-	
-	<meta name="HandheldFriendly" content="True">
-	<meta name="MobileOptimized" content="320">
-	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0">
-	
-	<link href='https://fonts.googleapis.com/css?family=Droid+Sans:700,400|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="../theme/css/main.css" type="text/css" />
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		
-	<!--[if lt IE 9]>
-		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	
-	
-	<link href="../" type="application/atom+xml" rel="alternate" title="Ted Lawless ATOM Feed" />
-	<link href="../feed.rss" type="application/atom+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+          <title>Ted Lawless - Using Pelican for a Gitub personal page</title>
+        <meta charset="utf-8" />
+        <meta name="generator" content="Pelican" />
+        <link href="http://lawlesst.github.io/feed.rss" type="application/rss+xml" rel="alternate" title="Ted Lawless RSS Feed" />
+
+
+
+
+
 </head>
-	
-<body>		
-	<header class="clearfix" role="banner">
-		<div class="wrapper">
-			<h1><a href="..">Ted Lawless</a></h1>
-		</div>
-	</header>
-	
-<div role="main" class="content clearfix">	
-	<article>
-		<div class="post wrapper">
-			<h1>Using Pelican for a Gitub personal page</h1>
-			<time datetime="2014-11-16T00:00:00-05:00" pubdate>11/16/2014</time> 
-			<hr/>
-			<p>I've been using my <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github user page</a> as a convenient way to publish <a href="../archives.html">notes</a> about my <a href="http://directory.brown.edu/uuid/2403c0a2-624f-a442-ee47-312376b77e3b">work</a>. I choose GH personal pages over a service like Blogger or Wordpress because combining it with <a href="https://disqus.com/">Disqus</a> for comments, allows for a lot of flexibility in how you write and arrange your content.</p>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="../">Ted Lawless</a></h1>
+        </header><!-- /#banner -->
+        <nav id="menu"><ul>
+            <li><a href="../pages/presentations.html">Presentations and workshops</a></li>
+            <li><a href="../pages/projects.html">Projects</a></li>
+        </ul></nav><!-- /#menu -->
+<section id="content" class="body">
+  <header>
+    <h2 class="entry-title">
+      <a href="../notebook/pelican.html" rel="bookmark"
+         title="Permalink to Using Pelican for a Gitub personal page">Using Pelican for a Gitub personal page</a></h2>
+ 
+  </header>
+  <footer class="post-info">
+    <time class="published" datetime="2014-11-16T00:00:00-05:00">
+      11/16/2014
+    </time>
+    <address class="vcard author">
+      By           <a class="url fn" href="../author/ted-lawless.html">Ted Lawless</a>
+    </address>
+    <div class="category">
+        Category: <a href="../category/notebook.html">notebook</a>
+    </div>
+  </footer><!-- /.post-info -->
+  <div class="entry-content">
+    <p>I've been using my <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github user page</a> as a convenient way to publish <a href="../archives.html">notes</a> about my <a href="http://directory.brown.edu/uuid/2403c0a2-624f-a442-ee47-312376b77e3b">work</a>. I choose GH personal pages over a service like Blogger or Wordpress because combining it with <a href="https://disqus.com/">Disqus</a> for comments, allows for a lot of flexibility in how you write and arrange your content.</p>
 <p>Up until this weekend I had used a somewhat clunky, <a href="https://github.com/lawlesst/lawlesst.github.com/blob/pre-pelican/mark.py">homemade Python script</a> for converting Markdown to HTML, applying a template, and generating an RSS feed.  This has worked well but the script had to generate things like an RSS feed and list of all posts.  There are many nice <a href="https://www.staticgen.com/">static site generation tools</a> available and at this point it makes sense for me to leverage one of those.  I chose <a href="http://blog.getpelican.com/">Pelican</a> because of my experience with Python and Python's markdown library.  According to a site called <a href="https://www.staticgen.com/">StaticGen</a>, is the most popular Python based static site generation tool so made me choose it over the other Python based tools.</p>
 <p>With a couple of hours of work I was able to convert my GH personal page to Pelican and was able to maintain my existing urls, Disqus comments, and Google Analytics code.  I was able to do this without writing any Python code, just by reading the Pelican docs, choosing and modifying a theme, changing the theme, and adjusting the site settings.  Overall it was a good experience.  Below are some specific notes that might help someone doing a project like this.  </p>
 <h3>Specific notes</h3>
@@ -50,42 +54,13 @@
 <p>Pelican's built in support for Disqus and Google Analytics made converting those tools to the new site really easy.  Just add <code>GOOGLE_ANALYTICS</code> and <code>DISQUS_SITENAME</code> to your Pelican settings file.  Many other common blog features, like tagging and blogrolls, are included with Pelican but I turned those off since I haven't been using them with my site and don't really want to.  It's nice to know that they exist though, particularly, tagging so that I can use them later if need be.    </p>
 <h4>Outstanding issue</h4>
 <p>The Markdown TOC extensions seems to conflict with Pygments syntax highlighting.  I haven't been able to resolve this yet.  Since I'm only using a TOC on one page but using syntax highlighting in most articles, I decided this wasn't a blocker and just have turned off TOC generation for now. </p>
-			
-			<div class="comments">
-			<h2>Comments !</h2>
-			    <div id="disqus_thread"></div>
-			    <script type="text/javascript">
-			       var disqus_identifier = "notebook/pelican.html";
-			       (function() {
-			       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			       dsq.src = '//tedlawlessnotebook.disqus.com/embed.js';
-			       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-			      })();
-			    </script>
-			</div>
-			
-		</div>
-	
-	</article>	
-</div>
-	
-
-		
-<footer class="clearfix">
-<ul class="social">
-	<span class="me"><a href="..">Ted Lawless</a>:</span>
-	<li><i class="fa fa-github fa-lg"></i><a href="http://github.com/lawlesst">Github</a></li>
-	<li><i class="fa fa-twitter fa-lg"></i><a href="http://twitter.com/tedlawless">Twitter</a></li>
-	<li><i class="fa fa-stack-overflow fa-lg"></i><a href="http://stackoverflow.com/users/758157/lawlesst">Stack Overflow</a></li>
-	<li><i class="fa fa-linkedin fa-lg"></i><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-	</ul>
-</footer>
-	
-	<script>
-	  var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
-	  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-	  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-	  s.parentNode.insertBefore(g,s)}(document,'script'));
-	</script>
+  </div><!-- /.entry-content -->
+</section>
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>,
+                which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
 </body>
 </html>
