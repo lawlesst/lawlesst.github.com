@@ -4,26 +4,26 @@ Slug:pyjniusvivo
 
 >Note: This post is quite old. Code samples are unlikely to still work. Please use only as background/reference.
 
-I’m loading data into [VIVO](http://vivoweb.org/), an application built with the [Jena Framework](http://jena.apache.org/).  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.    
+I’m loading data into [VIVO](http://vivoweb.org/), an application built with the [Jena Framework](http://jena.apache.org/).  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate [harvester](https://github.com/vivo-project/VIVO-Harvester) project that has more utilities for getting data into the system.
 
 Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:
 
- * generate a new, unique identifier to assign to new resources.  
- * find an existing resource in the model and return it's URI.  
- * load RDF created with processing scripts directly from those scripts. 
- * delete RDF created with processing scripts.  
+ * generate a new, unique identifier to assign to new resources.
+ * find an existing resource in the model and return it's URI.
+ * load RDF created with processing scripts directly from those scripts.
+ * delete RDF created with processing scripts.
 
-A [recent post](http://news.ycombinator.com/item?id=4407624) on Hacker News pointed me to a project called [Pyjnius](http://pyjnius.readthedocs.org/en/latest/index.html), which is "a Python library for accessing Java classes."  
+A [recent post](http://news.ycombinator.com/item?id=4407624) on Hacker News pointed me to a project called [Pyjnius](http://pyjnius.readthedocs.org/en/latest/index.html), which is "a Python library for accessing Java classes."
 
-For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using [RDFLib](http://rdflib.readthedocs.org/en/latest/index.html), but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  
+For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using [RDFLib](http://rdflib.readthedocs.org/en/latest/index.html), but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).
 
 I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case VIVO).  This [Gist](https://gist.github.com/3829194) contains code that we are using in VIVO data loading scripts.  We are just beginning to explore the [VIVO harvester](https://github.com/vivo-project/VIVO-Harvester) in detail and hope to take fuller advantage of it moving forward.
 
-If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.  
+If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.
 
-### Example of connecting to an existing Jena database.  
+### Example of connecting to an existing Jena database.
 
-~~~~{.python}
+```python
 from jnius import autoclass
 
 #Load java classes
@@ -48,10 +48,10 @@ while namespaces.hasNext():
 model.close()
 store.close()
 conn.close()
-~~~~
+```
 
 The output for a default VIVO install should look something like the following:
-~~~~
+```
 http://vitro.mannlib.cornell.edu/ns/vitro/public#
 http://www.w3.org/1999/02/22-rdf-syntax-ns#
 http://purl.org/NET/c4dm/event.owl#
@@ -62,11 +62,11 @@ http://purl.org/dc/terms/
 http://vivoweb.org/ontology/core#
 http://vitro.mannlib.cornell.edu/ns/vitro/0.7#
 http://www.w3.org/2000/01/rdf-schema#
-~~~~
+```
 
 #### Performing SPARQL queries
-This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.  
-~~~~{.python}
+This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model.
+```python
 from jnius import autoclass
 
 QueryFactory = autoclass('com.hp.hpl.jena.query.QueryFactory')
@@ -89,7 +89,7 @@ SELECT ?thing ?label
 WHERE
 {
       ?thing rdf:type owl:Thing
-      OPTIONAL { ?thing rdfs:label ?label } 
+      OPTIONAL { ?thing rdfs:label ?label }
 }
 LIMIT 20
 """
@@ -109,12 +109,12 @@ qset.close()
 model.close()
 store.close()
 conn.close()
-~~~~
+```
 
-#### Pyjnius Installation 
-The [installation instructions](http://pyjnius.readthedocs.org/en/latest/installation.html) for Pyjnius are pretty straightforward.  I would recommend installing it with [virtualenv](http://pypi.python.org/pypi/virtualenv).  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a [JDK](http://en.wikipedia.org/wiki/Java_Development_Kit) installed. You will also want to make sure your [classpath](http://en.wikipedia.org/wiki/Classpath_(Java)) is set if you want to use external libraries.  
+#### Pyjnius Installation
+The [installation instructions](http://pyjnius.readthedocs.org/en/latest/installation.html) for Pyjnius are pretty straightforward.  I would recommend installing it with [virtualenv](http://pypi.python.org/pypi/virtualenv).  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a [JDK](http://en.wikipedia.org/wiki/Java_Development_Kit) installed. You will also want to make sure your [classpath](http://en.wikipedia.org/wiki/Classpath_(Java)) is set if you want to use external libraries.
 
-~~~~
+```
 vagrant@lucid32:~$ mkdir pyjnius-project
 vagrant@lucid32:~$ cd pyjnius-project/
 vagrant@lucid32:~/pyjnius-project$ virtualenv venv
@@ -148,5 +148,5 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> stack.pop()
 'hello'
 >>> exit()
-~~~~
+```
 
