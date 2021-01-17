@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ted Lawless</title>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>Using Pelican for a Gitub personal page</h3>
+<h5>11-16-2014</h5>
+<div id="post-contents">
+  <p>Summary: Notes on converting this Github user page based site to <a href="http://blog.getpelican.com/">Pelican</a>, a Python based static site generator.</p>
+
+<p>I've been using my <a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">Github user page</a> as a convenient way to publish <a href="../archives.html">notes</a> about my <a href="http://directory.brown.edu/uuid/2403c0a2-624f-a442-ee47-312376b77e3b">work</a>. I choose GH personal pages over a service like Blogger or Wordpress because combining it with <a href="https://disqus.com/">Disqus</a> for comments, allows for a lot of flexibility in how you write and arrange your content.</p>
+
+<p>Up until this weekend I had used a somewhat clunky, <a href="https://github.com/lawlesst/lawlesst.github.com/blob/pre-pelican/mark.py">homemade Python script</a> for converting Markdown to HTML, applying a template, and generating an RSS feed.  This has worked well but the script had to generate things like an RSS feed and list of all posts.  There are many nice <a href="https://www.staticgen.com/">static site generation tools</a> available and at this point it makes sense for me to leverage one of those.  I chose <a href="http://blog.getpelican.com/">Pelican</a> because of my experience with Python and Python's markdown library.  According to a site called <a href="https://www.staticgen.com/">StaticGen</a>, is the most popular Python based static site generation tool so made me choose it over the other Python based tools.</p>
+
+<p>With a couple of hours of work I was able to convert my GH personal page to Pelican and was able to maintain my existing urls, Disqus comments, and Google Analytics code.  I was able to do this without writing any Python code, just by reading the Pelican docs, choosing and modifying a theme, changing the theme, and adjusting the site settings.  Overall it was a good experience.  Below are some specific notes that might help someone doing a project like this.  </p>
+
+<h3>Specific notes</h3>
+
+<h4>Publishing to Github</h4>
+
+<p>Since Github treats your master branch as you static site content, you need to have your HTML files in the root directory.  Pelican expects to generate the HTML files to an <code>output</code> directory.  Initially I thought that I would have to use git to mv files around each time I wanted to publish new content.  Thankfully the the Pelican team has a concise set of <a href="http://docs.getpelican.com/en/3.5.0/tips.html#user-pages">steps to follow</a> to support this workflow.  It uses <a href="https://github.com/davisp/ghp-import">ghp-import</a> to copy the Pelican <code>output</code> directory to a <code>gh-pages</code> branch of your repository.  The next step is to push that branch to your Github personal repo as master.  I created a brief <a href="https://github.com/lawlesst/lawlesst.github.com/blob/pelican/publish.sh">publish script</a> to automate this.  I keep the Pelican settings, content markdown, theme, etc in a separate Pelican branch and push that too to Github. </p>
+
+<h4>Preserving existing urls or naming your article pages</h4>
+
+<p>Since I had existing pages to convert, I used the <code>ARTICLE_SAVE_AS</code> <a href="http://docs.getpelican.com/en/latest/settings.html">setting</a> to save articles with a slug filename that's added to the metadata of each post/article rather than a date based, e.g. `2014/11/14/xxx.html', url.  This meant going back and adding the slug to 13 markdown files, not ideal but preserving the existing site urls was important to me.  Pelican's settings probably support doing something like this but I just went ahead and added the slug to each post's metadata. </p>
+
+<p>I was also able to easily change Pelican's auto-generated site feed file name, via the <code>FEED_RSS</code> setting, to match the feed name I have been using.</p>
+
+<h4>Theming</h4>
+
+<p>There are many <a href="https://github.com/getpelican/pelican-themes">themes</a> to choose from. I spent a fair amount of time trying out different themes, which was easy since applying a theme is as simple as changing a settings file to point at the theme's location on the file system.  Since the themes use a <a href="http://jinja.pocoo.org/docs/dev/">Jinja2</a> templates, I didn't have to learn a new syntax.  What few changes I needed to make were easy to apply.  The development server included with Pelican also allows you to run the server in the background, change content or themes in your text editor, and refresh your browser to see changes.  There were a few cases where changes I made didn't show up without restarting the development server so I added <code>LOAD_CONTENT_CACHE = False</code> to the Pelican settings file.  </p>
+
+<h4>Support for common tools/features</h4>
+
+<p>Pelican's built in support for Disqus and Google Analytics made converting those tools to the new site really easy.  Just add <code>GOOGLE_ANALYTICS</code> and <code>DISQUS_SITENAME</code> to your Pelican settings file.  Many other common blog features, like tagging and blogrolls, are included with Pelican but I turned those off since I haven't been using them with my site and don't really want to.  It's nice to know that they exist though, particularly, tagging so that I can use them later if need be.    </p>
+
+<h4>Outstanding issue</h4>
+
+<p>The Markdown TOC extensions seems to conflict with Pygments syntax highlighting.  I haven't been able to resolve this yet.  Since I'm only using a TOC on one page but using syntax highlighting in most articles, I decided this wasn't a blocker and just have turned off TOC generation for now. </p>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

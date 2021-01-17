@@ -4,3 +4,4 @@ markdown2
 feedgen
 pygments
 dateparser
+bs4

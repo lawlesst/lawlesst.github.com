@@ -3,14 +3,17 @@
 Flask Frozen app to generate HTML for github pages.
 """
 
-
+from datetime import datetime
 import glob
 import os
+from html.parser import HTMLParser
 
 from flask import Flask
 from flask import render_template
 from flask import url_for
+from flask import make_response
 
+from bs4 import BeautifulSoup
 import dateparser
 import markdown2
 
@@ -20,11 +23,17 @@ cwd = os.getcwd()
 posts_dir = os.path.join(cwd, "content", "notebook")
 pages_dir = os.path.join(cwd, "content", "pages")
 is_deploy = os.getenv("env") == ""
+link = "http://lawlesst.github.io/"
+
+# see: https://stackoverflow.com/a/55825140/758157
+class HTMLFilter(HTMLParser):
+    text = ""
+    def handle_data(self, data):
+        self.text += data
 
 
 def read_post(path, compile_html=True):
     with open(path) as inf:
-        print(path)
         title = next(inf).split(":")[1].strip()
         date = next(inf).split(":")[1].strip()
         slug = next(inf).split(":")[1].strip()
@@ -43,12 +52,10 @@ def read_post(path, compile_html=True):
     }
 
 
-def index_posts():
+def index_posts(compile_html=False):
     p = []
     for post in glob.glob(posts_dir + "/*.md"):
-        p.append(read_post(post, compile_html=False))
-
-    print(p)
+        p.append(read_post(post, compile_html=compile_html))
     sorted_posts = sorted(p, key=lambda x: x["date_obj"], reverse=True)
     return sorted_posts
 
@@ -59,11 +66,6 @@ def index():
     return render_template('index.html', recent_posts=posts)
 
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-
 @app.route('/archive')
 @app.route('/archives.html')
 def archive():
@@ -71,17 +73,10 @@ def archive():
     return render_template('archive.html', recent_posts=posts)
 
 
-@app.route('/notebook/<slug>')
 @app.route('/notebook/<slug>.html')
-@app.route('/post/<slug>')
 def post(slug):
-    with open(f"{posts_dir}/{slug}.md") as inf:
-        title = next(inf).split(":")[1]
-        date = next(inf).split(":")[1]
-        slug = next(inf).split(":")[1]
-        md = inf.read()
-    html = markdown2.markdown(md, extras=["footnotes", "fenced-code-blocks"])
-    return render_template('post.html', title=title, date=date, text=html)
+    post = read_post(os.path.join(posts_dir, f"{slug}.md"))
+    return render_template('post.html', title=post["title"], date=post["date"], text=post["html"])
 
 
 @app.route('/<slug>.html')
@@ -96,9 +91,26 @@ def page(slug):
 
 @app.route('/feed.rss')
 def rss():
-    with open(f"{pages_dir}/{slug}.md") as inf:
-        title = next(inf).split(":")[1]
-        slug = next(inf).split(":")[1]
-        md = inf.read()
-    html = markdown2.markdown(md)
-    return render_template('page.html', title=title, text=html)
+    posts = index_posts(compile_html=True)[:10]
+    rss_posts = []
+    for p in posts:
+        try:
+            f = HTMLFilter()
+            f.feed(p["html"])
+            p["description"] = " ".join([f.strip() for f in f.text.split(". ")[:5]])
+        except AttributeError:
+            p["description"] = None
+        p["link"] = f"{ link }notebook/{ p['slug'] }.html"
+        rss_posts.append(p)
+    d = {
+        "name": "Ted Lawless",
+        "link": link,
+        "description": "Work notebook",
+        "feed_url": f"{link}/{url_for('rss')}",
+        "pub_date": datetime.now(),
+        "posts": rss_posts
+    }
+    template = render_template('rss.xml.jinja2', **d)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+    return response

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ted Lawless</title>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>Using Python and Pyjnius to connect to Jena models</h3>
+<h5>10-03-12</h5>
+<div id="post-contents">
+  <blockquote>
+  <p>Note: This post is quite old. Code samples are unlikely to still work. Please use only as background/reference.</p>
+</blockquote>
+
+<p>I’m loading data into <a href="http://vivoweb.org/">VIVO</a>, an application built with the <a href="http://jena.apache.org/">Jena Framework</a>.  The VIVO web application comes with a nice set of bulk loading tools through an administrative interface.  However in the current VIVO release (1.5) there aren't web services or other tools for performing operations programatically on the underlying Jena models, without of course working directly with the VIVO codebase.  There is a separate <a href="https://github.com/vivo-project/VIVO-Harvester">harvester</a> project that has more utilities for getting data into the system.    </p>
+
+<p>Here's a quick list of operations on the VIVO model that we would like to be able perform via ingestion scripts:</p>
+
+<ul>
+<li>generate a new, unique identifier to assign to new resources.  </li>
+<li>find an existing resource in the model and return it's URI.  </li>
+<li>load RDF created with processing scripts directly from those scripts. </li>
+<li>delete RDF created with processing scripts.  </li>
+</ul>
+
+<p>A <a href="http://news.ycombinator.com/item?id=4407624">recent post</a> on Hacker News pointed me to a project called <a href="http://pyjnius.readthedocs.org/en/latest/index.html">Pyjnius</a>, which is "a Python library for accessing Java classes."  </p>
+
+<p>For the last couple of weeks, we have been using Pyjnius - with pretty good results.  We are able to write our ingestion scripts in Python, using <a href="http://rdflib.readthedocs.org/en/latest/index.html">RDFLib</a>, but still use the Jena and VIVO harvester classes when needed to connect to the existing data.  (See steps below for installing Pyjnius).  </p>
+
+<p>I have included a couple of examples of how you might use Pyjnius to connect to a Jena database (in our case VIVO).  This <a href="https://gist.github.com/3829194">Gist</a> contains code that we are using in VIVO data loading scripts.  We are just beginning to explore the <a href="https://github.com/vivo-project/VIVO-Harvester">VIVO harvester</a> in detail and hope to take fuller advantage of it moving forward.</p>
+
+<p>If you are interested in Pyjnius + Jena or VIVO, leave a note and we can discuss other uses for this approach.  </p>
+
+<h3>Example of connecting to an existing Jena database.</h3>
+
+<p>~~~~{.python}
+from jnius import autoclass</p>
+
+<h1>Load java classes</h1>
+
+<h1>Database setup</h1>
+
+<p>DBConnection = autoclass('com.hp.hpl.jena.db.DBConnection')
+LayoutType = autoclass('com.hp.hpl.jena.sdb.store.LayoutType')
+DatabaseType = autoclass('com.hp.hpl.jena.sdb.store.DatabaseType')
+SDBConnection = autoclass('com.hp.hpl.jena.sdb.sql.SDBConnection')
+SDBFactory = autoclass('com.hp.hpl.jena.sdb.SDBFactory')
+StoreDesc = autoclass('com.hp.hpl.jena.sdb.StoreDesc')</p>
+
+<p>storeDesc = StoreDesc(LayoutType.LayoutTripleNodesHash, DatabaseType.MySQL)
+conn = SDBConnection(DB<em>URL, DB</em>USER, DB_PASSWD)
+store = SDBFactory.connectStore(conn, storeDesc)
+dataset = SDBFactory.connectDataset(store)
+model = dataset.getNamedModel('http://vitro.mannlib.cornell.edu/default/vitro-kb-2')</p>
+
+<p>namespaces = model.listNameSpaces()
+while namespaces.hasNext():
+    print namespaces.next()</p>
+
+<p>model.close()
+store.close()
+conn.close()
+~~~~</p>
+
+<p>The output for a default VIVO install should look something like the following:
+~~~~
+http://vitro.mannlib.cornell.edu/ns/vitro/public#
+http://www.w3.org/1999/02/22-rdf-syntax-ns#
+http://purl.org/NET/c4dm/event.owl#
+http://purl.org/ontology/bibo/
+http://xmlns.com/foaf/0.1/
+http://www.w3.org/2002/07/owl#
+http://purl.org/dc/terms/
+http://vivoweb.org/ontology/core#
+http://vitro.mannlib.cornell.edu/ns/vitro/0.7#
+http://www.w3.org/2000/01/rdf-schema#
+~~~~</p>
+
+<h4>Performing SPARQL queries</h4>
+
+<p>This example is closer to the types of operations you might want to perform.  It executes a SPARQL select query on the VIVO model. <br />
+~~~~{.python}
+from jnius import autoclass</p>
+
+<p>QueryFactory = autoclass('com.hp.hpl.jena.query.QueryFactory')
+QueryExecutionFactory = autoclass('com.hp.hpl.jena.query.QueryExecutionFactory')
+ResultSetFormatter = autoclass('com.hp.hpl.jena.query.ResultSetFormatter')
+String = autoclass('java.lang.String')</p>
+
+<p>storeDesc = StoreDesc(LayoutType.LayoutTripleNodesHash, DatabaseType.MySQL)
+conn = SDBConnection(DB<em>URL, DB</em>USER, DB_PASSWD)
+store = SDBFactory.connectStore(conn, storeDesc)
+dataset = SDBFactory.connectDataset(store)
+model = dataset.getNamedModel('http://vitro.mannlib.cornell.edu/default/vitro-kb-2')</p>
+
+<p>query = """
+PREFIX rdf:   <a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#">http://www.w3.org/1999/02/22-rdf-syntax-ns#</a>
+PREFIX rdfs:  <a href="http://www.w3.org/2000/01/rdf-schema#">http://www.w3.org/2000/01/rdf-schema#</a>
+PREFIX owl:   <a href="http://www.w3.org/2002/07/owl#">http://www.w3.org/2002/07/owl#</a>
+SELECT ?thing ?label
+WHERE
+{
+      ?thing rdf:type owl:Thing
+      OPTIONAL { ?thing rdfs:label ?label } 
+}
+LIMIT 20
+"""</p>
+
+<p>query = QueryFactory.create(String(query))
+qset = QueryExecutionFactory.create(query, model)
+qexec = qset.execSelect()
+results = ResultSetFormatter.toList(qexec).listIterator()</p>
+
+<p>while results.hasNext():
+    next<em>result = results.next()
+    uri = next</em>result.get('?thing').toString()
+    label = next_result.get('?label').toString()
+    print uri, label</p>
+
+<p>qset.close()
+model.close()
+store.close()
+conn.close()
+~~~~</p>
+
+<h4>Pyjnius Installation</h4>
+
+<p>The <a href="http://pyjnius.readthedocs.org/en/latest/installation.html">installation instructions</a> for Pyjnius are pretty straightforward.  I would recommend installing it with <a href="http://pypi.python.org/pypi/virtualenv">virtualenv</a>.  Below are the installation steps I took on an Ubuntu Server box but should be pretty similar on other platforms.  Make sure that you have a <a href="http://en.wikipedia.org/wiki/Java_Development_Kit">JDK</a> installed. You will also want to make sure your <a href="http://en.wikipedia.org/wiki/Classpath_(Java)">classpath</a> is set if you want to use external libraries.  </p>
+
+<p>~~~~
+vagrant@lucid32:~$ mkdir pyjnius-project
+vagrant@lucid32:~$ cd pyjnius-project/
+vagrant@lucid32:~/pyjnius-project$ virtualenv venv
+New python executable in venv/bin/python
+Installing setuptools............done.
+Installing pip...............done.
+(venv)vagrant@lucid32:~/pyjnius-project$ source venv/bin/activate
+vagrant@lucid32:~/pyjnius-project$ pip install cython
+Downloading/unpacking cython...
+Successfully installed cython
+Cleaning up...
+(venv)vagrant@lucid32:~/pyjnius-project$ git clone git://github.com/kivy/pyjnius.git
+Initialized empty Git repository in /home/vagrant/pyjnius-project/pyjnius/.git/
+...
+(venv)vagrant@lucid32:~/pyjnius-project$ cd pyjnius/
+(venv)vagrant@lucid32:~/pyjnius-project/pyjnius$ python setup.py install
+(venv)vagrant@lucid32:~/pyjnius-project/pyjnius$ cd ..
+(venv)vagrant@lucid32:~/pyjnius-project/pyjnius$ python
+Python 2.6.5 (r265:79063, Apr 16 2010, 13:09:56)
+[GCC 4.4.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.</p>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>from jnius import autoclass
+      Stack = autoclass('java.util.Stack')
+      stack = Stack()
+      stack.push('hello')
+      'hello'
+      stack.push('world')
+      'world'
+      stack.pop()
+      'world'
+      stack.pop()
+      'hello'
+      exit()
+      ~~~~</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ted Lawless</title>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>A utility script for developing VIVO custom list views</h3>
+<h5>03-18-13</h5>
+<div id="post-contents">
+  <p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system. </p>
+
+<p>To speed up the development of these SPARQL queries, my colleague and I put together a <a href="https://gist.github.com/lawlesst/5192700">Python script</a> to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called <a href="https://gist.github.com/lawlesst/5192700">generate_listview.py</a>, parses the VIVO XML based list view config files (<a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml">example</a>) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.  </p>
+
+<p>A script like this isn't necessary for developing custom list views but we have found it to be useful and makes us a bit more productive.  You can run these queries in the browser using the built-in SPARQL query interface.  However, the list views use a pattern of creating a new graph via SPARQL CONSTRUCT queries and then running a final SELECT query against the constructed graph, which is hard, if not impossible, to simulate in the browser.  This script will simulate that flow and allow you to see all the actions in one step as you run the query.  </p>
+
+<p>Since this script is not exactly the same as what VIVO does when you load a profile in your browser, you will likely encounter aspects of list views that it doesn't handle well.  For example, you won't be able to use ARQ functions in the final SELECT query, since it's executed with RDFLib rather than VIVO.  But overall this could be a convenient tool to have available.  We think it is.  </p>
+
+<h4>Getting started</h4>
+
+<ul>
+<li><p><a href="https://gist.github.com/lawlesst/5192700">Download the scripts</a> and place them in a directory. </p></li>
+<li><p>Install required Python modules.  </p></li>
+</ul>
+
+<p>~~~~
+$ pip install git+git://github.com/RDFLib/rdflib-sparql.git
+$ pip install SPARQLWrapper
+$ pip install requests
+~~~~</p>
+
+<ul>
+<li><p>Run the list view generator by passing it an existing list view config file.
+~~~~
+$ python generate_listview.py /path/to/listViewConfig-awardOrHonor.xml
+~~~~</p></li>
+<li><p>View the output in the terminal.  Adjust the listViewConfig.xml file and rerun until it meets your needs.   </p></li>
+</ul>
+
+<h4>Other resources</h4>
+
+<ul>
+<li><p>The <a href="https://github.com/vivo-project/VIVO/blob/develop/doc/list_view_configuration_guidelines.txt">list view documentation</a> included with VIVO covers the list view process in more detail.  </p></li>
+<li><p>A <a href="http://www.vivoweb.org/files/presentations/12ws3/Cooks_tour.pdf">presentationn</a> from the 2012 VIVO conference details possible approaches to customizing VIVO.</p></li>
+</ul>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

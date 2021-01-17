@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ted Lawless</title>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>Publishing the Lahman Baseball Database with Datasette</h3>
+<h5>11-20-17</h5>
+<div id="post-contents">
+  <blockquote>
+  <p>Summary: publishing the <a href="http://www.seanlahman.com/baseball-archive/statistics/">Lahman Baseball Database</a> with <a href="https://simonwillison.net/2017/Nov/13/datasette/">Datasette</a>. API available at <a href="https://baseballdb.lawlesst.net">https://baseballdb.lawlesst.net</a>.</p>
+</blockquote>
+
+<p>For those of us interested in open data, an exciting new tool was released this month. It's by <a href="https://simonwillison.net/">Simon Willison</a> and called <a href="https://simonwillison.net/2017/Nov/13/datasette/">Datasette</a>. Datasette allows you to very quickly convert CSV files to a sqlite database and publish on the web with an API. Head over to Simon's <a href="https://simonwillison.net/2017/Nov/13/datasette/">site</a> for more details. <a href="https://twitter.com/ftrain">Paul Ford</a> also has also published a nice summary of the tool on Medium, "<a href="https://trackchanges.postlight.com/big-data-small-effort-b62607a43a8c">Big Data, Small Effort</a>".</p>
+
+<p>Since I'm interested in both open data and baseball history, I decided to try Datasette with the <a href="http://www.seanlahman.com/baseball-archive/statistics/">Lahman Baseball Database</a>. For those not familiar, the Lahman Baseball Database is a dataset of players, teams, managers, parks - really anything baseball - that spans from 1871 to 2016. It's available under a Creative Commons License and freely available for download from <a href="http://www.seanlahman.com/baseball-archive/statistics/">Lahman's site</a>. If you ever had a copy of the Baseball Encyclopedia, this is basically what it is but in database form. It's a great resource.</p>
+
+<h3>Setup</h3>
+
+<p>For an initial proof-of-concept with Datasette, I decided to focus just on players (the Master.csv file), appearances, and teams. This is a large enough subset of the total database to be interesting but small enough to quickly get up and running. Following the documentation in the Datasette README, I was able to have the tool up and running in minutes. Very easy to get started.</p>
+
+<h3>Querying</h3>
+
+<p>You can find the Datasette instance loaded with the Lahaman database running at <a href="https://baseballdb.lawlesst.net">https://baseballdb.lawlesst.net</a>. The three tables are easily browseable using Datasette's interface and API. Datasette also supports SQL and bookmarkable queries.</p>
+
+<p>Using the Lahman database we can start asking questions about baseball history. Here are a few basic queries to get started:</p>
+
+<ul>
+<li><p>What's the minimum and maximum birth year for players who have appeared in MLB? <a href="https://baseballdb.lawlesst.net/baseball-60223b5?sql=select+min%28birthYear%29%2C+max%28birthYear%29+from+Master">Answer</a></p></li>
+<li><p>What's the most frequent home state for players across all years? <a href="https://baseballdb.lawlesst.net/baseball-60223b5?sql=select+birthState%2C+count%28birthState%29+n+from+Master+group+by+birthState+order+by+n+desc%3B">Answer</a></p></li>
+</ul>
+
+<p>And few more complex queries that require joining across tables:</p>
+
+<ul>
+<li><p>Top 20 players in terms of the number of seasons they appeared in. <a href="https://baseballdb.lawlesst.net/baseball-60223b5?sql=select+A.playerID%2C+M.nameFirst%2C+M.nameLast%2C+M.debut%2C+count%28distinct+A.yearID%29+as+n+%0D%0Afrom+Appearances+A%0D%0Ajoin+Master+M%0D%0A+on+A.playerID%3DM.playerID%0D%0Awhere+G_all+%3E+0+%0D%0Agroup+by+A.playerID+%0D%0Aorder+by+n+desc+limit+20%3B">Answer</a></p></li>
+<li><p>Players who appeared in games during the 1984 season for the World Series winning 1984 Detroit Tigers. This requires joining all three tables. <a href="https://baseballdb.lawlesst.net/baseball-60223b5?sql=select+A.playerID%2C+M.nameFirst%2C+M.nameLast%2C+A.G_all+as+gamesPlayed%0D%0Afrom+Teams+T%0D%0Ajoin+Appearances+A+on%0D%0A+T.yearID%3DA.yearID+and+T.teamID%3DA.teamID%0D%0Ajoin+Master+M+on%0D%0A+A.playerID%3DM.playerID%0D%0Awhere+T.yearID%3D1984+and+T.teamID%3D%22DET%22%0D%0Aorder+by+M.nameLast">Answer</a></p></li>
+</ul>
+
+<p>If you are interested in baseball history or statistics, I'm sure you can easily come up with more questions to build off of these.</p>
+
+<h3>Deployment</h3>
+
+<p>Some details on deploying Datasette for public querying.</p>
+
+<p>To deploy, I settled on using a small Digital Ocean droplet and am using Apache as a reverse proxy. Datasette is setup to be easily published with <a href="https://zeit.co/now">Zeit Now</a> but the sqlite database of these three baseball files exceeded the size limit for the free tier with Now. I also tried Heroku but again ran into file size issues.</p>
+
+<p>One small issue, more an annoyance, with the underlying <a href="https://github.com/channelcat/sanic">Sanic</a> web framework Datasette uses - a "connection timeout" error would be displayed in the browser if you used the app (query or browsing), did something else for 60 seconds and then returned to the page. The message went away if you clicked refresh in the browser This behavior is described in this <a href="https://github.com/channelcat/sanic/pull/939">Sanic pull request</a> and a change has been merged into master. To work around this, I installed Sanic directly from Github with pip to get the latest version.</p>
+
+<p>This instance of Datasette is also deployed with the <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a> option so you should be able to use this endpoint in client side demos.</p>
+
+<p>Thanks for reading this far. Please add a comment with any feedback you have or any ways that you may extend this.</p>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

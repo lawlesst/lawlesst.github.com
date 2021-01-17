@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ted Lawless</title>
+<link rel="stylesheet" href="/static/styles.css">
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>Python ETL and JSON-LD</h3>
+<h5>12-05-15</h5>
+<div id="post-contents">
+  <p>I've written an <a href="https://github.com/lawlesst/petl-ld">extension</a> to <a href="https://petl.readthedocs.org/en/latest/">petl</a>, a Python ETL library, that applies JSON-LD contexts to data tables for transformation into RDF.</p>
+
+<h3>The problem</h3>
+
+<p>Converting existing data to RDF, such as for <a href="http://vivoweb.org">VIVO</a>, often involves taking tabular data exported from a system of record, transforming or augmenting it in some way, and then mapping it to RDF for ingest into the platform. The W3C maintains an <a href="http://www.w3.org/wiki/ConverterToRdfSome">extensive list</a> of tools designed to map tabular data to RDF.</p>
+
+<p>General purpose CSV to RDF tools, however, almost always require some advanced preparation or cleaning of the data. This means that developers and data wranglers often have to write custom code. This code can quickly become verbose and difficult to maintain. Using an <a href="https://en.wikipedia.org/wiki/Extract,_transform,_load">ETL</a> toolkit can help with this.</p>
+
+<h3>ETL with Python</h3>
+
+<p>One such ETL tool that I'm having good results with is <a href="https://petl.readthedocs.org/en/latest/">petl</a>, Python ETL. <a href="https://petl.readthedocs.org/en/latest/">petl</a> started at an informatics group at the University of Oxford and is maintained by <a href="http://www.well.ox.ac.uk/alistair-miles">Alistair Mles</a>. It has clear <a href="https://petl.readthedocs.org/en/latest/">documentation</a> and is available under an open license.</p>
+
+<p>petl provides adapters for reading data from a variety of sources - csv, Excel, databases, XML - and many utilities for cleaning, transforming, and validating. For example adding a column of static values to a petl table is as simple as:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">etl</span><span class="o">.</span><span class="n">addfield</span><span class="p">(</span><span class="n">table1</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;person&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3>petl and JSON-LD for RDF</h3>
+
+<p>petl, however, doesn't have utilities for outputting tables to RDF. To add this functionality, I've written a small extension, called <a href="https://github.com/lawlesst/petl-ld">petl-ld</a>, to use <a href="http://www.w3.org/TR/json-ld/#the-context">JSON-LD</a> contexts to map petl's table data structure to RDF. This allows the developer to clean, enhance, and validate the incoming data with petl functionality and patterns - and then, as a final step, apply a JSON-LD context to create an RDF serialization.</p>
+
+<p>The JSON-LD transformation utilizes the <a href="https://github.com/RDFLib/rdflib-jsonld">rdflib-jsonld</a> extenstion to RDFLib maintained by <a href="https://github.com/niklasl">Niklas Lindström</a>.</p>
+
+<p>Here is an example:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">petl</span> <span class="k">as</span> <span class="nn">etl</span>
+<span class="kn">import</span> <span class="nn">petlld</span>
+
+<span class="c1"># set up a petl table  to demonstrate</span>
+<span class="n">table1</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;uri&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">],</span>
+          <span class="p">[</span><span class="s1">&#39;n1&#39;</span><span class="p">,</span> <span class="s2">&quot;Smith, Bob&quot;</span><span class="p">],</span>
+          <span class="p">[</span><span class="s1">&#39;n2&#39;</span><span class="p">,</span> <span class="s2">&quot;Jones, Sally&quot;</span><span class="p">],</span>
+          <span class="p">[</span><span class="s1">&#39;n3&#39;</span><span class="p">,</span> <span class="s2">&quot;Adams, Bill&quot;</span><span class="p">]]</span>
+
+<span class="c1"># use petl utilities to add a column with our data type - foaf:Person</span>
+<span class="n">table2</span> <span class="o">=</span> <span class="n">etl</span><span class="o">.</span><span class="n">addfield</span><span class="p">(</span><span class="n">table1</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;foaf:Person&#39;</span><span class="p">)</span>
+
+<span class="c1"># a JSON-LD context for our data</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;@base&quot;</span><span class="p">:</span> <span class="s2">&quot;http://example.org/people/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="s2">&quot;@type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;@id&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rdfs&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.w3.org/2000/01/rdf-schema#&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;foaf&quot;</span><span class="p">:</span> <span class="s2">&quot;http://xmlns.com/foaf/0.1/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;rdfs:label&quot;</span>
+<span class="p">}</span>
+
+<span class="c1"># serialize the data as</span>
+<span class="n">table2</span><span class="o">.</span><span class="n">tojsonld</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The JSON-LD output:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+   <span class="nt">&quot;@context&quot;</span><span class="p">:{</span>
+      <span class="nt">&quot;a&quot;</span><span class="p">:</span><span class="s2">&quot;@type&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;foaf&quot;</span><span class="p">:</span><span class="s2">&quot;http://xmlns.com/foaf/0.1/&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;rdfs:label&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;rdfs&quot;</span><span class="p">:</span><span class="s2">&quot;http://www.w3.org/2000/01/rdf-schema#&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="s2">&quot;@id&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;@base&quot;</span><span class="p">:</span><span class="s2">&quot;http://example.org/people/&quot;</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;@graph&quot;</span><span class="p">:[</span>
+      <span class="p">{</span>
+         <span class="nt">&quot;a&quot;</span><span class="p">:</span><span class="s2">&quot;foaf:Person&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="s2">&quot;n1&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Smith, Bob&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="nt">&quot;a&quot;</span><span class="p">:</span><span class="s2">&quot;foaf:Person&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="s2">&quot;n2&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Jones, Sally&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="nt">&quot;a&quot;</span><span class="p">:</span><span class="s2">&quot;foaf:Person&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;uri&quot;</span><span class="p">:</span><span class="s2">&quot;n3&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Adams, Bill&quot;</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>If you would rather output an <a href="https://github.com/RDFLib/rdflib">RDFLib</a> <a href="https://rdflib.readthedocs.org/en/stable/intro_to_graphs.html">Graph</a> for serialization in another format, that is possible too.</p>
+
+<div class="codehilite"><pre><span></span><code><span class="n">graph</span> <span class="o">=</span> <span class="n">table2</span><span class="o">.</span><span class="n">tograph</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;turtle&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The <a href="http://www.w3.org/TR/turtle/">turtle</a> output:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="k">@prefix</span><span class="w"> </span><span class="nn">foaf:</span><span class="w"> </span><span class="nv">&lt;http://xmlns.com/foaf/0.1/&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="k">@prefix</span><span class="w"> </span><span class="nn">rdf:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="k">@prefix</span><span class="w"> </span><span class="nn">rdfs:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/2000/01/rdf-schema#&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="k">@prefix</span><span class="w"> </span><span class="nn">xml:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/XML/1998/namespace&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+<span class="k">@prefix</span><span class="w"> </span><span class="nn">xsd:</span><span class="w"> </span><span class="nv">&lt;http://www.w3.org/2001/XMLSchema#&gt;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+
+<span class="nv">&lt;http://example.org/people/n1&gt;</span><span class="w"> </span><span class="kt">a</span><span class="w"> </span><span class="nn">foaf:</span><span class="nt">Person</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="nn">rdfs:</span><span class="nt">label</span><span class="w"> </span><span class="s">&quot;Smith, Bob&quot;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+
+<span class="nv">&lt;http://example.org/people/n2&gt;</span><span class="w"> </span><span class="kt">a</span><span class="w"> </span><span class="nn">foaf:</span><span class="nt">Person</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="nn">rdfs:</span><span class="nt">label</span><span class="w"> </span><span class="s">&quot;Jones, Sally&quot;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+
+<span class="nv">&lt;http://example.org/people/n3&gt;</span><span class="w"> </span><span class="kt">a</span><span class="w"> </span><span class="nn">foaf:</span><span class="nt">Person</span><span class="w"> </span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="nn">rdfs:</span><span class="nt">label</span><span class="w"> </span><span class="s">&quot;Adams, Bill&quot;</span><span class="w"> </span><span class="p">.</span><span class="w"></span>
+</code></pre></div>
+
+<h3>Summary</h3>
+
+<p>If you are working with Python and converting tabular data to RDF, take a look at <a href="https://github.com/lawlesst/petl-ld">petl-ld</a>) and see if it helps you write less, more readable code. Feedback is welcome.</p>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>
