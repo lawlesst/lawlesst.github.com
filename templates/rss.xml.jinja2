@@ -15,14 +15,14 @@ render the feed to RSS XML.
     <link>{{ link }}</link>
     <atom:link href="{{ feed_url }}" rel="self" type="application/rss+xml" />
     <description>{{ description }}</description>
-    <pubDate>{{ pub_date.strftime('%a, %d %b %y %T') }} UTC</pubDate>
+    <pubDate>{{ pub_date.strftime('%a, %d %b %y %T') }} EST</pubDate>
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
 
     {% for item in posts %}
     <item>
        <title>{{ item.title }}</title>
        <description>{{ item.description|safe }}</description>
-       <pubDate>{{ item.date_obj.strftime('%a, %d %b %y %T') }} UTC</pubDate>
+       <pubDate>{{ item.date_obj.strftime('%a, %d %b %y %T') }} EST</pubDate>
        <guid isPermaLink="false">{{ item.link }}</guid>
        <link>{{ item.link }}</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
