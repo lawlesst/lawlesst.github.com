@@ -15,7 +15,7 @@ To that end, the [scripts](https://github.com/lawlesst/researcher-profile-data) 
 
 A second script harvests the organizational structure of the program. Both types of data are outputted to a simple JSON structure that then can be mapped to your destination system. Here is an example profile:
 
-```
+```json
     {
         "url": "https://irp.nih.gov/pi/veronica-alvarez",
         "name": "Veronica Alicia Alvarez, Ph.D.",
