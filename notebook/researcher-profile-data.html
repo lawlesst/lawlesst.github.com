@@ -3,9 +3,6 @@
 <head>
 <title>Ted Lawless</title>
 <link rel="stylesheet" href="/static/styles.css">
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
 
 </head>
 <body>
@@ -31,29 +28,29 @@
 
 <p>A second script harvests the organizational structure of the program. Both types of data are outputted to a simple JSON structure that then can be mapped to your destination system. Here is an example profile:</p>
 
-<pre><code>    {
-        "url": "https://irp.nih.gov/pi/veronica-alvarez",
-        "name": "Veronica Alicia Alvarez, Ph.D.",
-        "label": "Veronica Alicia Alvarez, Ph.D.",
-        "first": "Veronica",
-        "last": "Alvarez",
-        "middle": "Alicia",
-        "honors": "Ph.D.",
-        "email": "xxx@mail.nih.gov",
-        "title": "Senior Investigator",
-        "position_title": "Senior Investigator",
-        "photo": "https://irp.nih.gov/sites/default/files/pi/0013626077.jpg",
-        "bio": "Dr. Alvarez earned a Ph.D. degree in Neuroscience in 1997 from University of Buenos Aires, Argentina. She trained as a postdoctoral fellow with Dr. John Williams at the Vollum Institute, OHSU from 1998 to 2001 studying the firing properties of locus coerulues neurons and its modulation by opioids. She then trained with Dr. Bernardo Sabatini at Harvard Medical School from 2001-2007 where she studied mechanisms of functional and morphological plasticity at glutamatergic synapses using electrophysiology and two-photon imaging. In 2008, she established an independent research program at NIAAA where she is investigator and acting chief of the Section on Neuronal Structure.",
-        "research_interests": [],
-        "pmids": [
-            "25547712",
-            "21743470",
-            "21289199",
-            "26080439"
-        ],
-        "website": "http://youtu.be/N9aFVrLVa7A"
-    }
-</code></pre>
+<div class="codehilite"><pre><span></span><code>    <span class="p">{</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://irp.nih.gov/pi/veronica-alvarez&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Veronica Alicia Alvarez, Ph.D.&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Veronica Alicia Alvarez, Ph.D.&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;first&quot;</span><span class="p">:</span> <span class="s2">&quot;Veronica&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;last&quot;</span><span class="p">:</span> <span class="s2">&quot;Alvarez&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;middle&quot;</span><span class="p">:</span> <span class="s2">&quot;Alicia&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;honors&quot;</span><span class="p">:</span> <span class="s2">&quot;Ph.D.&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;xxx@mail.nih.gov&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Senior Investigator&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;position_title&quot;</span><span class="p">:</span> <span class="s2">&quot;Senior Investigator&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;photo&quot;</span><span class="p">:</span> <span class="s2">&quot;https://irp.nih.gov/sites/default/files/pi/0013626077.jpg&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;bio&quot;</span><span class="p">:</span> <span class="s2">&quot;Dr. Alvarez earned a Ph.D. degree in Neuroscience in 1997 from University of Buenos Aires, Argentina. She trained as a postdoctoral fellow with Dr. John Williams at the Vollum Institute, OHSU from 1998 to 2001 studying the firing properties of locus coerulues neurons and its modulation by opioids. She then trained with Dr. Bernardo Sabatini at Harvard Medical School from 2001-2007 where she studied mechanisms of functional and morphological plasticity at glutamatergic synapses using electrophysiology and two-photon imaging. In 2008, she established an independent research program at NIAAA where she is investigator and acting chief of the Section on Neuronal Structure.&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;research_interests&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="nt">&quot;pmids&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;25547712&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;21743470&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;21289199&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;26080439&quot;</span>
+        <span class="p">],</span>
+        <span class="nt">&quot;website&quot;</span><span class="p">:</span> <span class="s2">&quot;http://youtu.be/N9aFVrLVa7A&quot;</span>
+    <span class="p">}</span>
+</code></pre></div>
 
 <p>All of the outputted information is about real, working researchers and therefore can be used for integrating with other sources of data to populate a system you are either building or evaluating, e.g. <a href="http://vivoweb.org">VIVO</a>.</p>
 
