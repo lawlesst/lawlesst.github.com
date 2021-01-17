@@ -627,7 +627,7 @@ The code below has been tested only with an Innovative Interfaces Z39.50 server 
 
 Below is code for a basic scan by call number.  As you can see, we specify the number of results to be returned (11) and the position (6) we want the requested call number to be in that list.
 
-~~~~{.python}
+```python
 from PyZ3950 import zoom
 
 conn = zoom.Connection('library.school.edu', 210)
@@ -654,11 +654,11 @@ for index, rec in enumerate(results):
         print '\t', display
 
 conn.close()
-~~~~
+```
 
 Running this search against the [Brown University Library](http://library.brown.edu/) library catalog, you would get results like below.  The arrow indicates the position in the list of the call number we requested.
 
-~~~
+```
         Ps 3521 E716 D4^   1 entry
         Ps 3521 E716 D6^   1 entry
         Ps 3521 E716 D6 1959^   1 entry
@@ -671,13 +671,13 @@ Running this search against the [Brown University Library](http://library.brown.
         Ps 3521 E716 V3 1969^   1 entry
         Ps 3521 E716 V48^   1 entry
 
-~~~
+```
 
 ### Call number scan and fetching metadata
 
 Taking this a step further, now that you have a sorted list of call numbers you might want to fetch the bibliographic details for each title.  In the example below, each item in the scan result is passed to a Z39.50 search that returns the MARC record for each title.  The MARC record is read with [pymarc](https://github.com/edsu/pymarc/) and a Record object is created that allows us to convert the data into more friendly formats.
 
-~~~~{.python}
+```python
 from PyZ3950 import zoom
 import pymarc
 
@@ -717,7 +717,7 @@ for rec in results:
     print bib.title()
 
 conn.close()
-~~~~
+```
 
 ### Web service to implement Stack View on your library website
 
