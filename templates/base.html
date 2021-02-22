@@ -14,7 +14,14 @@
 {% endblock %}
 </div>
 
-<footer><a href="{{ url_for('index') }}">Ted Lawless</a>, 2021</footer>
+<footer>
+  <a href="{{ url_for('index') }}">Ted Lawless</a>, 2021
+  <ul>
+  <li>lawlesst at gmail</li>
+  <li><a href="https://github.com/lawlesst">Github</a></li>
+  <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+    <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+</footer>
 {% block script %}{% endblock %}
 
 {% if config['ENV'] != 'development' %}
