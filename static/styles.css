@@ -13,8 +13,8 @@ header {
   background-color: #000080c7;
   margin: 0;
   padding: 0;
-  padding-bottom: .25em;
-  padding-top:  .25em;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 header h1 {
