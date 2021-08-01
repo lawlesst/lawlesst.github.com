@@ -24,7 +24,7 @@
 </footer>
 {% block script %}{% endblock %}
 
-{% if config['ENV'] != 'development' %}
+{% if config['FLASK_ENV'] != 'development' %}
 <script>
 var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
