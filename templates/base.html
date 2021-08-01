@@ -2,6 +2,11 @@
 <html>
 <head>
 <title>{% if title %}{{ title }}{% else %}Ted Lawless{% endif %}</title>
+{% if config['ENV'] == 'development' %}
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+{% endif %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 {% block extra_head %}{% endblock %}
 </head>
@@ -24,7 +29,7 @@
 </footer>
 {% block script %}{% endblock %}
 
-{% if config['FLASK_ENV'] != 'development' %}
+{% if config['ENV'] != 'development' %}
 <script>
 var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

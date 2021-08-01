@@ -10,6 +10,11 @@ body {
 }
 
 header {
+  background-color: #000080c7;
+  margin: 0;
+  padding: 0;
+  padding-bottom: .25em;
+  padding-top:  .25em;
 }
 
 header h1 {
@@ -18,10 +23,11 @@ header h1 {
 
 header h1 a {
   text-decoration: none;
+  color; white;
 }
 
 header h1 a:visited {
-  color: black;
+  color: white;
 }
 
 blockquote {
