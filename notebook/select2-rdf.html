@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Select2 for RDF editing interfaces</title>
+
+<link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>Select2 for RDF editing interfaces</h3>
+<h5>11-16-2014</h5>
+<div id="post-contents">
+  <p>Summary: A description and example of using <a href="http://ivaynberg.github.io/select2/">Select2</a> to build an editing interface for RDF data.  Sample HTML and JavaScript is included that relates skos:Concepts from the <a href="http://oclc.org/developer/develop/web-services/fast-api/assign-fast.en.html">assignFAST</a> webservice provided by <a href="http://www.oclc.org/data.en.html">OCLC</a> to local researcher URIs.  </p>
+
+<h3>Overview</h3>
+
+<p>I've been working on a project that requires an end-user web interface that is both simple to use but also updates underlying RDF data about researchers and their activities.  When we started this project, we reviewed available libraries for building web based editing interfaces on top of RDF and found a fair number.  During our review, however, most of those we found fell short of meeting our requirements, mostly because few are being actively maintained or developed.  </p>
+
+<p>Knowing that there is a great deal of work being done with JavaScript frameworks and libraries, we looked outside the scope of RDF specific tools.  <a href="http://ivaynberg.github.io/select2/">Select2</a> was quickly identified as tool we wanted to use.  Select2, as the project says somewhat humbly, "is a jQuery-based replacement for select boxes." It supports searching, remote data sets, and infinite scrolling of results."  The <a href="http://ivaynberg.github.io/select2/">examples page</a> does a great job of showing the capabilities of the library and documenting its feature. </p>
+
+<p>One of the primary editing functions we wanted to support with our web application was the ability for users to add relationships to concepts (e.g. topics or geographic areas studied) or people (collaborators).  Select2's tagging widget seemed like a good candidate because it provides a straightforward input element for users to begin typing tags and the library provides autocompletion to match existing terms.  Select2 also supports loading remote data via AJAX, which again suited us well because the RDF application we are using, <a href="http://vivoweb.org/">VIVO</a> provides autocomplete web services as well.  The remote loading, via AJAX, also makes it possible to look up entities in external systems and pull those into the user interface as suggested tags.</p>
+
+<h3>Solution</h3>
+
+<p>After determining Select2 was a good solution to our user interface requirements.  We began to investigate how we could create triples like below from Select2 editing events.  </p>
+
+<div class="codehilite"><pre><span></span><code>@<span class="nv">prefix</span> <span class="nv">ex</span>: <span class="o">&lt;</span><span class="nv">http</span>:<span class="o">//</span><span class="nv">example</span>.<span class="nv">org</span><span class="o">/&gt;</span>.
+@<span class="nv">prefix</span> <span class="nv">vivo</span>: <span class="o">&lt;</span><span class="nv">http</span>:<span class="o">//</span><span class="nv">vivoweb</span>.<span class="nv">org</span><span class="o">/</span><span class="nv">ontology</span><span class="o">/</span><span class="nv">core</span>#<span class="o">&gt;</span>.
+
+<span class="nv">ex</span>:<span class="nv">person123</span> <span class="nv">vivo</span>:<span class="nv">hasResearchArea</span> <span class="nv">ex</span>:<span class="nv">concept456</span> .
+</code></pre></div>
+
+<p>Since Select2 as a library focuses on the front-end editing interaction, it doesn't prescribe a backend for storing data created.  Adapting it to create the data we needed was a matter of reading the documentation and taking advantage of the rich options offered.  </p>
+
+<p>The next step was to develop a way to embed RDF-like information in the page so that we could create triples representing the data that users changed.  We considered several approaches to embedding this semantic information into the application but decided using <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes">HTML5 data attributes</a> were a simple and straightforward way.  See the snippet below.  The URI for the entity being updated 'ex:jsmith' is added as a data attribute to the containing div.  The Select2 input element has the data attribute for the predicate 'vivo:hasResearchArea' and the term resolved via autocomplete will become the object.  We are using a standard set of namespace prefixes so the embedded qnames - 'data:jsmith' - can be expanded to the full uri, e.g. http://example.org/individual/jsmith'.  </p>
+
+<div class="codehilite"><pre><span></span><code>    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;profile&quot;</span> <span class="na">data-subject</span><span class="o">=</span><span class="s">&quot;ex:jsmith&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">h5</span><span class="p">&gt;</span>John Smith - reseacher<span class="p">&lt;/</span><span class="nt">h5</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">label</span> <span class="na">for</span><span class="o">=</span><span class="s">&quot;research-area&quot;</span><span class="p">&gt;</span>Research areas:<span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">input</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;research-area&quot;</span> <span class="na">data-predicate</span><span class="o">=</span><span class="s">&quot;vivo:hasResearchArea&quot;</span><span class="p">/&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div>
+
+<p>With the HTML data properties in place, we can then use Select2's support for remote data sources to pull in suggested tags (either a local webservice or third party API) and use the events generated by Select2 objects (tag added or tag removed) to create intermediate JavaScript data structures to represent triples.  When the change event is triggered, JavaScript reads the event and reads the HTML data attributes to assemble the triples.  For example:</p>
+
+<div class="codehilite"><pre><span></span><code><span class="p">{</span>
+    <span class="nx">subject</span><span class="o">:</span> <span class="s2">&quot;ex:jsmith&quot;</span><span class="p">,</span>
+    <span class="nx">predicate</span><span class="o">:</span> <span class="s2">&quot;vivo:hasResearchArea&quot;</span><span class="p">,</span>
+    <span class="nx">object</span><span class="o">:</span> <span class="s2">&quot;http://id.worldcat.org/fast/932231&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>This data is then posted as JSON to a local REST API that reads JSON data like above and the action (add or remove), converts the statements to the necessary RDF triples, and issues a SPARQL update query to change the data in the underlying store.  This data transformation is invisible to users because it happens in the background after selecting a tag.  The editing is also inline and not part of a form so users don't have to click a save button or confirm updates.  Again, we are focusing on ease of use and trying to mask as much of the complexity of the underlying data as possible from the end user.  </p>
+
+<h3>Demo</h3>
+
+<p>I have created a <a href="http://jsfiddle.net/lawlesst/a00x2ess/">JSFiddle</a> with a <a href="http://jsfiddle.net/lawlesst/a00x2ess/">complete example</a> of this editing process.  In the example, the URIs for objects are skos:Concepts representing research topics and are pulled in real time from a web service from the <a href="http://oclc.org/developer/develop/web-services/fast-api/assign-fast.en.html">assignFAST</a> webservice provided by <a href="http://www.oclc.org/data.en.html">OCLC</a>.</p>
+
+<iframe width="100%" height="300" src="//jsfiddle.net/lawlesst/a00x2ess/embedded/result,js/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
+<p>I have also posted a <a href="https://github.com/lawlesst/triple-edit">sample Django application</a>, based on our production system, that demonstrates this editing workflow and others.  It also has code for processing the posted JSON and updating the triple store via SPARQL.</p>
+
+<p>If you are doing similar work or interested in learning more about our application, please leave a comment here or email lawlesst AT gmail.com.</p>
+
+</div>
+
+
+</div>
+
+<footer>
+  <a href="/">Ted Lawless</a>, 2021
+  <ul>
+  <li>lawlesst at gmail</li>
+  <li><a href="https://github.com/lawlesst">Github</a></li>
+  <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+    <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+</footer>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

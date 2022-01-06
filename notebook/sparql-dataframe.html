@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SPARQL to Pandas Dataframes</title>
+
+<link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>SPARQL to Pandas Dataframes</h3>
+<h5>10-26-17</h5>
+<div id="post-contents">
+  <blockquote>
+  <p>Update: See this <a href="https://github.com/lawlesst/sparql-dataframe">Python module</a> for converting SPARQL query results into Pandas dataframes.</p>
+</blockquote>
+
+<h2>Using Pandas to explore data SPARQL</h2>
+
+<p><a href="http://pandas.pydata.org/">Pandas</a> is a Python based power tool for munging and analyzing data. While working with data from SPARQL endpoints, you may prefer to explore and analyze it with pandas given its full feature set, strong documentation and large community of users.</p>
+
+<p>The code below is an example of issuing a query to the <a href="http://query.wikidata.org">Wikidata SPARQL endpoint</a> and loading the data into a pandas dataframe and running basic operations on the returned data.</p>
+
+<p>This is a modified version of <a href="https://github.com/SuLab/sparql_to_pandas">code from Su Labs</a>. Here we remove the types returned by the SPARQL endpoint since they add noise and we will prefer to handle datatypes with Pandas.</p>
+
+<p>{% notebook sparql_dataframe.ipynb %}</p>
+
+<p>With a few lines of code, we can connect data stored in SPARQL endpoints with pandas, the powerful Python data munging and analysis library.</p>
+
+<p>See the <a href="https://github.com/SuLab/sparql_to_pandas/blob/master/SPARQL_pandas.ipynb">Su Labs tutorial</a> for more examples.</p>
+
+<p>You can also <a href="https://github.com/lawlesst/lawlesst.github.com/blob/pelican/content/jupyter/sparql_dataframe.ipynb">download the examples</a> from this post as a <a href="https://github.com/lawlesst/lawlesst.github.com/blob/pelican/content/jupyter/sparql_dataframe.ipynb">Jupyter notebook</a>.</p>
+
+</div>
+
+
+</div>
+
+<footer>
+  <a href="/">Ted Lawless</a>, 2021
+  <ul>
+  <li>lawlesst at gmail</li>
+  <li><a href="https://github.com/lawlesst">Github</a></li>
+  <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+    <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+</footer>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

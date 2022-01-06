@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Solr Document Signatures</title>
+
+<link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>Solr Document Signatures</h3>
+<h5>03-29-13</h5>
+<div id="post-contents">
+  <p>I previously <a href="http://lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.</p>
+
+<p>This feature is nicely documented on the Solr wiki under <a href="http://wiki.apache.org/solr/Deduplication">Deduplication</a>.  The exact changes I made are listed below.  For my application, using this built-in updateRequestProcessor eliminates the need to generate hashes as part of the indexing code or on the fly in cache validation logic.</p>
+
+<h3>Solr configuration</h3>
+
+<h4>solrconfig.xml</h4>
+
+<ul>
+<li>Add the update request processor to the UpdateRequest chain.</li>
+</ul>
+
+<div class="codehilite"><pre><span></span><code><span class="nt">&lt;updateRequestProcessorChain</span> <span class="na">name=</span><span class="s">&quot;etag&quot;</span><span class="nt">&gt;</span>
+     <span class="nt">&lt;processor</span> <span class="na">class=</span><span class="s">&quot;solr.processor.SignatureUpdateProcessorFactory&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;bool</span> <span class="na">name=</span><span class="s">&quot;enabled&quot;</span><span class="nt">&gt;</span>true<span class="nt">&lt;/bool&gt;</span>
+       <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;signatureField&quot;</span><span class="nt">&gt;</span>etag<span class="nt">&lt;/str&gt;</span>
+       <span class="cm">&lt;!-- For VIVO we don&#39;t want to overwrite duplicates if we</span>
+<span class="cm">       somehow come across one.</span>
+<span class="cm">       --&gt;</span>
+       <span class="nt">&lt;bool</span> <span class="na">name=</span><span class="s">&quot;overwriteDupes&quot;</span><span class="nt">&gt;</span>false<span class="nt">&lt;/bool&gt;</span>
+       <span class="cm">&lt;!-- using the Lookup3Signature since the documentation says it is faster</span>
+<span class="cm">       and we should not encounter actual duplicates in a VIVO Solr index since we</span>
+<span class="cm">       are including the URI in the Solr document. --&gt;</span>
+       <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;signatureClass&quot;</span><span class="nt">&gt;</span>solr.processor.Lookup3Signature<span class="nt">&lt;/str&gt;</span>
+     <span class="nt">&lt;/processor&gt;</span>
+     <span class="nt">&lt;processor</span> <span class="na">class=</span><span class="s">&quot;solr.LogUpdateProcessorFactory&quot;</span> <span class="nt">/&gt;</span>
+     <span class="nt">&lt;processor</span> <span class="na">class=</span><span class="s">&quot;solr.RunUpdateProcessorFactory&quot;</span> <span class="nt">/&gt;</span>
+   <span class="nt">&lt;/updateRequestProcessorChain&gt;</span>
+</code></pre></div>
+
+<ul>
+<li>Add the update chain to the update request handler so that it is called after each document is updated.</li>
+</ul>
+
+<div class="codehilite"><pre><span></span><code>  <span class="nt">&lt;requestHandler</span> <span class="na">name=</span><span class="s">&quot;/update&quot;</span>
+                  <span class="na">class=</span><span class="s">&quot;solr.XmlUpdateRequestHandler&quot;</span><span class="nt">&gt;</span>
+       <span class="nt">&lt;lst</span> <span class="na">name=</span><span class="s">&quot;defaults&quot;</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;str</span> <span class="na">name=</span><span class="s">&quot;update.processor&quot;</span><span class="nt">&gt;</span>etag<span class="nt">&lt;/str&gt;</span>
+       <span class="nt">&lt;/lst&gt;</span>
+    <span class="nt">&lt;/requestHandler&gt;</span>
+</code></pre></div>
+
+<h4>schema.xml</h4>
+
+<ul>
+<li>Add the field to store the signature to the index.</li>
+</ul>
+
+<div class="codehilite"><pre><span></span><code><span class="cm">&lt;!-- In this case we want to store it for retrieval by our web application</span>
+<span class="cm">    so stored=true.  We won&#39;t be searching on this field and won&#39;t be using it</span>
+<span class="cm">    to automatically overwrite duplicates so indexed=false. --&gt;</span>
+<span class="nt">&lt;field</span> <span class="na">name=</span><span class="s">&quot;etag&quot;</span> <span class="na">type=</span><span class="s">&quot;string&quot;</span> <span class="na">stored=</span><span class="s">&quot;true&quot;</span> <span class="na">indexed=</span><span class="s">&quot;false&quot;</span> <span class="na">multiValued=</span><span class="s">&quot;false&quot;</span> <span class="nt">/&gt;</span>
+</code></pre></div>
+
+<p>After making these adjustments, restarting Solr and re-indexing your content, you should see a new field in the Solr documents called 'etag' and its content should be a hash of its contents.</p>
+
+<p>Solr also has <a href="http://wiki.apache.org/solr/SolrAndHTTPCaches">built in support for ETags and caching in general</a>, but I don't think this is quite what I want in this situation.</p>
+
+</div>
+
+
+</div>
+
+<footer>
+  <a href="/">Ted Lawless</a>, 2021
+  <ul>
+  <li>lawlesst at gmail</li>
+  <li><a href="https://github.com/lawlesst">Github</a></li>
+  <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+    <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+</footer>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

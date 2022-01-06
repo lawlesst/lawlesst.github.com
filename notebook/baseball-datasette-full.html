@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Now Publishing Complete Lahman Baseball Database with Datasette</title>
+
+<link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>Now Publishing Complete Lahman Baseball Database with Datasette</h3>
+<h5>12-03-17</h5>
+<div id="post-contents">
+  <blockquote>
+  <p>Summary: The <a href="https://simonwillison.net/2017/Nov/13/datasette/">Datasette</a> API available at <a href="https://baseballdb.lawlesst.net">https://baseballdb.lawlesst.net</a> now contains the full <a href="http://www.seanlahman.com/baseball-archive/statistics/">Lahman Baseball Database</a>.</p>
+</blockquote>
+
+<p>In a <a href="http://lawlesst.github.io/notebook/baseball-datasette.html">previous post</a>, I described how I'm using <a href="https://simonwillison.net/2017/Nov/13/datasette/">Datasette</a> to publish a subset of the Lahman Baseball Database. At that time, I only published three of the 27 tables available in the database. I've since expanded that Datasette API to include the complete Baseball Database.</p>
+
+<p>The process for this was quite straightforward. I ran the MySQL dump Lahman helpfully <a href="http://www.seanlahman.com/baseball-archive/statistics/">provides</a> through this <a href="https://github.com/dumblob/mysql2sqlite/blob/master/mysql2sqlite">mysql2sqlite</a> tool to provide an import file for sqlite. Importing into sqlite for publishing with Datasette was as simple as:</p>
+
+<pre><code>$ ./mysql2sqlite lahman2016.sql | sqlite3 baseball.db
+</code></pre>
+
+<p>The complete sqlite version of the Lahman database is 31 megabytes.</p>
+
+<h3>Querying</h3>
+
+<p>With the full database now loaded, there are many more interesting queries that can be run. Including:</p>
+
+<ul>
+<li>Who played the most games at 2B in MLB history? <a href="https://baseballdb.lawlesst.net/baseball-5b7556e?sql=select+F.playerID%2C+M.nameFirst+%7C%7C+%27+%27+%7C%7C++M.nameLast+as+name+%2C+sum%28F.G%29+as+games%0D%0Afrom+Fielding+F%0D%0Ajoin+Master+M+using+%28playerID%29%0D%0Awhere+F.POS%3D%222B%22%0D%0Agroup+by+F.playerID%0D%0AORDER+BY+games+desc+%0D%0ALIMIT+100%3B+">Answer</a></li>
+<li>In what park has the most MLB games been played? <a href="https://baseballdb.lawlesst.net/baseball-5b7556e?sql=select+H.%22park.key%22%2C+%22park.name%22%2C+city%2C+state%2C+sum%28games%29+as+games%0D%0Afrom+HomeGames+H%0D%0Ajoin+Parks+P+using+%28%22park.key%22%29%0D%0Agroup+by+H.%22park.key%22+%0D%0Aorder+by+games+desc%0D%0Alimit+100%3B">Answer</a></li>
+<li>Which players who made their debut in the 1950 season or later committed they most errors? <a href="https://baseballdb.lawlesst.net/baseball-5b7556e?sql=select+playerID%2C+nameFirst%2C+nameLast%2C+sum%28E%29+as+errors%2C+debut%2C+finalgame%0D%0Afrom+Fielding+F%0D%0Ajoin+Master+M+using+%28playerID%29%0D%0Awhere+debut+%3E+date%28%271950-01-01%27%29%0D%0Agroup+by+playerID%0D%0Aorder+by+errors+desc%0D%0Alimit+100+%3B">Answer</a></li>
+</ul>
+
+<p>Happy querying. If you are using this in a project or interested in learning more, leave a comment below or <a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">contact me</a> directly.</p>
+
+</div>
+
+
+</div>
+
+<footer>
+  <a href="/">Ted Lawless</a>, 2021
+  <ul>
+  <li>lawlesst at gmail</li>
+  <li><a href="https://github.com/lawlesst">Github</a></li>
+  <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+    <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+</footer>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>

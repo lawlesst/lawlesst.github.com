@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>An OpenRefine reconciliation service for academic journal data</title>
+
+<link rel="stylesheet" href="/static/styles.css">
+
+</head>
+<body>
+<header>
+<h1><a href="/">Ted Lawless</a><h1>
+</header>
+<div id="content">
+
+
+<h3>An OpenRefine reconciliation service for academic journal data</h3>
+<h5>08-07-13</h5>
+<div id="post-contents">
+  <p>Recently I've been working to link local data stored in <a href="http://vivoweb.org">VIVO</a> as RDF with other sources on the Web.  The <a href="http://refine.deri.ie/docs">RDF Refine extension</a> for <a href="http://openrefine.org/">OpenRefine</a><sup class="footnote-ref" id="fnref-refine"><a href="#fn-refine">1</a></sup> has been a useful tool in this work.  OpenRefine allows you to query a <a href="https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API">reconciliation service</a> to match local strings to entities from another source and the RDF Extension allows for export as RDF.</p>
+
+<p>Some of the data that I'm trying to interlink involves the work of university researchers and the venues in which their research is published.  The <a href="http://www.journaltocs.ac.uk/about.php">JournalTOCs</a> project manged at <a href="http://www.hw.ac.uk/">Heriot-Watt University</a> is a good source of metadata about academic journals and articles.  This resource aggregates table of contents information from over 22,000 journals.  The JournalsTOC service also kindly offers an <a href="http://www.journaltocs.ac.uk/develop.php">API</a> for querying both article and journal metadata from their dataset.</p>
+
+<p>Using a <a href="https://github.com/mikejs/reconcile-demo">demo reconciliation service</a> developed by Michael Stephens as a model, I put together a basic reconciliation service for the JournalTOC data that queries the <a href="http://www.journaltocs.ac.uk/develop.php">JournalTOC API</a> and translates the response to the format that OpenRefine is expecting.  The <a href="https://github.com/lawlesst/journaltocs-reconcile">code is available on Github</a>.  This service can be run locally and OpenRefine will query it just fine.  I have tested this with local data and it looks like a good option if you are working with similar data or interested in this work.</p>
+
+<p>The URIs returned for publications are not quite <a href="http://www.w3.org/TR/cooluris/">cool</a>.  They are modeled after the URIs for journals that CrossRef makes available in its <a href="http://crosstech.crossref.org/2011/04/content_negotiation_for_crossr.html">RDF representation of DOIs</a> domain, e.g http://id.crossref.org/issn/1059-9495, but can't yet be resolved to RDF representations.  I'm working out a better solution for this and will write about that when I have something to report.</p>
+
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn-refine">
+<p>OpenRefine was Google Refine until recently.  The latest released version is <a href="http://openrefine.org/">Google Refine 2.5</a> and still carries the Google branding, which can be confusing.  A new release of Refine is being developed and that will be called OpenRefine.&#160;<a href="#fnref-refine" class="footnoteBackLink" title="Jump back to footnote 1 in the text.">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+</div>
+
+
+</div>
+
+<footer>
+  <a href="/">Ted Lawless</a>, 2021
+  <ul>
+  <li>lawlesst at gmail</li>
+  <li><a href="https://github.com/lawlesst">Github</a></li>
+  <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+    <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+</footer>
+
+
+
+<script>
+var _gaq=[['_setAccount','UA-2790298-5'],['_trackPageview']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+
+</script>
+</body>
+</html>
