@@ -92,7 +92,7 @@ def rss():
         try:
             f = HTMLFilter()
             f.feed(p["html"])
-            p["description"] = " ".join([f.strip() for f in f.text.split(". ")[:5]])
+            p["description"] = ". ".join([f.strip() for f in f.text.split(". ")[:3]]) + "..."
         except AttributeError:
             p["description"] = None
         p["link"] = f"{ link }notebook/{ p['slug'] }.html"
