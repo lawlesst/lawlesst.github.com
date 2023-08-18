@@ -5,7 +5,7 @@ description = ""
 authors = ["Ted Lawless <t.lawless@digital-science-com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 ghp-import = {git = "https://github.com/davisp/ghp-import.git"}
 frozen-flask = {git = "https://github.com/Frozen-Flask/Frozen-Flask.git"}
 markdown2 = "^2.4.2"
