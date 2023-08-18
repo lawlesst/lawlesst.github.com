@@ -35,6 +35,10 @@ header h1 a:visited {
   color: white;
 }
 
+#about {
+  margin-top: 2em;
+}
+
 blockquote {
   background-color: #eee;
   padding: .6em;
