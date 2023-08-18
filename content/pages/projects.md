@@ -25,7 +25,9 @@ Here's a brief list of the technologies being used to develop this platform.
 ### Data processing pipeline
 Maintain and extend a custom Python, based data pipeline for processing and de-identifying research data. Map incoming data to local data model. Manage and extend value-added processes. Develop and maintain codebooks to assist researchers with understanding data structures and contents.
 
-A version of this software has been open sourced as a reusable Python library called [SIRAD, Secure Infrastructure for Research with Administrative Data](https://github.com/riipl-org/sirad). A paper is also under review that outlines the Lab's data infrastructure. A pre-print is available at [10.31219/osf.io/hdv3c](https://dx.doi.org/10.31219/osf.io/hdv3c).
+A version of this software has been open sourced as a reusable Python library called [SIRAD, Secure Infrastructure for Research with Administrative Data](https://github.com/riipl-org/sirad). A [paper](https://doi.org/10.1145/3335150) was also published describing the methods in *Communications of the ACM*:
+
+* Hastings, Justine S., Howison, Mark, Lawless, Ted, Ucles, John, White, Preston. Unlocking data to improve public policy. Communications of the ACM. Volume 62. Issue 10. October 2019 pp 48–53. https://doi.org/10.1145/3335150
 
 ### RI360 table
 Lead the design and implementation of an integrated dataset that links individual-level information across state government programs over a 20 year time span. Challenges addressed here include linking entities across datasets, normalizing dates, scaling the build and indexing process to handle a billion rows, documentation, training staff and students to contribute.
