@@ -7,23 +7,13 @@
     <link>http://lawlesst.github.io/</link>
     <atom:link href="http://lawlesst.github.io///feed.rss" rel="self" type="application/rss+xml" />
     <description>Work notebook</description>
-    <pubDate>Fri, 07 Jan 22 14:43:05 EST</pubDate>
+    <pubDate>Fri, 07 Jan 22 16:38:40 EST</pubDate>
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
 
     
     <item>
        <title>Fix the docs - SQL Server and Docker on a Mac</title>
-       <description>I recently setup Microsoft SQL Server on a Macbook and found a simple error in Microsoft's documentation Since I didn't quickly find an answer in the normal places (Google -> Stackoverflow), I thought I would post it here in case it saves someone a few minutes From Microsoft's "Get started with SQL Server" documentation, which is otherwise quite good and nicely organized, Step 1.1 ((https://www.microsoft.com/en-us/sql-server/developer-get-started/python/mac/)) lists two comands for pulling a Docker image from Docker Hub and running it The path to the Docker location is incorrect and you will receive an error message when trying to pull the image The docker pull command:
-
-sudo docker pull microsoft/mssql-server-linux:2017-latest
-
-
-Should be changed to:
-
-sudo docker pull mcr.microsoft.com/mssql/server:2017-latest
-
-
-Note: Microsoft does have a chat window embedded on this site and I thought that I could submit an error report that way but the chat windod requires you to authenticate with Gitter, which points you to Oauth via Github, and the Oauth message is kind of scary regarding the amount of access you will be giving Gitter, as Oauth with Github usually is</description>
+       <description>I recently setup Microsoft SQL Server on a Macbook and found a simple error in Microsoft's documentation. Since I didn't quickly find an answer in the normal places (Google -> Stack Overflow), I thought I would post it here in case it saves someone a few minutes. From Microsoft's "Get started with SQL Server" documentation, which is otherwise quite good and nicely organized, Step 1.1 ((https://www.microsoft.com/en-us/sql-server/developer-get-started/python/mac/)) lists two commands for pulling a Docker image from Docker Hub and running it...</description>
        <pubDate>Fri, 07 Jan 22 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/mssql-server-docker.html</guid>
        <link>http://lawlesst.github.io/notebook/mssql-server-docker.html</link>
@@ -34,11 +24,7 @@ Note: Microsoft does have a chat window embedded on this site and I thought that
        <title>Automatically extracting keyphrases from text</title>
        <description>I've posted an explainer/guide to how we are automatically extracting keyphrases for Constellate, a new text analytics service from JSTOR and Portico.
 
-We are defining keyphrases as up to three word phrases that are key, or important, to the overall subject matter of the document Keyphrase is often used interchangeably with keywords, but we are opting to use the former since it's more descriptive We did a fair amount of reading to grasp prior art in this area, extracting keyphrases is a long standing research topic in information retrieval and natural language processing, and ended up developing a custom solution based on term frequency in the Constellate corpus If you are interested in this work generally, and not just the Constellate implementation, Burton DeWilde has published an excellent primer on automated keyphrase extraction.
-
-More information about Constellate can be found here.
-
-Disclaimer: this is a work-related post I don't intend to speak for my employer, Ithaka</description>
+We are defining keyphrases as up to three word phrases that are key, or important, to the overall subject matter of the document. Keyphrase is often used interchangeably with keywords, but we are opting to use the former since it's more descriptive. We did a fair amount of reading to grasp prior art in this area, extracting keyphrases is a long standing research topic in information retrieval and natural language processing, and ended up developing a custom solution based on term frequency in the Constellate corpus...</description>
        <pubDate>Mon, 19 Jul 21 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/constellate-keyphrases.html</guid>
        <link>http://lawlesst.github.io/notebook/constellate-keyphrases.html</link>
@@ -47,13 +33,9 @@ Disclaimer: this is a work-related post I don't intend to speak for my employer,
     
     <item>
        <title>Datasette hosting costs</title>
-       <description>I've been hosting a Datasette (https://baseballdb.lawlesst.net, aka baseballdb) of historical baseball data for a few years and the last year or so it has been hosted on Google Cloud Run I thought I would share my hosting costs for 2020 as a point of reference for others who might be interested in running a Datasette but aren't sure how much it may cost.
+       <description>I've been hosting a Datasette (https://baseballdb.lawlesst.net, aka baseballdb) of historical baseball data for a few years and the last year or so it has been hosted on Google Cloud Run. I thought I would share my hosting costs for 2020 as a point of reference for others who might be interested in running a Datasette but aren't sure how much it may cost.
 
-The total hosting cost on Google Cloud Run for 2020 for the baseballdb was $51.31, or a monthly average of about $4.28 USD The monthly bill did vary a fair amount from as high as $13 in May to as low as $2 in March Since I did no deployments during this time or updates to the site, I assume the variation in costs is related to the amount queries the Datasette was serving I don't have a good sense of how many total queries per month this instance is serving since I'm not using Google Analytics or similar.
-
-Google does report that it is subtracting $49.28 in credits for the year but I don't expect those credits/promotions to expire anytime soon since my projected costs for 2021 is $59.
-
-This cost information is somewhat incomplete without knowing the number of queries served per month but it is a benchmark</description>
+The total hosting cost on Google Cloud Run for 2020 for the baseballdb was $51.31, or a monthly average of about $4.28 USD. The monthly bill did vary a fair amount from as high as $13 in May to as low as $2 in March...</description>
        <pubDate>Sat, 16 Jan 21 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/datasette-hosting.html</guid>
        <link>http://lawlesst.github.io/notebook/datasette-hosting.html</link>
@@ -62,17 +44,11 @@ This cost information is somewhat incomplete without knowing the number of queri
     
     <item>
        <title>Connecting Python's RDFLib to AWS Neptune</title>
-       <description>I've written previously about using Python's RDFLib to connect to various triple stores For a current project, I'm using Amazon Neptune as a triple store and the RDFLib SPARQLStore implemenation did not work out of the box I thought I would share my solution.
+       <description>I've written previously about using Python's RDFLib to connect to various triple stores. For a current project, I'm using Amazon Neptune as a triple store and the RDFLib SPARQLStore implemenation did not work out of the box. I thought I would share my solution.
 
 The problem
 
-Neptune returns ntriples by default and RDFLib, by default in version 4.2.2, is expecting CONSTRUCT queries to return RDF/XML The solution is to override RDFLib's SPARQLStore to explictly request RDF/XML from Neptune via HTTP content negotiation.
-
-Once this is in place, you can query and update Neptune via SPARQL with RDFLib the same way that you would other triple stores.
-
-Code
-
-If you are interested in working with Neptune using RDFLib, here's a "NeptuneStore" and "NeptuneUpdateStore" implementation that you can use.</description>
+Neptune returns ntriples by default and RDFLib, by default in version 4.2.2, is expecting CONSTRUCT queries to return RDF/XML...</description>
        <pubDate>Fri, 15 Mar 19 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/rdflib-neptune.html</guid>
        <link>http://lawlesst.github.io/notebook/rdflib-neptune.html</link>
@@ -83,16 +59,7 @@ If you are interested in working with Neptune using RDFLib, here's a "NeptuneSto
        <title>Usable sample researcher profile data</title>
        <description>I've published a small set of web harvesting scripts to fetch information about researchers and their activities from the NIH Intramural Research Program website.
 
-On various projects I've been involved with, it has been difficult to acquire usable sample, or test data, about researchers and their activities You either need access to a HR system and a research information system (for the activities) or create mock data Mock, or fake data, doesn't work well when you want to start integrating information across systems or develop tools to find new publications It's hard to build a publication harvesting tool without real author names and research interests.
-
-
-
-
-
-
-To that end, the scripts I've published crawl the NIH Intramural Research Program website and pull out profile information for the thousand or so researchers that are members of the program, including a name, email, photo, short biography research interests, and the Pubmed IDs for selected publications.
-
-A second script harvests the organizational structure of the program Both types of data are outputted to a simple JSON structure that then can be mapped to your destination system</description>
+On various projects I've been involved with, it has been difficult to acquire usable sample, or test data, about researchers and their activities. You either need access to a HR system and a research information system (for the activities) or create mock data. Mock, or fake data, doesn't work well when you want to start integrating information across systems or develop tools to find new publications...</description>
        <pubDate>Sat, 19 May 18 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/researcher-profile-data.html</guid>
        <link>http://lawlesst.github.io/notebook/researcher-profile-data.html</link>
@@ -101,37 +68,14 @@ A second script harvests the organizational structure of the program Both types 
     
     <item>
        <title>Exploring 10 years of the New Yorker Fiction Podcast with Wikidata</title>
-       <description>Note: The online Datasette that supported the sample queries below is no longer available The raw data is at: https://github.com/lawlesst/new-yorker-fiction-podcast-data.
+       <description>Note: The online Datasette that supported the sample queries below is no longer available. The raw data is at: https://github.com/lawlesst/new-yorker-fiction-podcast-data.
 
 
-The New Yorker Fiction Podcast recently celebrated its ten year anniversary For those of you not familiar, this is a monthly podcast hosted by New Yorker fiction editor Deborah Treisman where a writer who has published a short story in the New Yorker selects a favorite story from the magazine's archive and reads and discusses it on the podcast with Treissman.1
+The New Yorker Fiction Podcast recently celebrated its ten year anniversary. For those of you not familiar, this is a monthly podcast hosted by New Yorker fiction editor Deborah Treisman where a writer who has published a short story in the New Yorker selects a favorite story from the magazine's archive and reads and discusses it on the podcast with Treissman.1
 
 I've been a regular listener to the podcast since it started in 2007 and thought it would be fun to look a little deeper at who has been invited to read and what authors they selected to read and discuss.
 
-The New Yorker posts all episodes of the Fiction podcast on their website in nice clean, browseable HTML pages I wrote a Python script to step through the pages and pull out the basic details about each episode:
-
-
-title
-url
-summary
-date published
-writer
-reader
-
-
-The reader and the writer for each story is embedded in the title so a bit of text processing was required to cleanly identify each reader and writer I also had to manually reconcile a few episodes that didn't follow the same pattern as the others.
-
-All code used here and harvested data is available on Github.
-
-Matching to Wikidata
-
-I then took each of the writers and readers and matched them to Wikidata using the searchentities API.
-
-With the Wikidata ID, I'm able to retrieve many attributes each reader and writer by querying the Wikidata SPARQL endpoint, such as gender, date of birth, awards received, Library of Congress identifier, etc.
-
-Publishing with Datasette
-
-I saved this harvested data to two CSV files - episodes.csv and people.csv - and then built a sqlite database to publish with Datasette using the built-in integration with Zeit Now</description>
+The New Yorker posts all episodes of the Fiction podcast on their website in nice clean, browseable HTML pages...</description>
        <pubDate>Tue, 06 Feb 18 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/nyer-fiction.html</guid>
        <link>http://lawlesst.github.io/notebook/nyer-fiction.html</link>
@@ -143,18 +87,9 @@ I saved this harvested data to two CSV files - episodes.csv and people.csv - and
        <description>Summary: The Datasette API available at https://baseballdb.lawlesst.net now contains the full Lahman Baseball Database.
 
 
-In a previous post, I described how I'm using Datasette to publish a subset of the Lahman Baseball Database At that time, I only published three of the 27 tables available in the database I've since expanded that Datasette API to include the complete Baseball Database.
+In a previous post, I described how I'm using Datasette to publish a subset of the Lahman Baseball Database. At that time, I only published three of the 27 tables available in the database. I've since expanded that Datasette API to include the complete Baseball Database.
 
-The process for this was quite straightforward I ran the MySQL dump Lahman helpfully provides through this mysql2sqlite tool to provide an import file for sqlite Importing into sqlite for publishing with Datasette was as simple as:
-
-$ ./mysql2sqlite lahman2016.sql | sqlite3 baseball.db
-
-
-The complete sqlite version of the Lahman database is 31 megabytes.
-
-Querying
-
-With the full database now loaded, there are many more interesting queries that can be run</description>
+The process for this was quite straightforward...</description>
        <pubDate>Sun, 03 Dec 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/baseball-datasette-full.html</guid>
        <link>http://lawlesst.github.io/notebook/baseball-datasette-full.html</link>
@@ -163,10 +98,10 @@ With the full database now loaded, there are many more interesting queries that 
     
     <item>
        <title>Publishing the Lahman Baseball Database with Datasette</title>
-       <description>Summary: publishing the Lahman Baseball Database with Datasette API available at https://baseballdb.lawlesst.net.
+       <description>Summary: publishing the Lahman Baseball Database with Datasette. API available at https://baseballdb.lawlesst.net.
 
 
-For those of us interested in open data, an exciting new tool was released this month It's by Simon Willison and called Datasette Datasette allows you to very quickly convert CSV files to a sqlite database and publish on the web with an API Head over to Simon's site for more details</description>
+For those of us interested in open data, an exciting new tool was released this month. It's by Simon Willison and called Datasette...</description>
        <pubDate>Mon, 20 Nov 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/baseball-datasette.html</guid>
        <link>http://lawlesst.github.io/notebook/baseball-datasette.html</link>
@@ -180,11 +115,11 @@ For those of us interested in open data, an exciting new tool was released this 
 
 Using Pandas to explore data SPARQL
 
-Pandas is a Python based power tool for munging and analyzing data While working with data from SPARQL endpoints, you may prefer to explore and analyze it with pandas given its full feature set, strong documentation and large community of users.
+Pandas is a Python based power tool for munging and analyzing data. While working with data from SPARQL endpoints, you may prefer to explore and analyze it with pandas given its full feature set, strong documentation and large community of users.
 
 The code below is an example of issuing a query to the Wikidata SPARQL endpoint and loading the data into a pandas dataframe and running basic operations on the returned data.
 
-This is a modified version of code from Su Labs Here we remove the types returned by the SPARQL endpoint since they add noise and we will prefer to handle datatypes with Pandas.
+This is a modified version of code from Su Labs. Here we remove the types returned by the SPARQL endpoint since they add noise and we will prefer to handle datatypes with Pandas.
 
 {% notebook sparql_dataframe.ipynb %}
 
@@ -192,7 +127,7 @@ With a few lines of code, we can connect data stored in SPARQL endpoints with pa
 
 See the Su Labs tutorial for more examples.
 
-You can also download the examples from this post as a Jupyter notebook.</description>
+You can also download the examples from this post as a Jupyter notebook....</description>
        <pubDate>Thu, 26 Oct 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/sparql-dataframe.html</guid>
        <link>http://lawlesst.github.io/notebook/sparql-dataframe.html</link>
@@ -201,10 +136,7 @@ You can also download the examples from this post as a Jupyter notebook.</descri
     
     <item>
        <title>Querying Wikidata to Identify Globally Famous Baseball Players</title>
-       <description>Earlier this year I had the pleasure of attending a lecture by Cesar Hidalgo of MIT's Media Lab One of the projects Hidalgo discussed was Pantheon Pantheon is a website and dataset that ranks "globally famous individuals" based on a metric the team created called the Historical Popularity Index (HPI) A key component of HPI is the number of Wikipedia pages an individual has in in various languages For a complete description of the project, see:
-
-
-  Yu, A</description>
+       <description>Earlier this year I had the pleasure of attending a lecture by Cesar Hidalgo of MIT's Media Lab. One of the projects Hidalgo discussed was Pantheon. Pantheon is a website and dataset that ranks "globally famous individuals" based on a metric the team created called the Historical Popularity Index (HPI)...</description>
        <pubDate>Tue, 18 Oct 16 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/wikidata-baseball-fame.html</guid>
        <link>http://lawlesst.github.io/notebook/wikidata-baseball-fame.html</link>
