@@ -1,9 +1,9 @@
 
 publish:
 	$ poetry run python freeze.py
-	$ ghp-import -m "Update site" build
+	$ poetry run ghp-import -m "Update site" build
 	$ git push -f origin gh-pages:master
 	$ git push origin write:write
 
 dev_server:
-	$ FLASK_ENV=development poetry run flask run -p 5100
+	$ FLASK_DEBUG=true FLASK_ENV=development poetry run flask run -p 5100

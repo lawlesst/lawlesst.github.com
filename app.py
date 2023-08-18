@@ -6,6 +6,7 @@ import glob
 import os
 from datetime import datetime
 from html.parser import HTMLParser
+from pathlib import Path
 
 import dateparser
 import markdown2
@@ -32,9 +33,19 @@ def read_post(path):
         title = next(inf).split(":")[1].strip()
         date = next(inf).split(":")[1].strip()
         slug = next(inf).split(":")[1].strip()
-        md = inf.read()
+        text = inf.read()
+        # Use custom --include= command for embedding python.
+        for line in text.split("\n"):
+            if line.startswith("--include="):
+                chunks = line.split("=")
+                source_path = Path(chunks[-1]).resolve()
+                with open(source_path) as f:
+                    py = f.read()
+                code_fence = f"```python\n{py}```"
+                text = text.replace(line, code_fence)
+        md = text
 
-    html = markdown2.markdown(md, extras=["footnotes", "fenced-code-blocks"])
+    html = markdown2.markdown(md, extras=["footnotes", "fenced-code-blocks", "markdown_include.include"])
     return {
         "title": title,
         "slug": slug,
@@ -116,7 +127,7 @@ def rss():
     return response
 
 
-@app.route("/tools/auth-redirect.html")
+@app.route("/tools/auth-redirect")
 def tool():
     title = "Auth Redirect Helper"
     return render_template("tools/auth-redirect.html", title=title)
