@@ -9,7 +9,6 @@ from html.parser import HTMLParser
 
 import dateparser
 import markdown2
-from bs4 import BeautifulSoup
 from flask import Flask, make_response, render_template, url_for
 
 app = Flask(__name__)
@@ -114,3 +113,9 @@ def rss():
     response = make_response(template)
     response.headers["Content-Type"] = "application/xml"
     return response
+
+
+@app.route("/tools/auth-redirect.html")
+def tool():
+    title = "Auth Redirect Helper"
+    return render_template("tools/auth-redirect.html", title=title)

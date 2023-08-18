@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div id="page-contents">
+    <h3>Your authentication code</h3>
+    <code id="params"></code>
+    <h5>What is this?</h5>
+    <p>Just a little helper to assist with getting an authentication redirect code from Spotify.</p>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const code = urlParams.get("code");
+    document.getElementById("params").textContent = code
+</script>
+
+{% endblock %}
