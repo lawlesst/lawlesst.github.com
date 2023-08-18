@@ -7,9 +7,22 @@
     <link>http://lawlesst.github.io/</link>
     <atom:link href="http://lawlesst.github.io///feed.rss" rel="self" type="application/rss+xml" />
     <description>Work notebook</description>
-    <pubDate>Fri, 04 Aug 23 13:43:57 EST</pubDate>
+    <pubDate>Fri, 18 Aug 23 16:17:06 EST</pubDate>
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
 
+    
+    <item>
+       <title>Importing Python code by file reference and inspecting classes</title>
+       <description>I recently had a use case for importing Python code by reference to its full file path, inspecting each class found within the source, and performing a task if a particular attribute was found. This was for a command-line interface (CLI) and I wanted the script to be run like the following:
+
+$ python inspect_source.py /full/path/to/source.py
+
+My initial scan of stackoverflow answers didn't provide a solution for exactly what I wanted to do in this case. So I turned to my other favorite resource, Python 3 Module of the Week, and read up on the standard library's importlib and inspect modules...</description>
+       <pubDate>Fri, 18 Aug 23 00:00:00 EST</pubDate>
+       <guid isPermaLink="false">http://lawlesst.github.io/notebook/python-class-inspection.html</guid>
+       <link>http://lawlesst.github.io/notebook/python-class-inspection.html</link>
+       <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
+    </item>
     
     <item>
        <title>Fix the docs - SQL Server and Docker on a Mac</title>
@@ -131,15 +144,6 @@ You can also download the examples from this post as a Jupyter notebook....</des
        <pubDate>Thu, 26 Oct 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/sparql-dataframe.html</guid>
        <link>http://lawlesst.github.io/notebook/sparql-dataframe.html</link>
-       <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
-    </item>
-    
-    <item>
-       <title>Querying Wikidata to Identify Globally Famous Baseball Players</title>
-       <description>Earlier this year I had the pleasure of attending a lecture by Cesar Hidalgo of MIT's Media Lab. One of the projects Hidalgo discussed was Pantheon. Pantheon is a website and dataset that ranks "globally famous individuals" based on a metric the team created called the Historical Popularity Index (HPI)...</description>
-       <pubDate>Tue, 18 Oct 16 00:00:00 EST</pubDate>
-       <guid isPermaLink="false">http://lawlesst.github.io/notebook/wikidata-baseball-fame.html</guid>
-       <link>http://lawlesst.github.io/notebook/wikidata-baseball-fame.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
     </item>
     

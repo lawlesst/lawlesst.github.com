@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Importing Python code by file reference and inspecting classes</title>
+  
+  <link rel="stylesheet" href="/static/styles.css">
+  
+</head>
+
+<body>
+  <div id="content">
+    <header>
+      <h1><a href="/">Ted Lawless</a>
+        <h1>
+    </header>
+    
+
+<h3>Importing Python code by file reference and inspecting classes</h3>
+<h5>08-18-2023</h5>
+<div id="post-contents">
+  <p>I recently had a use case for importing Python code by reference to its full file path, inspecting each class found within the source, and performing a task if a particular attribute was found. This was for a command-line interface (CLI) and I wanted the script to be run like the following:</p>
+
+<p><code>$ python inspect_source.py /full/path/to/source.py</code></p>
+
+<p>My initial scan of <a href="https://stackoverflow.com/search?q=import+python+code+and+inspect+classes">stackoverflow answers</a> didn't provide a solution for exactly what I wanted to do in this case. So I turned to my other favorite resource, <a href="https://pymotw.com/3/index.html">Python 3 Module of the Week</a>, and read up on the standard library's <a href="https://pymotw.com/3/importlib/index.html">importlib</a> and <a href="https://pymotw.com/3/inspect/index.html">inspect</a> modules. I was able to piece this together.</p>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">source_path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+
+<span class="n">module_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">stem</span>
+
+<span class="c1"># Append the parent of the source_path to the python path</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Importing </span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2"> as </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Import the source code as a module.</span>
+<span class="n">imported_source</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+
+<span class="c1"># Use inspect to get all classes.</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">_class</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">imported_source</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">):</span>
+    <span class="c1"># Check for existence of the target attribute.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">attrib</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_class</span><span class="p">,</span> <span class="s2">&quot;my_target_attribute&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">if</span> <span class="n">attrib</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If the attribute is found, do something.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> -- do something with the target attribute.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This solution requires that all modules imported by the source file in this case already exist in your environment. Otherwise you will get import errors.</p>
+
+</div>
+
+
+
+    <footer>
+      <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
+        updated: 08-18-2023 16:17. </span>
+      <ul>
+        <li>lawlesst at gmail</li>
+        <li><a href="https://github.com/lawlesst">Github</a></li>
+        <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
+        <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+    </footer>
+  </div>
+
+  
+
+</body>
+
+</html>
