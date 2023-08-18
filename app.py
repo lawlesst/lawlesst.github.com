@@ -56,7 +56,8 @@ def index_posts():
 
 @app.context_processor
 def inject_datestamp():
-    return dict(now=datetime.now().strftime("%m-%d-%Y %H:%M"))
+    now = datetime.now()
+    return dict(now=now.strftime("%m-%d-%Y %H:%M"), current_year=now.year)
 
 
 @app.route("/")
