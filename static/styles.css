@@ -1,6 +1,6 @@
 body {
   /*font-family: 'Droid Sans', sans-serif;*/
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
   padding: 0;
   margin: 0;
 }
@@ -9,6 +9,7 @@ body {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
+  font-weight: 100;
 }
 
 header {
@@ -71,6 +72,14 @@ footer a {
 
 footer a:visited {
   color: black;
+}
+
+code {
+  background: #f8f3f3;
+  word-wrap: break-word;
+  box-decoration-break: clone;
+  padding: .1rem .3rem .2rem;
+  border-radius: .2rem;
 }
 
 /*Code higlighting via: pygmentize -S default -f html -a .codehilite*/
