@@ -8,8 +8,8 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   {% endif %}
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   {% block extra_head %}{% endblock %}
 </head>
 
@@ -23,7 +23,8 @@
     {% endblock %}
 
     <footer>
-      <a href="{{ url_for('index') }}">Ted Lawless</a>, 2022
+      <a href="{{ url_for('index') }}">Ted Lawless</a>, 2022. <span class="last-updated">{% if now %}Last updated: {{
+        now }}. {% endif %}</span>
       <ul>
         <li>lawlesst at gmail</li>
         <li><a href="https://github.com/lawlesst">Github</a></li>

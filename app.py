@@ -55,6 +55,11 @@ def index_posts():
     return sorted_posts
 
 
+@app.context_processor
+def inject_datestamp():
+    return dict(now=datetime.now().strftime("%m-%d-%Y %H:%M"))
+
+
 @app.route("/")
 def index():
     posts = index_posts()[:5]

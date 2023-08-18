@@ -6,12 +6,22 @@ body {
   font-size: 1.1rem;
 }
 
+@media only screen and (min-width: 1200px) {
+  #content {
+    max-width: 50%;
+    margin-top: 2em;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  #content {
+    max-width: 90%;
+  }
+}
+
 #content {
-  width: 50%;
   margin-left: auto;
   margin-right: auto;
-  font-weight: 100;
-  margin-top: 2em;
 }
 
 header {
@@ -55,7 +65,7 @@ blockquote {
   margin-bottom: .5em;
 }
 
-date {
+.date {
   font-size: smaller;
   font-style: italic;
   margin-left: 1em;
@@ -81,6 +91,11 @@ code {
   box-decoration-break: clone;
   padding: .1rem .3rem .2rem;
   border-radius: .2rem;
+}
+
+.last-updated {
+  float: right;
+  font-size: x-small;
 }
 
 /*Code higlighting via: pygmentize -S default -f html -a .codehilite*/
