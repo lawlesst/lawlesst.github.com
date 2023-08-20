@@ -3,37 +3,19 @@
 
 {% block content %}
 
-<div id="about">
-
-  <div>
-    <h3>Contents </h3>
-
-    <ul>
-      <li><a href="{{ url_for('archive')}}">infrequent techinical notes/articles about various topics</a></li>
-      <li><a href="{{ url_for('page', slug='presentations')}}">a list of presentations</a> given over the years</li>
-      <li>selected <a href="{{ url_for('page', slug='projects') }}">projects</a> that I've been involved with</li>
-    </ul>
-  </div>
-
-  <p>
-    If any of this is of interest to you, please feel free to contact me via email (lawlesst at gmail), <a
-      href="https://github.com/lawlesst">Github</a> , <a
-      href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a>, or <a
-      href="https://twitter.com/tedlawless">Twitter</a>.
-  </p>
-</div>
-
 <div id="recent-posts">
-  <h3>Recent (somewhat) Posts</h3>
+  <h3>Articles/posts</h3>
   <ol>
     {% for post in recent_posts %}
-    <li><a href="{{ url_for('post', slug=post.slug)}}">{{ post.title }}</a>
-      <date>{{ post.date }}</date>
+    <li><a href="{{ url_for('post', slug=post.slug)}}">{{ post.title }}</a>, <date>{{ post.date }}</date>
     </li>
     {% endfor %}
     <ol>
 </div>
 <p>See a <a href="{{ url_for('archive')}}">full list of posts</a> or the <a href="{{ url_for('rss') }}">RSS feed.</a>
+</p>
+
+<p>For contact information, see the <a href="{{ url_for('page', slug='about')}}">about page</a>.
 </p>
 
 {% endblock %}
