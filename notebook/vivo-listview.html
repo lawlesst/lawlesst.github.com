@@ -11,15 +11,18 @@
 <body>
   <div id="content">
     <header>
-      <h1><a href="/">Ted Lawless</a>
-        <h1>
+      <a class="logo" href="/">home</a>
+      <nav>
+        <a href="/about.html">about</a>
+        <a href="/archives.html">archive</a>
+      </nav>
     </header>
     
 
-<h3>A utility script for developing VIVO custom list views</h3>
-<h5>03-18-13</h5>
-<div id="post-contents">
-  <p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system.</p>
+<h1 class="title">A utility script for developing VIVO custom list views</h3>
+  <date>03-18-13</date>
+  <div id="post-contents">
+    <p>As you continue with your <a href="http://www.vivoweb.org/">VIVO</a> implementation, you might want to adjust the properties that are displayed on profile pages.  VIVO handles what properties display on a profile page through a set of list views, which are SPARQL queries that pull data from your VIVO store and pass it on to <a href="https://wiki.duraspace.org/display/VIVO/FreeMarker">Freemarker</a> templating system.</p>
 
 <p>To speed up the development of these SPARQL queries, my colleague and I put together a <a href="https://gist.github.com/lawlesst/5192700">Python script</a> to simulate what VIVO does when it reads a list view and queries the RDF models for data.  The script, called <a href="https://gist.github.com/lawlesst/5192700">generate_listview.py</a>, parses the VIVO XML based list view config files (<a href="https://github.com/vivo-project/VIVO/blob/develop/productMods/config/listViewConfig-awardOrHonor.xml">example</a>) and queries VIVO via SPARQL to retrieve the data and display it to the terminal.  This eliminates the need to edit the list view config files on the server and reload pages, and all of the profile data, to see if your query is doing what you expect.  This workflow allows you to build a custom list view separately and then copy the finished the list view config XML file to the server when you are more confident that it is retrieving the data that you want it to.</p>
 
@@ -57,18 +60,13 @@ $ pip install requests
 <li><p>A <a href="http://www.vivoweb.org/files/presentations/12ws3/Cooks_tour.pdf">presentationn</a> from the 2012 VIVO conference details possible approaches to customizing VIVO.</p></li>
 </ul>
 
-</div>
+  </div>
 
-
+  
 
     <footer>
       <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
-        updated: 08-18-2023 16:18. </span>
-      <ul>
-        <li>lawlesst at gmail</li>
-        <li><a href="https://github.com/lawlesst">Github</a></li>
-        <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-        <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+        updated: 08-20-2023 08:44. </span>
     </footer>
   </div>
 

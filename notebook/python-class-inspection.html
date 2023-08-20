@@ -11,15 +11,18 @@
 <body>
   <div id="content">
     <header>
-      <h1><a href="/">Ted Lawless</a>
-        <h1>
+      <a class="logo" href="/">home</a>
+      <nav>
+        <a href="/about.html">about</a>
+        <a href="/archives.html">archive</a>
+      </nav>
     </header>
     
 
-<h3>Importing Python code by file reference and inspecting classes</h3>
-<h5>08-18-2023</h5>
-<div id="post-contents">
-  <p>I recently had a use case for importing Python code by reference to its full file path, inspecting each class found within the source, and performing a task if a particular attribute was found. This was for a command-line interface (CLI) and I wanted the script to be run like the following:</p>
+<h1 class="title">Importing Python code by file reference and inspecting classes</h3>
+  <date>08-18-2023</date>
+  <div id="post-contents">
+    <p>I recently had a use case for importing Python code by reference to its full file path, inspecting each class found within the source, and performing a task if a particular attribute was found. This was for a command-line interface (CLI) and I wanted the script to be run like the following:</p>
 
 <p><code>$ python inspect_source.py /full/path/to/source.py</code></p>
 
@@ -60,18 +63,13 @@
 
 <p>This solution requires that all modules imported by the source file in this case already exist in your environment. Otherwise you will get import errors.</p>
 
-</div>
+  </div>
 
-
+  
 
     <footer>
       <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
-        updated: 08-18-2023 16:18. </span>
-      <ul>
-        <li>lawlesst at gmail</li>
-        <li><a href="https://github.com/lawlesst">Github</a></li>
-        <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-        <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+        updated: 08-20-2023 08:44. </span>
     </footer>
   </div>
 

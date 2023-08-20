@@ -11,15 +11,18 @@
 <body>
   <div id="content">
     <header>
-      <h1><a href="/">Ted Lawless</a>
-        <h1>
+      <a class="logo" href="/">home</a>
+      <nav>
+        <a href="/about.html">about</a>
+        <a href="/archives.html">archive</a>
+      </nav>
     </header>
     
 
-<h3>Solr Document Signatures</h3>
-<h5>03-29-13</h5>
-<div id="post-contents">
-  <p>I previously <a href="http://lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.</p>
+<h1 class="title">Solr Document Signatures</h3>
+  <date>03-29-13</date>
+  <div id="post-contents">
+    <p>I previously <a href="http://lawlesst.github.com/notebook/vivo-caching.html">wrote</a> about working with Apache <a href="http://httpd.apache.org/docs/2.2/caching.html">mod_cache</a>, HTTP <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a>, and <a href="http://www.vivoweb.org/">VIVO</a> to cache public pages.  After writing that post, I found that <a href="http://wiki.apache.org/solr/Deduplication">Solr supports adding "signatures" to documents</a> as a way to identify if a document is identical to another.  This <a href="http://wiki.apache.org/solr/Deduplication">feature</a> was added to Solr as a way to identify duplicate documents or prevent duplicates documents from being added to the index.  However it is flexible enough to meet the needs for my intended use, which is to generate a unique identifying string for the contents of a Solr document and use that string within a web application to validate <a href="http://en.wikipedia.org/wiki/HTTP_ETag">ETags</a> forwarded by clients.</p>
 
 <p>This feature is nicely documented on the Solr wiki under <a href="http://wiki.apache.org/solr/Deduplication">Deduplication</a>.  The exact changes I made are listed below.  For my application, using this built-in updateRequestProcessor eliminates the need to generate hashes as part of the indexing code or on the fly in cache validation logic.</p>
 
@@ -77,18 +80,13 @@
 
 <p>Solr also has <a href="http://wiki.apache.org/solr/SolrAndHTTPCaches">built in support for ETags and caching in general</a>, but I don't think this is quite what I want in this situation.</p>
 
-</div>
+  </div>
 
-
+  
 
     <footer>
       <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
-        updated: 08-18-2023 16:18. </span>
-      <ul>
-        <li>lawlesst at gmail</li>
-        <li><a href="https://github.com/lawlesst">Github</a></li>
-        <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-        <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+        updated: 08-20-2023 08:44. </span>
     </footer>
   </div>
 

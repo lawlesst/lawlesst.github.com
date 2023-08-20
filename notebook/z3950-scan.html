@@ -11,15 +11,18 @@
 <body>
   <div id="content">
     <header>
-      <h1><a href="/">Ted Lawless</a>
-        <h1>
+      <a class="logo" href="/">home</a>
+      <nav>
+        <a href="/about.html">about</a>
+        <a href="/archives.html">archive</a>
+      </nav>
     </header>
     
 
-<h3>Using Z39.50 to produce a Stack View.</h3>
-<h5>02-08-13</h5>
-<div id="post-contents">
-  <p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library browsing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library.</p>
+<h1 class="title">Using Z39.50 to produce a Stack View.</h3>
+  <date>02-08-13</date>
+  <div id="post-contents">
+    <p>The <a href="http://librarylab.law.harvard.edu/">Harvard Library Innovation Lab</a> has developed a library browsing tool called <a href="http://librarylab.law.harvard.edu/blog/stack-view/">Stack View</a>.  It provides a way to virtual browse through a collection of items from a library.</p>
 
 <p>The examples on the Stack View website show how to pull data in from a variety of sources and example scripts are provided.  But many libraries might want to pull data in from their own catalog.  Additionally libraries might want to display the items in call number order so that the virtual Stack View approximates what a user would see if they were actually browsing the shelves in your library.</p>
 
@@ -738,18 +741,13 @@
 
 <p>To fully integrate this into a website, you will need to run a basic web service that can lookup the call number for a given title, scan for nearby items, and then return the metadata for those items in a <a href="http://librarylab.law.harvard.edu/projects/stackview/demo/documentation.html">Stack View compliant JSON format</a>.  I have posted <a href="https://gist.github.com/lawlesst/4722068">code</a> for a simple Python and <a href="http://flask.pocoo.org/">Flask</a> app on <a href="https://gist.github.com/lawlesst/4722068">Github</a> that implements Stack View.  This code is in use on an internal website and seems to be working fine but hasn't been fully implemented yet.  So please use it as a reference rather than something that can be installed and used right away.</p>
 
-</div>
+  </div>
 
-
+  
 
     <footer>
       <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
-        updated: 08-18-2023 16:18. </span>
-      <ul>
-        <li>lawlesst at gmail</li>
-        <li><a href="https://github.com/lawlesst">Github</a></li>
-        <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-        <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+        updated: 08-20-2023 08:44. </span>
     </footer>
   </div>
 

@@ -11,15 +11,18 @@
 <body>
   <div id="content">
     <header>
-      <h1><a href="/">Ted Lawless</a>
-        <h1>
+      <a class="logo" href="/">home</a>
+      <nav>
+        <a href="/about.html">about</a>
+        <a href="/archives.html">archive</a>
+      </nav>
     </header>
     
 
-<h3>Fix the docs - SQL Server and Docker on a Mac</h3>
-<h5>01-07-22</h5>
-<div id="post-contents">
-  <p>I recently setup Microsoft SQL Server on a Macbook and found a simple error in Microsoft's documentation. Since I didn't quickly find an answer in the normal places (Google -> Stack Overflow), I thought I would post it here in case it saves someone a few minutes. </p>
+<h1 class="title">Fix the docs - SQL Server and Docker on a Mac</h3>
+  <date>01-07-22</date>
+  <div id="post-contents">
+    <p>I recently setup Microsoft SQL Server on a Macbook and found a simple error in Microsoft's documentation. Since I didn't quickly find an answer in the normal places (Google -> Stack Overflow), I thought I would post it here in case it saves someone a few minutes. </p>
 
 <p>From Microsoft's "Get started with SQL Server" documentation, which is otherwise quite good and nicely organized, Step 1.1 ((https://www.microsoft.com/en-us/sql-server/developer-get-started/python/mac/)) lists two commands for pulling a Docker image from Docker Hub and running it. The path to the Docker location is incorrect and you will receive an error message when trying to pull the image. </p>
 
@@ -35,18 +38,13 @@
 
 <p>Note: Microsoft does have a chat window embedded on this site and I thought that I could submit an error report that way but the chat window requires you to authenticate with Gitter, which points you to Oauth via Github, and the Oauth message is kind of scary regarding the amount of access you will be giving Gitter, as Oauth with Github usually is. So I stopped there.</p>
 
-</div>
+  </div>
 
-
+  
 
     <footer>
       <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
-        updated: 08-18-2023 16:18. </span>
-      <ul>
-        <li>lawlesst at gmail</li>
-        <li><a href="https://github.com/lawlesst">Github</a></li>
-        <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-        <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+        updated: 08-20-2023 08:44. </span>
     </footer>
   </div>
 

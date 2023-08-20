@@ -11,15 +11,18 @@
 <body>
   <div id="content">
     <header>
-      <h1><a href="/">Ted Lawless</a>
-        <h1>
+      <a class="logo" href="/">home</a>
+      <nav>
+        <a href="/about.html">about</a>
+        <a href="/archives.html">archive</a>
+      </nav>
     </header>
     
 
-<h3>Datasette hosting costs</h3>
-<h5>1-16-21</h5>
-<div id="post-contents">
-  <p>I've been hosting a <a href="https://datasette.io/">Datasette</a> (<a href="https://baseballdb.lawlesst.net">https://baseballdb.lawlesst.net</a>, aka baseballdb) of historical baseball data for a few years and the last year or so it has been hosted on Google Cloud Run. I thought I would share my hosting costs for 2020 as a point of reference for others who might be interested in running a Datasette but aren't sure how much it may cost.</p>
+<h1 class="title">Datasette hosting costs</h3>
+  <date>1-16-21</date>
+  <div id="post-contents">
+    <p>I've been hosting a <a href="https://datasette.io/">Datasette</a> (<a href="https://baseballdb.lawlesst.net">https://baseballdb.lawlesst.net</a>, aka baseballdb) of historical baseball data for a few years and the last year or so it has been hosted on Google Cloud Run. I thought I would share my hosting costs for 2020 as a point of reference for others who might be interested in running a Datasette but aren't sure how much it may cost.</p>
 
 <p>The total hosting cost on Google Cloud Run for 2020 for the baseballdb was $51.31, or a monthly average of about $4.28 USD. The monthly bill did vary a fair amount from as high as $13 in May to as low as $2 in March. Since I did no deployments during this time or updates to the site, I assume the variation in costs is related to the amount queries the Datasette was serving. I don't have a good sense of how many total queries per month this instance is serving since I'm not using Google Analytics or similar.</p>
 
@@ -29,18 +32,13 @@
 
 <p>Thanks again to <a href="https://simonwillison.net/">Simon Willison</a>  for building and maintaining Datasette and to the <a href="http://chadwick-bureau.com/">Chadwick Bureau</a> for maintaining, and making freely available, the Baseball Databank.</p>
 
-</div>
+  </div>
 
-
+  
 
     <footer>
       <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
-        updated: 08-18-2023 16:18. </span>
-      <ul>
-        <li>lawlesst at gmail</li>
-        <li><a href="https://github.com/lawlesst">Github</a></li>
-        <li><a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a></li>
-        <li><a href="https://twitter.com/tedlawless">Twitter</a></li>
+        updated: 08-20-2023 08:44. </span>
     </footer>
   </div>
 
