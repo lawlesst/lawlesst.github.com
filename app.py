@@ -127,7 +127,7 @@ def rss():
     return response
 
 
-@app.route("/tools/auth-redirect")
+@app.route("/tools/auth-redirect.html")
 def tool():
     title = "Auth Redirect Helper"
     return render_template("tools/auth-redirect.html", title=title)
