@@ -3,7 +3,7 @@ Slug:about
 
 This is the personal site of [Ted Lawless](https://www.linkedin.com/in/ted-lawless-bb30b65), a data scientist and programmer. I've been infrequently posting about technical topics here since 2012. 
 
-If any of this is of interest to you, please feel free to contact me via <a
+If any of this is of interest to you or you have a specific question, please feel free to contact me via <a
       href="mailto:lawlesst+blog@gmail.com.com">email</a>, <a href="https://github.com/lawlesst">Github</a>, or
     <a href="https://www.linkedin.com/in/ted-lawless-bb30b65/">LinkedIn</a>
 

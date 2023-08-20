@@ -25,7 +25,8 @@
     {% endblock %}
 
     <footer>
-      <a href="{{ url_for('index') }}">Ted Lawless</a>, {{ current_year }}. <span class="last-updated">{% if now %}Last
+      <a href="{{ url_for('page', slug='about') }}">Ted Lawless</a>, {{ current_year }}. <span class="last-updated">{%
+        if now %}Last
         updated: {{
         now }}. {% endif %}</span>
     </footer>
