@@ -9,6 +9,10 @@
     <code id="params"></code>
     <h5>What is this?</h5>
     <p>Just a little helper to assist with getting an authentication redirect code from Spotify.</p>
+    <p>To complete the authentication workflow, run:</p>
+    <code>
+        python authorization.py refresh-token --code <span id="code-arg"></span>
+    </code>
 </div>
 
 {% endblock %}
@@ -19,6 +23,7 @@
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get("code");
     document.getElementById("params").textContent = code
+    document.getElementById("code-arg").textContent = code
 </script>
 
 {% endblock %}
