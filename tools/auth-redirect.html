@@ -25,13 +25,17 @@
     <code id="params"></code>
     <h5>What is this?</h5>
     <p>Just a little helper to assist with getting an authentication redirect code from Spotify.</p>
+    <p>To complete the authentication workflow, run:</p>
+    <code>
+        python authorization.py refresh-token --code <span id="code-arg"></span>
+    </code>
 </div>
 
 
 
     <footer>
       <a href="/">Ted Lawless</a>, 2023. <span class="last-updated">Last
-        updated: 08-20-2023 08:58. </span>
+        updated: 08-20-2023 09:02. </span>
     </footer>
   </div>
 
@@ -41,6 +45,7 @@
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get("code");
     document.getElementById("params").textContent = code
+    document.getElementById("code-arg").textContent = code
 </script>
 
 
