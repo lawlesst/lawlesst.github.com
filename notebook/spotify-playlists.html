@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Creating Spotify Playlists via the Spotify API</title>
+  
+  <link rel="stylesheet" href="/static/styles.css">
+  
+</head>
+
+<body>
+  <div id="content">
+    <header>
+      <a class="logo" href="/">home</a>
+      <nav>
+        <a href="/about.html">about</a>
+        <a href="/archives.html">archive</a>
+      </nav>
+    </header>
+    
+
+<h1 class="title">Creating Spotify Playlists via the Spotify API</h3>
+  <date>08-20-2023</date>
+  <div id="post-contents">
+    <p>I've recently pushed <a href="https://github.com/lawlesst/spotify-playlists">code</a> to Github for a little hobby project I've been working. There are public radio music shows that I enjoy but am often not able to listen to because they are aired at a time that I'm busy. It's more convenient to listen on demand. I also spend most of my listening time in the Spotify app so I would rather listen there even if the show offers a feed from their site, and many don't. </p>
+
+<p>While exploring the possibility of creating Spotify playlists of these shows, I learned that many of them publish their playlists on their show sites using an undocumented API provided by National Public Radio. I was able to use my browser to determine what HTTP calls I need to make to get the latest episodes and the tracks played. I was then able (after a rather steep learning curve) use the <a href="https://developer.spotify.com/documentation/web-api">Spotify API</a> to create playlists for the shows I'm interested in. </p>
+
+<p>Now I'm able to run a script that will harvest the playlists for shows I'm interested in and update Spotify playlists that I can listen to at my convenience. I miss the DJ's introduction to songs and any local flavor of the show but it allows me to hear the music on demand. As I listen, the tracks become part of my Spotify listening history that can be mined by Spotify to offer me additional recommendations. </p>
+
+<p>Since there were a few technical hurdles, mostly around authentication, with the Spotify API, I posted my <a href="https://github.com/lawlesst/spotify-playlists">code</a> for others to review. I may post more in-depth about this later. The <a href="https://github.com/lawlesst/spotify-playlists">project README</a> also includes more details on how to get started with the Spotify API.</p>
+
+<p>Here are some of the shows I'm harvesting and their corresponding public Spotify playlist that I've created. You should still donate to your favorite public radio station. </p>
+
+<ul>
+<li><a href="https://www.wemu.org/show/the-roots-music-project-with-jeremy-baldwin">WEMU Roots Music Project with Jeremy Baldwin</a> - <a href="https://open.spotify.com/playlist/5CL6kh3r9obk4N7T5wPwnt?si=34bc11c915ac4655">playlist</a></li>
+<li><a href="https://www.hppr.org/show/high-plains-morning">HPPR: High Plains Morning</a> - <a href="https://open.spotify.com/playlist/7iVnCseOptNviUNe8nRPGp?si=12c7c9fcfee1475a">playlist</a></li>
+<li><a href="https://www.wncw.org/show/cosmic-american-music-show">WNCW: Cosmic American Music Show</a> - <a href="https://open.spotify.com/playlist/4y3IOtVq0MSGODMZMNQuuE?si=fed2f69a703e45fe">playlist</a></li>
+</ul>
+
+  </div>
+
+  
+
+    <footer>
+      <a href="/about.html">Ted Lawless</a>, 2023. <span class="last-updated">Last
+        updated: 08-20-2023 09:31. </span>
+    </footer>
+  </div>
+
+  
+
+</body>
+
+</html>

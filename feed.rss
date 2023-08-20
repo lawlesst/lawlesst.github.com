@@ -7,9 +7,18 @@
     <link>http://lawlesst.github.io/</link>
     <atom:link href="http://lawlesst.github.io///feed.rss" rel="self" type="application/rss+xml" />
     <description>Work notebook</description>
-    <pubDate>Sun, 20 Aug 23 09:02:31 EST</pubDate>
+    <pubDate>Sun, 20 Aug 23 09:31:59 EST</pubDate>
     <docs>http://blogs.law.harvard.edu/tech/rss</docs>
 
+    
+    <item>
+       <title>Creating Spotify Playlists via the Spotify API</title>
+       <description>I've recently pushed code to Github for a little hobby project I've been working. There are public radio music shows that I enjoy but am often not able to listen to because they are aired at a time that I'm busy. It's more convenient to listen on demand...</description>
+       <pubDate>Sun, 20 Aug 23 00:00:00 EST</pubDate>
+       <guid isPermaLink="false">http://lawlesst.github.io/notebook/spotify-playlists.html</guid>
+       <link>http://lawlesst.github.io/notebook/spotify-playlists.html</link>
+       <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
+    </item>
     
     <item>
        <title>Importing Python code by file reference and inspecting classes</title>
@@ -118,32 +127,6 @@ For those of us interested in open data, an exciting new tool was released this 
        <pubDate>Mon, 20 Nov 17 00:00:00 EST</pubDate>
        <guid isPermaLink="false">http://lawlesst.github.io/notebook/baseball-datasette.html</guid>
        <link>http://lawlesst.github.io/notebook/baseball-datasette.html</link>
-       <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
-    </item>
-    
-    <item>
-       <title>SPARQL to Pandas Dataframes</title>
-       <description>Update: See this Python module for converting SPARQL query results into Pandas dataframes.
-
-
-Using Pandas to explore data SPARQL
-
-Pandas is a Python based power tool for munging and analyzing data. While working with data from SPARQL endpoints, you may prefer to explore and analyze it with pandas given its full feature set, strong documentation and large community of users.
-
-The code below is an example of issuing a query to the Wikidata SPARQL endpoint and loading the data into a pandas dataframe and running basic operations on the returned data.
-
-This is a modified version of code from Su Labs. Here we remove the types returned by the SPARQL endpoint since they add noise and we will prefer to handle datatypes with Pandas.
-
-{% notebook sparql_dataframe.ipynb %}
-
-With a few lines of code, we can connect data stored in SPARQL endpoints with pandas, the powerful Python data munging and analysis library.
-
-See the Su Labs tutorial for more examples.
-
-You can also download the examples from this post as a Jupyter notebook....</description>
-       <pubDate>Thu, 26 Oct 17 00:00:00 EST</pubDate>
-       <guid isPermaLink="false">http://lawlesst.github.io/notebook/sparql-dataframe.html</guid>
-       <link>http://lawlesst.github.io/notebook/sparql-dataframe.html</link>
        <dc:creator><![CDATA[Ted Lawless]]></dc:creator>
     </item>
     
