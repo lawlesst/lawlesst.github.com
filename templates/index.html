@@ -4,7 +4,7 @@
 {% block content %}
 
 <div id="recent-posts">
-  <h3>Articles/posts</h3>
+  <h1>Articles/posts</h1>
   <ol>
     {% for post in recent_posts %}
     <li><a href="{{ url_for('post', slug=post.slug)}}">{{ post.title }}</a>, <date>{{ post.date }}</date>
