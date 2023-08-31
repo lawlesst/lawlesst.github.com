@@ -10,4 +10,4 @@ My initial scan of [stackoverflow answers](https://stackoverflow.com/search?q=im
 
 --include=content/examples/inspect_source.py
 
-This solution requires that all modules imported by the source file in this case already exist in your environment. Otherwise you will get import errors.
+This solution requires that all modules imported by the source file already exist in your environment. Otherwise you will get import errors.
