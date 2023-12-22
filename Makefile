@@ -2,7 +2,7 @@
 publish:
 	$ poetry run python freeze.py
 	$ poetry run ghp-import -m "Update site" build
-	$ git push -f origin gh-pages:master
+	$ git push -f origin gh-pages:main
 	$ git push origin write:write
 
 dev_server:

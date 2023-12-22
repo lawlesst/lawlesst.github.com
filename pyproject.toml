@@ -12,7 +12,7 @@ Pygments = "^2.11.2"
 dateparser = "^1.1.0"
 bs4 = "^0.0.1"
 lxml = "^4.9.3"
-frozen-flask = "^0.18"
+frozen-flask = "^1.0.1"
 ghp-import = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
