@@ -3,6 +3,22 @@ Slug:projects
 
 <hr/>
 
+## Digital Science
+
+Develop data pipelines, analysis tools, and web applications to support a team of data scientists focusing on scientific research evaluation. Lead customer training for platform API. Develop solutions with Google Cloud Platform and Amazon Web services. Prototype new data analysis tools and approaches.
+
+Brief list of technologies and activities involved in this role:
+
+* Developing custom command line tools in Python for use by the Data Science team.
+* Building a web application and data pipeline deployment environment with Gitlab's CI/CD tools, Google Cloud.
+* Managing team cloud infrastructure using Terraform. 
+* Cleaning and loading datasets into Google Big Query (GBQ) to facilitate colleague's analysis tasks. Built with [Luigi](https://luigi.readthedocs.io/en/stable/index.html) and scheduled and monitored with Gitlab CI/CD. 
+* Training customers on the [Dimensions API](https://docs.dimensions.ai/dsl) and [Dimensions on Google Big Query](https://docs.dimensions.ai/bigquery/).
+* Developing custom web applications for customers and internal usage.
+* Serving as technical support for our data team, Python programming, Python packaging, SQL, Cloud resources. 
+
+<hr/>
+
 ## JSTOR Labs
 Lead developer on a new text analytics platform. Responsible for all aspects of technical development from metadata schema design to front-end development. All technical are build using cloud platforms from Amazon Web Services.
 
