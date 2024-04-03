@@ -12,6 +12,7 @@ freezer = Freezer(app)
 def added_pages():
     yield "page", {"slug": "projects"}
     yield "page", {"slug": "presentations"}
+    yield "page", {"slug": "baseballdb"}
 
 if __name__ == '__main__':
     freezer.freeze()
