@@ -1,4 +1,4 @@
-Title: Using Pelican for a Gitub personal page
+Title: Using Pelican for a Github personal page
 Date: 11-16-2014
 Slug: pelican
 Summary: Notes on converting this Github user page based site to [Pelican](http://blog.getpelican.com/), a Python based static site generator.
