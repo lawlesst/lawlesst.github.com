@@ -73,7 +73,7 @@ def inject_datestamp():
 
 @app.route("/")
 def index():
-    posts = index_posts()[:5]
+    posts = index_posts()[:10]
     return render_template("index.html", recent_posts=posts)
 
 

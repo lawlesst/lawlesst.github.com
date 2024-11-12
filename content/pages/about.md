@@ -15,6 +15,6 @@ Please feel free to contact me via <a
 
 ## Some technical details
 
-This site is hosted via [Github pages](https://pages.github.com/). The site layout is adapted from Niklas Fasching's ["Just enough CSS for a blog"](https://niklasfasching.de/posts/just-enough-css/). Thank you Niklas. The HTML is generated with [Frozen Flask](https://github.com/Frozen-Flask/Frozen-Flask) via [Jinja templates](https://jinja.palletsprojects.com/en/3.1.x/) and [Markdown](https://www.markdownguide.org/) files.
+This site is hosted via [Github pages](https://pages.github.com/). The site layout uses [Simple.css](https://github.com/kevquirk/simple.css). The HTML is generated with [Frozen Flask](https://github.com/Frozen-Flask/Frozen-Flask) via [Jinja templates](https://jinja.palletsprojects.com/en/3.1.x/) and [Markdown](https://www.markdownguide.org/) files.
 
 No cookies are used to track usage on this site via Google Analytics or any other website tracking software. 
