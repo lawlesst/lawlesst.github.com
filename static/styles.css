@@ -1,5 +1,6 @@
 :root {
   --accent-bg: #ededed;
+  --code: black;
 }
 
 a {
@@ -16,10 +17,7 @@ date {
 
 /*Code higlighting via: pygmentize -S default -f html -a .codehilite*/
 
-.codehilite {
-  border: 1px solid;
-  padding: .5em;
-}
+.codehilite {}
 
 .codehilite .hll {
   background-color: #ffffcc
